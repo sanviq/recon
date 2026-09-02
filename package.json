@@ -8,6 +8,7 @@
     "generate": "node server/src/cli/generate.js",
     "pull": "node server/src/cli/pull.js",
     "reconcile": "node server/src/cli/reconcile.js",
+    "explain": "node server/src/cli/explain.js",
     "evaluate": "node server/src/cli/evaluate.js",
     "serve": "node server/src/index.js",
     "sweep": "node server/src/cli/sweep.js",
