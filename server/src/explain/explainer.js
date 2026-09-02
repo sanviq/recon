@@ -17,7 +17,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { createHash } from 'node:crypto';
 import { formatPaise } from '../lib/money.js';
-import { REASON, REASON_LABEL } from '../match/codes.js';
+import { REASON, REASON_LABEL, STATUS } from '../match/codes.js';
 
 const MODEL = 'claude-opus-5';
 
@@ -111,6 +111,15 @@ export function buildFacts(row, { group, payment } = {}) {
   if (row.utr) facts.settlement_utr = row.utr;
   if (row.settled_date) facts.razorpay_settled_date = row.settled_date;
 
+  // Which leg actually broke. Without this an invoice whose payment matched
+  // perfectly but whose settlement batch was short-credited gets described as an
+  // invoice-vs-payment discrepancy — a sentence that reads as nonsense, because
+  // both of those amounts are identical. The failure is one level up.
+  facts.failing_leg =
+    row.leg_a?.status === STATUS.EXCEPTION ? 'ledger_to_payment'
+    : row.leg_b?.status === STATUS.EXCEPTION ? 'settlement_to_bank'
+    : null;
+
   if (group) {
     facts.settlement_batch = {
       utr: group.utr,
@@ -139,10 +148,22 @@ export function templateExplanation(row, facts) {
   const rs = (v) => (v ? `Rs ${v}` : 'an unknown amount');
   const p = facts.matched_payment;
   const b = facts.settlement_batch;
+  // A note that says "UTR undefined" is worse than one that says the reference
+  // is unavailable — the reader stops trusting the whole report. Nothing
+  // interpolated below is allowed to reach the page as a broken value.
+  const utr = b?.utr ?? facts.settlement_utr ?? 'an unrecorded reference';
+  const txns = b?.bank_transactions?.length ? b.bank_transactions.join(' and ') : 'the credits under that UTR';
+  const times = b?.bank_transactions?.length ?? 2;
+  const lag = typeof b?.days_between_payout_and_credit === 'number'
+    ? `${b.days_between_payout_and_credit} days later`
+    : 'well outside the expected settlement window';
 
   switch (row.reason) {
     case REASON.AMOUNT_MISMATCH:
-      if (p) {
+      // The invoice may match its payment exactly and still be flagged, because
+      // the batch that paid it out was short-credited. Which leg broke decides
+      // which story is true.
+      if (facts.failing_leg === 'ledger_to_payment' && p) {
         return {
           explanation: `Invoice ${facts.invoice_id} is booked at ${rs(facts.ledger_amount_rupees)} but Razorpay captured ${rs(p.captured_amount_rupees)} against the same order reference. The two records are the same transaction, so one of the amounts was entered wrong.`,
           suggested_action: `Open invoice ${facts.invoice_id} and compare it against payment ${p.payment_id} in the Razorpay dashboard, then correct whichever side is wrong.`,
@@ -150,8 +171,8 @@ export function templateExplanation(row, facts) {
         };
       }
       return {
-        explanation: `The bank credited ${rs(b?.actually_credited_rupees)} against UTR ${b?.utr}, but Razorpay reported a payout of ${rs(b?.expected_credit_rupees)} for that batch. The shortfall is not explained by gateway fees or GST, which are already accounted for.`,
-        suggested_action: `Ask the bank what was deducted from the credit for UTR ${b?.utr}.`,
+        explanation: `Razorpay reported a payout of ${rs(b?.expected_credit_rupees)} under UTR ${utr}, but only ${rs(b?.actually_credited_rupees)} reached the bank, and invoice ${facts.invoice_id} is one of ${b?.invoices_in_batch ?? 'several'} invoices in that batch. The shortfall is on top of gateway fees and GST, which are already accounted for.`,
+        suggested_action: `Ask the bank what was deducted from the credit for UTR ${utr}, and hold the invoices in that batch until it is explained.`,
         severity: 'medium',
       };
 
@@ -164,15 +185,15 @@ export function templateExplanation(row, facts) {
 
     case REASON.DUPLICATE_UTR:
       return {
-        explanation: `UTR ${b?.utr} was credited to the bank ${b?.bank_transactions?.length ?? 2} times, but Razorpay only paid it out once. The bank balance is currently overstated, and invoice ${facts.invoice_id} sits inside that batch.`,
-        suggested_action: `Compare bank transactions ${(b?.bank_transactions ?? []).join(' and ')} and have the bank reverse the duplicate posting before this month's books are closed.`,
+        explanation: `UTR ${utr} was credited to the bank ${times} times, but Razorpay only paid it out once. The bank balance is currently overstated, and invoice ${facts.invoice_id} sits inside that batch.`,
+        suggested_action: `Compare ${txns} and have the bank reverse the duplicate posting before this month's books are closed.`,
         severity: 'high',
       };
 
     case REASON.DATE_OUT_OF_WINDOW:
       return {
-        explanation: `Razorpay settled UTR ${b?.utr} on ${facts.razorpay_settled_date}, but the credit did not reach the bank until ${b?.days_between_payout_and_credit} days later. Invoice ${facts.invoice_id} is in that batch, so its money is not yet confirmed as received on the expected date.`,
-        suggested_action: `Confirm the credit for UTR ${b?.utr} has now landed, and move it to the correct accounting period if it crossed a month end.`,
+        explanation: `Razorpay settled UTR ${utr} on ${facts.razorpay_settled_date ?? 'its scheduled payout date'}, but the credit did not reach the bank until ${lag}. Invoice ${facts.invoice_id} is in that batch, so its money is not yet confirmed as received on the expected date.`,
+        suggested_action: `Confirm the credit for UTR ${utr} has now landed, and move it to the correct accounting period if it crossed a month end.`,
         severity: 'medium',
       };
 

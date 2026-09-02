@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recon — reconciliation report</title>
+<style>
+  /* Palette roles. Dark values are selected steps for the dark surface, not an
+     automatic flip of the light ones. */
+  :root {
+    color-scheme: light;
+    --surface:        #fcfcfb;
+    --plane:          #f9f9f7;
+    --ink:            #0b0b0b;
+    --ink-2:          #52514e;
+    --ink-muted:      #898781;
+    --grid:           #e1e0d9;
+    --axis:           #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+
+    /* Meter: one hue, fill darker than its own track (ordinal ramp, validated). */
+    --meter-fill:     #2a78d6;
+    --meter-track:    #86b6ef;
+    --bar:            #2a78d6;
+
+    /* Status palette — fixed, never themed, never reused as a series color. */
+    --sev-high:       #d03b3b;
+    --sev-medium:     #ec835a;
+    --sev-low:        #898781;
+    --good:           #006300;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --surface:      #1a1a19;
+      --plane:        #0d0d0d;
+      --ink:          #ffffff;
+      --ink-2:        #c3c2b7;
+      --ink-muted:    #898781;
+      --grid:         #2c2c2a;
+      --axis:         #383835;
+      --border:       rgba(255,255,255,0.10);
+      --meter-fill:   #3987e5;
+      --meter-track:  #184f95;
+      --bar:          #3987e5;
+      --sev-high:     #d03b3b;
+      --sev-medium:   #ec835a;
+      --sev-low:      #898781;
+      --good:         #0ca30c;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--plane);
+    color: var(--ink);
+    font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 20px 64px; }
+
+  header { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 6px; }
+  h1 { font-size: 20px; margin: 0; letter-spacing: -0.01em; }
+  .sub { color: var(--ink-muted); font-size: 13px; }
+  .sub code { font-size: 12px; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+  h2 { font-size: 13px; font-weight: 600; margin: 0 0 14px; color: var(--ink-2); letter-spacing: 0.01em; }
+
+  .grid { display: grid; gap: 14px; margin-top: 20px; }
+  .cols-2 { grid-template-columns: minmax(0,1fr) minmax(0,1fr); align-items: start; }
+  @media (max-width: 860px) { .cols-2 { grid-template-columns: 1fr; } }
+
+  /* --- hero + meter ------------------------------------------------------ */
+  .hero-row { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 32px; align-items: center; }
+  @media (max-width: 700px) { .hero-row { grid-template-columns: 1fr; gap: 20px; } }
+  .hero-figure { font-size: 52px; font-weight: 600; line-height: 1; letter-spacing: -0.02em; }
+  .hero-label { color: var(--ink-2); font-size: 13px; margin-top: 6px; }
+
+  /* Meter: a single ratio against its whole, on a same-hue track. */
+  .meter { width: 100%; height: 14px; border-radius: 7px; background: var(--meter-track); overflow: hidden; }
+  .meter > i { display: block; height: 100%; background: var(--meter-fill); border-radius: 7px; }
+  .meter-legend { display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; font-size: 13px; }
+  .meter-legend b { font-weight: 600; }
+  .meter-legend .muted { color: var(--ink-2); }
+
+  /* --- KPI row ----------------------------------------------------------- */
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin-top: 14px; }
+  .tile .k { color: var(--ink-2); font-size: 12px; }
+  .tile .v { font-size: 24px; font-weight: 600; margin-top: 4px; letter-spacing: -0.01em; }
+  .tile .n { color: var(--ink-muted); font-size: 12px; margin-top: 3px; }
+
+  /* --- reason bars ------------------------------------------------------- */
+  .bars { display: flex; flex-direction: column; gap: 10px; }
+  .bar-row { display: grid; grid-template-columns: 168px minmax(0,1fr) 34px; gap: 12px; align-items: center; }
+  .bar-row .lbl { color: var(--ink-2); font-size: 13px; }
+  .bar-track { height: 12px; background: var(--grid); border-radius: 6px; }
+  /* Rounded data-end, anchored to the baseline at the left. */
+  .bar-track > i { display: block; height: 100%; background: var(--bar); border-radius: 0 4px 4px 0; min-width: 3px; }
+  .bar-row .n { text-align: right; font-variant-numeric: tabular-nums; font-size: 13px; }
+
+  /* --- table ------------------------------------------------------------- */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    text-align: left; font-weight: 600; color: var(--ink-2); font-size: 12px;
+    padding: 0 10px 8px; border-bottom: 1px solid var(--axis); white-space: nowrap;
+  }
+  td { padding: 11px 10px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: 0; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+
+  /* Status never rides on color alone — dot plus the word. */
+  .sev { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .sev i { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .sev-high i { background: var(--sev-high); }
+  .sev-medium i { background: var(--sev-medium); }
+  .sev-low i { background: var(--sev-low); }
+
+  .reason {
+    display: inline-block; padding: 2px 8px; border-radius: 5px;
+    background: var(--plane); border: 1px solid var(--border);
+    font-size: 12px; color: var(--ink-2); white-space: nowrap;
+  }
+  .note { color: var(--ink); }
+  .note .action { color: var(--ink-2); margin-top: 4px; display: block; }
+  .src { color: var(--ink-muted); font-size: 11px; }
+
+  .toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+  button {
+    font: inherit; font-size: 13px; padding: 5px 11px; border-radius: 7px;
+    border: 1px solid var(--border); background: var(--surface); color: var(--ink-2); cursor: pointer;
+  }
+  button[aria-pressed="true"] { color: var(--ink); border-color: var(--axis); font-weight: 600; }
+  button:hover { border-color: var(--axis); }
+
+  .audit { max-height: 340px; overflow: auto; font-size: 12px; }
+  .audit table { font-size: 12px; }
+  .audit td { padding: 6px 10px; }
+
+  .empty { color: var(--ink-muted); padding: 24px 0; }
+  .err { color: var(--sev-high); }
+  .scroll-x { overflow-x: auto; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Recon</h1>
+    <span class="sub" id="datasetLine">loading…</span>
+  </header>
+  <p class="sub" style="margin:0 0 18px">
+    Three-way reconciliation across a merchant ledger, Razorpay payments and settlements, and a bank statement.
+  </p>
+
+  <div id="app"><p class="empty">Loading…</p></div>
+</div>
+
+<script type="module">
+const RUPEE = 100;
+const fmtRs = (paise) => {
+  if (typeof paise !== 'number') return '—';
+  const sign = paise < 0 ? '-' : '';
+  const abs = Math.abs(paise);
+  const whole = Math.floor(abs / RUPEE).toLocaleString('en-IN');
+  return `${sign}₹${whole}.${String(abs % RUPEE).padStart(2, '0')}`;
+};
+const pct = (n) => `${(n * 100).toFixed(1)}%`;
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const REASON_LABEL = {
+  amount_mismatch: 'Amount mismatch',
+  missing_counterpart: 'Missing counterpart',
+  duplicate_utr: 'Duplicate UTR',
+  date_out_of_window: 'Settled outside window',
+  ambiguous_candidates: 'Ambiguous — multiple matches',
+  unresolved: 'Unresolved',
+};
+
+const get = async (path) => {
+  const res = await fetch(path);
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error ?? res.statusText);
+  return body;
+};
+
+let state = { summary: null, exceptions: [], audit: null, filter: 'all' };
+
+async function load() {
+  const app = document.getElementById('app');
+  try {
+    const [summary, exceptions, audit] = await Promise.all([
+      get('/api/summary'), get('/api/exceptions'), get('/api/audit?limit=120'),
+    ]);
+    state = { ...state, summary, exceptions, audit };
+    render();
+  } catch (err) {
+    app.innerHTML = `<div class="card"><p class="err">${esc(err.message)}</p></div>`;
+  }
+}
+
+function render() {
+  const { summary: s, exceptions } = state;
+  const sum = s.summary;
+  const totalValue = sum.value_matched_paise + sum.value_flagged_paise;
+  const valueShare = totalValue ? sum.value_matched_paise / totalValue : 0;
+
+  document.getElementById('datasetLine').innerHTML =
+    `<code>${esc(s.dataset?.dir?.split('/').slice(-2).join('/') ?? '')}</code> · run ${esc(new Date(s.finished_at).toLocaleString())}`;
+
+  document.getElementById('app').innerHTML = `
+    <section class="card">
+      <div class="hero-row">
+        <div>
+          <div class="hero-figure">${pct(sum.match_rate)}</div>
+          <div class="hero-label">${sum.matched} of ${sum.ledger_rows} invoices<br>auto-reconciled end to end</div>
+        </div>
+        <div>
+          <h2>Value confirmed in the bank</h2>
+          <div class="meter" role="img"
+               aria-label="${pct(valueShare)} of invoiced value auto-reconciled">
+            <i style="width:${(valueShare * 100).toFixed(2)}%"></i>
+          </div>
+          <div class="meter-legend">
+            <span><b>${fmtRs(sum.value_matched_paise)}</b> reconciled</span>
+            <span class="muted"><b>${fmtRs(sum.value_flagged_paise)}</b> flagged for review</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="kpis">
+        ${tile('Settlement batches', `${sum.settlements_matched}/${sum.settlement_groups}`, 'confirmed against the bank')}
+        ${tile('Bank credits flagged', `${sum.bank_exceptions}/${sum.bank_rows}`, `${fmtRs(sum.bank_unexplained_credit_paise)} unexplained`)}
+        ${tile('Invoice exceptions', String(sum.exceptions), 'every one carries a reason code')}
+        ${tile('Throughput', s.throughput ? `${s.throughput.records_per_second.toLocaleString('en-IN')}/s` : '—',
+               s.throughput ? `${s.throughput.records} records in ${s.throughput.elapsed_ms}ms` : '')}
+      </div>
+    </section>
+
+    <div class="grid cols-2">
+      <section class="card">
+        <h2>Exceptions by reason</h2>
+        ${reasonBars(sum.exceptions_by_reason)}
+      </section>
+      <section class="card">
+        <h2>How the matches were made</h2>
+        ${accuracyPanel(s)}
+      </section>
+    </div>
+
+    <section class="card" style="margin-top:14px">
+      <h2>Exception list — every unmatched record, nothing hidden</h2>
+      <div class="toolbar">
+        ${['all', 'high', 'medium', 'low'].map((f) =>
+          `<button data-filter="${f}" aria-pressed="${state.filter === f}">${f === 'all' ? `All (${exceptions.length})` : f[0].toUpperCase() + f.slice(1)}</button>`).join('')}
+      </div>
+      <div class="scroll-x">${exceptionTable()}</div>
+    </section>
+
+    <section class="card" style="margin-top:14px">
+      <h2>Audit trail — last ${state.audit.entries.length} of ${state.audit.total} decisions</h2>
+      <div class="audit scroll-x">${auditTable()}</div>
+    </section>
+  `;
+
+  for (const btn of document.querySelectorAll('[data-filter]')) {
+    btn.addEventListener('click', () => { state.filter = btn.dataset.filter; render(); });
+  }
+}
+
+const tile = (k, v, n) => `<div class="card tile"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div><div class="n">${esc(n)}</div></div>`;
+
+/** Horizontal bars: one hue, magnitude by length, counts direct-labelled. */
+function reasonBars(byReason) {
+  const rows = Object.entries(byReason).sort((a, b) => b[1] - a[1]);
+  if (!rows.length) return '<p class="empty">No exceptions.</p>';
+  const max = Math.max(...rows.map((r) => r[1]));
+  return `<div class="bars">${rows.map(([reason, count]) => `
+    <div class="bar-row">
+      <span class="lbl">${esc(REASON_LABEL[reason] ?? reason)}</span>
+      <span class="bar-track"><i style="width:${(count / max * 100).toFixed(1)}%"
+        title="${esc(REASON_LABEL[reason] ?? reason)}: ${count}"></i></span>
+      <span class="n">${count}</span>
+    </div>`).join('')}</div>`;
+}
+
+function accuracyPanel(s) {
+  const m = s.metrics?.accuracy;
+  const w = s.calibrated_ledger_window;
+  const rules = s.metrics?.matches_by_rule ?? null;
+  const parts = [];
+
+  if (m) {
+    parts.push(`<div class="kpis" style="margin-top:0">
+      ${tile('Precision', pct(m.precision_auto_matched), `${m.false_positive} false positive${m.false_positive === 1 ? '' : 's'}`)}
+      ${tile('Recall', pct(m.recall), `${m.false_negative} missed`)}
+      ${tile('Misrouted', String(m.misrouted_matches), 'booked to the wrong invoice')}
+      ${tile('Reason accuracy', pct(m.reason_code_accuracy), 'correct code on flagged rows')}
+    </div>`);
+  } else {
+    parts.push(`<p class="sub" style="margin:0 0 10px">No labelled ground truth for this dataset — accuracy is only measurable on a generated set.</p>`);
+  }
+  if (w) {
+    parts.push(`<p class="sub" style="margin:12px 0 0">Payment-date window calibrated from this merchant's own reference-matched invoices:
+      <b>${w.min} to +${w.max} days</b>.</p>`);
+  }
+  if (rules) {
+    parts.push(`<p class="sub" style="margin:8px 0 0">${Object.entries(rules)
+      .map(([rule, n]) => `${n} by <code>${esc(rule)}</code>`).join(' · ')}</p>`);
+  }
+  return parts.join('');
+}
+
+function exceptionTable() {
+  const rows = state.exceptions.filter((e) => state.filter === 'all' || e.note?.severity === state.filter);
+  if (!rows.length) return '<p class="empty">Nothing in this bucket.</p>';
+  return `<table>
+    <thead><tr>
+      <th>Severity</th><th>Record</th><th>Date</th><th class="num">Amount</th>
+      <th>Reason</th><th>What is wrong, and what to do</th>
+    </tr></thead>
+    <tbody>${rows.map((e) => {
+      const sev = e.note?.severity ?? 'low';
+      return `<tr>
+        <td><span class="sev sev-${esc(sev)}"><i></i>${sev[0].toUpperCase() + sev.slice(1)}</span></td>
+        <td><span class="mono">${esc(e.id)}</span><br><span class="src">${esc(e.counterparty ?? '').slice(0, 42)}</span></td>
+        <td class="num">${esc(e.date)}</td>
+        <td class="num">${fmtRs(e.amount_paise)}</td>
+        <td><span class="reason">${esc(REASON_LABEL[e.reason] ?? e.reason)}</span></td>
+        <td class="note">${e.note
+          ? `${esc(e.note.explanation)}<span class="action">→ ${esc(e.note.suggested_action)}</span>
+             <span class="src">${e.note.source === 'llm' ? `written by ${esc(e.note.model ?? 'model')}` : 'deterministic template'}</span>`
+          : '<span class="src">run <code>npm run explain</code> to generate a note</span>'}</td>
+      </tr>`;
+    }).join('')}</tbody></table>`;
+}
+
+function auditTable() {
+  const entries = [...state.audit.entries].reverse();
+  if (!entries.length) return '<p class="empty">No audit entries yet.</p>';
+  return `<table>
+    <thead><tr><th>#</th><th>Leg</th><th>Subject</th><th>Decision</th><th>Rule / reason</th><th class="num">Confidence</th><th>At</th></tr></thead>
+    <tbody>${entries.map((e) => `<tr>
+      <td class="num">${e.seq ?? '—'}</td>
+      <td>${esc(e.leg)}</td>
+      <td><span class="mono">${esc(e.subject_id)}</span><br><span class="src">${esc(e.subject)}</span></td>
+      <td>${esc(e.decision)}</td>
+      <td class="mono">${esc(e.rule ?? e.reason ?? '—')}</td>
+      <td class="num">${typeof e.confidence === 'number' ? e.confidence.toFixed(2) : '—'}</td>
+      <td class="src">${esc(new Date(e.at).toLocaleTimeString())}</td>
+    </tr>`).join('')}</tbody></table>`;
+}
+
+load();
+</script>
+</body>
+</html>
