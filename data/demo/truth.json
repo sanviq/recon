@@ -1,0 +1,1263 @@
+{
+  "ledger": [
+    {
+      "invoice_id": "INV-2026-0001",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007000",
+      "utr": "CITIN2608057696",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0008",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007001",
+      "utr": "CITIN2608057696",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0018",
+      "status": "exception",
+      "reason": "amount_mismatch",
+      "payment_id": "pay_R00007002",
+      "utr": "CITIN2608057696",
+      "fault": "ledger_amount_typo"
+    },
+    {
+      "invoice_id": "INV-2026-0019",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007003",
+      "utr": "CITIN2608057696",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0028",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007004",
+      "utr": "AXISN2608064498",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0055",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007005",
+      "utr": "AXISN2608064498",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0068",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007006",
+      "utr": "AXISN2608064498",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0054",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007007",
+      "utr": "AXISN2608078365",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0022",
+      "status": "exception",
+      "reason": "ambiguous_candidates",
+      "payment_id": "pay_R00007008",
+      "utr": "HDFCN2608080530",
+      "fault": "amount_date_collision"
+    },
+    {
+      "invoice_id": "INV-2026-0026",
+      "status": "exception",
+      "reason": "ambiguous_candidates",
+      "payment_id": "pay_R00007009",
+      "utr": "HDFCN2608080530",
+      "fault": "amount_date_collision"
+    },
+    {
+      "invoice_id": "INV-2026-0027",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007010",
+      "utr": "HDFCN2608080530",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0044",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007011",
+      "utr": "HDFCN2608080530",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0056",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007012",
+      "utr": "HDFCN2608080530",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0058",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007013",
+      "utr": "HDFCN2608080530",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0070",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007014",
+      "utr": "HDFCN2608080530",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0005",
+      "status": "exception",
+      "reason": "date_out_of_window",
+      "payment_id": "pay_R00007015",
+      "utr": "CITIN2608098091",
+      "fault": "settlement_late"
+    },
+    {
+      "invoice_id": "INV-2026-0040",
+      "status": "exception",
+      "reason": "missing_counterpart",
+      "payment_id": null,
+      "utr": null,
+      "fault": "offline_invoice"
+    },
+    {
+      "invoice_id": "INV-2026-0003",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007017",
+      "utr": "CITIN2608103674",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0042",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007018",
+      "utr": "CITIN2608103674",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0004",
+      "status": "exception",
+      "reason": "missing_counterpart",
+      "payment_id": null,
+      "utr": null,
+      "fault": "offline_invoice"
+    },
+    {
+      "invoice_id": "INV-2026-0020",
+      "status": "exception",
+      "reason": "amount_mismatch",
+      "payment_id": "pay_R00007020",
+      "utr": "AXISN2608116777",
+      "fault": "settlement_short"
+    },
+    {
+      "invoice_id": "INV-2026-0052",
+      "status": "exception",
+      "reason": "amount_mismatch",
+      "payment_id": "pay_R00007021",
+      "utr": "AXISN2608116777",
+      "fault": "settlement_short"
+    },
+    {
+      "invoice_id": "INV-2026-0060",
+      "status": "exception",
+      "reason": "amount_mismatch",
+      "payment_id": "pay_R00007022",
+      "utr": "AXISN2608116777",
+      "fault": "settlement_short"
+    },
+    {
+      "invoice_id": "INV-2026-0072",
+      "status": "exception",
+      "reason": "amount_mismatch",
+      "payment_id": "pay_R00007023",
+      "utr": "AXISN2608116777",
+      "fault": "settlement_short"
+    },
+    {
+      "invoice_id": "INV-2026-0063",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007024",
+      "utr": "HDFCN2608125089",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0002",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007025",
+      "utr": "AXISN2608136981",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0029",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007026",
+      "utr": "AXISN2608136981",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0037",
+      "status": "exception",
+      "reason": "amount_mismatch",
+      "payment_id": "pay_R00007027",
+      "utr": "AXISN2608136981",
+      "fault": "ledger_amount_typo"
+    },
+    {
+      "invoice_id": "INV-2026-0050",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007028",
+      "utr": "AXISN2608136981",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0017",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007029",
+      "utr": "ICICN2608142886",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0034",
+      "status": "exception",
+      "reason": "missing_counterpart",
+      "payment_id": null,
+      "utr": null,
+      "fault": "offline_invoice"
+    },
+    {
+      "invoice_id": "INV-2026-0064",
+      "status": "exception",
+      "reason": "amount_mismatch",
+      "payment_id": "pay_R00007031",
+      "utr": "ICICN2608142886",
+      "fault": "ledger_amount_typo"
+    },
+    {
+      "invoice_id": "INV-2026-0065",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007032",
+      "utr": "ICICN2608142886",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0033",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007033",
+      "utr": "CITIN2608159485",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0043",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007034",
+      "utr": "CITIN2608159485",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0051",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007035",
+      "utr": "CITIN2608159485",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0071",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007036",
+      "utr": "CITIN2608159485",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0030",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007037",
+      "utr": "AXISN2608163700",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0066",
+      "status": "exception",
+      "reason": "ambiguous_candidates",
+      "payment_id": "pay_R00007038",
+      "utr": "AXISN2608163700",
+      "fault": "amount_date_collision"
+    },
+    {
+      "invoice_id": "INV-2026-0015",
+      "status": "exception",
+      "reason": "ambiguous_candidates",
+      "payment_id": "pay_R00007039",
+      "utr": "AXISN2608163700",
+      "fault": "amount_date_collision"
+    },
+    {
+      "invoice_id": "INV-2026-0016",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007040",
+      "utr": "HDFCN2608176205",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0035",
+      "status": "exception",
+      "reason": "missing_counterpart",
+      "payment_id": null,
+      "utr": null,
+      "fault": "offline_invoice"
+    },
+    {
+      "invoice_id": "INV-2026-0007",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007042",
+      "utr": "CITIN2608192620",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0046",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007043",
+      "utr": "CITIN2608192620",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0062",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007044",
+      "utr": "CITIN2608192620",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0010",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007045",
+      "utr": "AXISN2608208272",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0012",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007046",
+      "utr": "AXISN2608208272",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0038",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007047",
+      "utr": "AXISN2608208272",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0039",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007048",
+      "utr": "AXISN2608208272",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0049",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007049",
+      "utr": "AXISN2608208272",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0067",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007050",
+      "utr": "AXISN2608208272",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0006",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007051",
+      "utr": "AXISN2608217887",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0009",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007052",
+      "utr": "AXISN2608217887",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0023",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007053",
+      "utr": "AXISN2608217887",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0041",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007054",
+      "utr": "AXISN2608217887",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0031",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007055",
+      "utr": "HDFCN2608223279",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0032",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007056",
+      "utr": "HDFCN2608223279",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0021",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007057",
+      "utr": "HDFCN2608230924",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0025",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007058",
+      "utr": "HDFCN2608230924",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0045",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007059",
+      "utr": "HDFCN2608230924",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0047",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007060",
+      "utr": "HDFCN2608230924",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0059",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007061",
+      "utr": "HDFCN2608230924",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0061",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007062",
+      "utr": "HDFCN2608230924",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0069",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007063",
+      "utr": "HDFCN2608230924",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0053",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007064",
+      "utr": "HDFCN2608241945",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0011",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007065",
+      "utr": "CITIN2608253342",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0013",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007066",
+      "utr": "CITIN2608253342",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0036",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007067",
+      "utr": "CITIN2608253342",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0048",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007068",
+      "utr": "CITIN2608253342",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0057",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R00007069",
+      "utr": "CITIN2608253342",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0014",
+      "status": "exception",
+      "reason": "duplicate_utr",
+      "payment_id": "pay_R00007070",
+      "utr": "ICICN2608262599",
+      "fault": "settlement_duplicate"
+    },
+    {
+      "invoice_id": "INV-2026-0024",
+      "status": "exception",
+      "reason": "duplicate_utr",
+      "payment_id": "pay_R00007071",
+      "utr": "ICICN2608262599",
+      "fault": "settlement_duplicate"
+    }
+  ],
+  "payments": [
+    {
+      "payment_id": "pay_R00007002",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608057696",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007003",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608057696",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007001",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608057696",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007000",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608057696",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007006",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608064498",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007005",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608064498",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007004",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608064498",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_U00007002",
+      "status": "exception",
+      "reason": "missing_counterpart",
+      "utr": "AXISN2608064498",
+      "fault": "unrecorded_payment"
+    },
+    {
+      "payment_id": "pay_R00007007",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608078365",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007008",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608080530",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007009",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608080530",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007011",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608080530",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007014",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608080530",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007010",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608080530",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007013",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608080530",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007012",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608080530",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007015",
+      "status": "exception",
+      "reason": "date_out_of_window",
+      "utr": "CITIN2608098091",
+      "fault": "settlement_late"
+    },
+    {
+      "payment_id": "pay_R00007017",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608103674",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007018",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608103674",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007022",
+      "status": "exception",
+      "reason": "amount_mismatch",
+      "utr": "AXISN2608116777",
+      "fault": "settlement_short"
+    },
+    {
+      "payment_id": "pay_R00007021",
+      "status": "exception",
+      "reason": "amount_mismatch",
+      "utr": "AXISN2608116777",
+      "fault": "settlement_short"
+    },
+    {
+      "payment_id": "pay_R00007023",
+      "status": "exception",
+      "reason": "amount_mismatch",
+      "utr": "AXISN2608116777",
+      "fault": "settlement_short"
+    },
+    {
+      "payment_id": "pay_R00007020",
+      "status": "exception",
+      "reason": "amount_mismatch",
+      "utr": "AXISN2608116777",
+      "fault": "settlement_short"
+    },
+    {
+      "payment_id": "pay_R00007024",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608125089",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_U00007000",
+      "status": "exception",
+      "reason": "missing_counterpart",
+      "utr": "HDFCN2608125089",
+      "fault": "unrecorded_payment"
+    },
+    {
+      "payment_id": "pay_R00007026",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608136981",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007027",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608136981",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007025",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608136981",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007028",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608136981",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007031",
+      "status": "matched",
+      "reason": null,
+      "utr": "ICICN2608142886",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007029",
+      "status": "matched",
+      "reason": null,
+      "utr": "ICICN2608142886",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007032",
+      "status": "matched",
+      "reason": null,
+      "utr": "ICICN2608142886",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007036",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608159485",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007033",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608159485",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007035",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608159485",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007034",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608159485",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007037",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608163700",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007039",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608163700",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007038",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608163700",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007040",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608176205",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_U00007001",
+      "status": "exception",
+      "reason": "missing_counterpart",
+      "utr": "AXISN2608180975",
+      "fault": "unrecorded_payment"
+    },
+    {
+      "payment_id": "pay_R00007042",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608192620",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007044",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608192620",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007043",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608192620",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007049",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608208272",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007045",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608208272",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007050",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608208272",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007047",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608208272",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007046",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608208272",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007048",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608208272",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007054",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608217887",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007052",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608217887",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007051",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608217887",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007053",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608217887",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007056",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608223279",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007055",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608223279",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007059",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608230924",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007063",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608230924",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007060",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608230924",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007062",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608230924",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007057",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608230924",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007058",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608230924",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007061",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608230924",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007064",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608241945",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007065",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608253342",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007068",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608253342",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007067",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608253342",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007069",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608253342",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007066",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608253342",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R00007071",
+      "status": "exception",
+      "reason": "duplicate_utr",
+      "utr": "ICICN2608262599",
+      "fault": "settlement_duplicate"
+    },
+    {
+      "payment_id": "pay_R00007070",
+      "status": "exception",
+      "reason": "duplicate_utr",
+      "utr": "ICICN2608262599",
+      "fault": "settlement_duplicate"
+    }
+  ],
+  "bank": [
+    {
+      "txn_id": "TXN202608050001",
+      "status": "matched",
+      "reason": null,
+      "settlement_id": "setl_R00000700",
+      "fault": null
+    },
+    {
+      "txn_id": "TXN202608060002",
+      "status": "matched",
+      "reason": null,
+      "settlement_id": "setl_R00000701",
+      "fault": null
+    },
+    {
+      "txn_id": "TXN202608070003",
+      "status": "matched",
+      "reason": null,
+      "settlement_id": "setl_R00000702",
+      "fault": null
+    },
+    {
+      "txn_id": "TXN202608080004",
+      "status": "matched",
+      "reason": null,
+      "settlement_id": "setl_R00000703",
+      "fault": null
+    },
+    {
+      "txn_id": "TXN202608100006",
+      "status": "matched",
+      "reason": null,
+      "settlement_id": "setl_R00000705",
+      "fault": null
+    },
+    {
+      "txn_id": "TXN202608110007",
+      "status": "exception",
+      "reason": "amount_mismatch",
+      "settlement_id": "setl_R00000706",
+      "fault": "settlement_short"
+    },
+    {
+      "txn_id": "TXN202608120008",
+      "status": "matched",
+      "reason": null,
+      "settlement_id": "setl_R00000707",
+      "fault": null
+    },
+    {
+      "txn_id": "TXN202608130009",
+      "status": "matched",
+      "reason": null,
+      "settlement_id": "setl_R00000708",
+      "fault": null
+    },
+    {
+      "txn_id": "TXN202608140010",
+      "status": "matched",
+      "reason": null,
+      "settlement_id": "setl_R00000709",
+      "fault": null
+    },
+    {
+      "txn_id": "TXN202608150005",
+      "status": "exception",
+      "reason": "date_out_of_window",
+      "settlement_id": "setl_R00000704",
+      "fault": "settlement_late"
+    },
+    {
+      "txn_id": "TXN202608150011",
+      "status": "matched",
+      "reason": null,
+      "settlement_id": "setl_R00000710",
+      "fault": null
+    },
+    {
+      "txn_id": "TXN202608150025",
+      "status": "exception",
+      "reason": "missing_counterpart",
+      "settlement_id": null,
+      "fault": "orphan_credit"
+    },
+    {
+      "txn_id": "TXN202608160012",
+      "status": "matched",
+      "reason": null,
+      "settlement_id": "setl_R00000711",
+      "fault": null
+    },
+    {
+      "txn_id": "TXN202608170013",
+      "status": "matched",
+      "reason": null,
+      "settlement_id": "setl_R00000712",
+      "fault": null
+    },
+    {
+      "txn_id": "TXN202608180014",
+      "status": "matched",
+      "reason": null,
+      "settlement_id": "setl_R00000713",
+      "fault": null
+    },
+    {
+      "txn_id": "TXN202608190015",
+      "status": "matched",
+      "reason": null,
+      "settlement_id": "setl_R00000714",
+      "fault": null
+    },
+    {
+      "txn_id": "TXN202608200016",
+      "status": "matched",
+      "reason": null,
+      "settlement_id": "setl_R00000715",
+      "fault": null
+    },
+    {
+      "txn_id": "TXN202608210017",
+      "status": "matched",
+      "reason": null,
+      "settlement_id": "setl_R00000716",
+      "fault": null
+    },
+    {
+      "txn_id": "TXN202608220018",
+      "status": "matched",
+      "reason": null,
+      "settlement_id": "setl_R00000717",
+      "fault": null
+    },
+    {
+      "txn_id": "TXN202608230019",
+      "status": "matched",
+      "reason": null,
+      "settlement_id": "setl_R00000718",
+      "fault": null
+    },
+    {
+      "txn_id": "TXN202608240020",
+      "status": "matched",
+      "reason": null,
+      "settlement_id": "setl_R00000719",
+      "fault": null
+    },
+    {
+      "txn_id": "TXN202608250021",
+      "status": "matched",
+      "reason": null,
+      "settlement_id": "setl_R00000720",
+      "fault": null
+    },
+    {
+      "txn_id": "TXN202608250024",
+      "status": "exception",
+      "reason": "missing_counterpart",
+      "settlement_id": null,
+      "fault": "orphan_credit"
+    },
+    {
+      "txn_id": "TXN202608260022",
+      "status": "exception",
+      "reason": "duplicate_utr",
+      "settlement_id": "setl_R00000721",
+      "fault": "settlement_duplicate"
+    },
+    {
+      "txn_id": "TXN202608260023",
+      "status": "exception",
+      "reason": "duplicate_utr",
+      "settlement_id": "setl_R00000721",
+      "fault": "settlement_duplicate"
+    }
+  ],
+  "summary": {
+    "ledger_matched": 54,
+    "ledger_exceptions": 18,
+    "bank_matched": 19,
+    "bank_exceptions": 6,
+    "settlements": 22
+  }
+}

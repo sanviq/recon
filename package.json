@@ -1,0 +1,23 @@
+{
+  "name": "recon",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "AI reconciliation agent for Razorpay merchants — Razorpay Buildathon Track 04 (AI Finance Controller)",
+  "scripts": {
+    "generate": "node server/src/cli/generate.js",
+    "pull": "node server/src/cli/pull.js",
+    "reconcile": "node server/src/cli/reconcile.js",
+    "evaluate": "node server/src/cli/evaluate.js",
+    "serve": "node server/src/index.js",
+    "test": "node --test server/test/"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.71.0",
+    "better-sqlite3": "^12.4.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "razorpay": "^2.9.6"
+  }
+}
