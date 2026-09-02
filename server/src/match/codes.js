@@ -33,6 +33,7 @@ export const RULE = {
   FUZZY_AMOUNT_DATE: 'A3_fuzzy_amount_in_window',
   BATCH_EXACT: 'B1_batch_utr_exact',
   BATCH_TOLERANCE: 'B2_batch_utr_within_tolerance',
+  BATCH_SPLIT: 'B3_batch_utr_split_credits',
 };
 
 // Confidence is assigned by the rule that fired, not guessed. These are the only
@@ -44,6 +45,9 @@ export const RULE_CONFIDENCE = {
   [RULE.FUZZY_AMOUNT_DATE]: 0.78,
   [RULE.BATCH_EXACT]: 1.0,
   [RULE.BATCH_TOLERANCE]: 0.8,
+  // Lower than an exact single credit: the tranches summing correctly is strong
+  // evidence but not proof that they belong to the same payout.
+  [RULE.BATCH_SPLIT]: 0.85,
 };
 
 export const ALL_REASONS = Object.values(REASON);

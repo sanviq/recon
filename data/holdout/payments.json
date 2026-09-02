@@ -1,0 +1,1360 @@
+[
+  {
+    "id": "pay_R424242002",
+    "entity": "payment",
+    "amount": 93900,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242028",
+    "method": "card",
+    "captured": true,
+    "description": "Payment from Rohit Electronics",
+    "fee": 1878,
+    "tax": 338,
+    "net": 91684,
+    "created_at": 1785749147,
+    "captured_date": "2026-08-03",
+    "notes": {
+      "customer": "Rohit Electronics"
+    }
+  },
+  {
+    "id": "pay_R424242004",
+    "entity": "payment",
+    "amount": 2283700,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242061",
+    "method": "wallet",
+    "captured": true,
+    "description": "Payment from Patel Hardware",
+    "fee": 45674,
+    "tax": 8221,
+    "net": 2229805,
+    "created_at": 1785765894,
+    "captured_date": "2026-08-03",
+    "notes": {
+      "customer": "Patel Hardware"
+    }
+  },
+  {
+    "id": "pay_R424242001",
+    "entity": "payment",
+    "amount": 236022,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242024",
+    "method": "netbanking",
+    "captured": true,
+    "description": "Payment from Rohit Electronics",
+    "fee": 4720,
+    "tax": 850,
+    "net": 230452,
+    "created_at": 1785784447,
+    "captured_date": "2026-08-03",
+    "notes": {
+      "customer": "Rohit Electronics"
+    }
+  },
+  {
+    "id": "pay_R424242005",
+    "entity": "payment",
+    "amount": 2283700,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242035",
+    "method": "card",
+    "captured": true,
+    "description": "Payment from Coastal Foods",
+    "fee": 45674,
+    "tax": 8221,
+    "net": 2229805,
+    "created_at": 1785785788,
+    "captured_date": "2026-08-03",
+    "notes": {
+      "customer": "Coastal Foods"
+    }
+  },
+  {
+    "id": "pay_R424242008",
+    "entity": "payment",
+    "amount": 191700,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242070",
+    "method": "card",
+    "captured": true,
+    "description": "Payment from Sunrise Stationers",
+    "fee": 3834,
+    "tax": 690,
+    "net": 187176,
+    "created_at": 1785836192,
+    "captured_date": "2026-08-04",
+    "notes": {
+      "customer": "Sunrise Stationers"
+    }
+  },
+  {
+    "id": "pay_R424242009",
+    "entity": "payment",
+    "amount": 191700,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242000",
+    "method": "netbanking",
+    "captured": true,
+    "description": "Payment from Patel Hardware",
+    "fee": 3834,
+    "tax": 690,
+    "net": 187176,
+    "created_at": 1785862358,
+    "captured_date": "2026-08-04",
+    "notes": {
+      "customer": "Patel Hardware"
+    }
+  },
+  {
+    "id": "pay_R424242003",
+    "entity": "payment",
+    "amount": 176300,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242032",
+    "method": "card",
+    "captured": true,
+    "description": "Payment from Aarav Print House",
+    "fee": 3526,
+    "tax": 635,
+    "net": 172139,
+    "created_at": 1785863355,
+    "captured_date": "2026-08-04",
+    "notes": {
+      "customer": "Aarav Print House"
+    }
+  },
+  {
+    "id": "pay_R424242000",
+    "entity": "payment",
+    "amount": 242200,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242001",
+    "method": "upi",
+    "captured": true,
+    "description": "Payment from Aarav Print House",
+    "fee": 4844,
+    "tax": 872,
+    "net": 236484,
+    "created_at": 1785868260,
+    "captured_date": "2026-08-04",
+    "notes": {
+      "customer": "Aarav Print House"
+    }
+  },
+  {
+    "id": "pay_R424242006",
+    "entity": "payment",
+    "amount": 33600,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242040",
+    "method": "upi",
+    "captured": true,
+    "description": "Payment from Coastal Foods",
+    "fee": 672,
+    "tax": 121,
+    "net": 32807,
+    "created_at": 1785932530,
+    "captured_date": "2026-08-05",
+    "notes": {
+      "customer": "Coastal Foods"
+    }
+  },
+  {
+    "id": "pay_R424242012",
+    "entity": "payment",
+    "amount": 8748531,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242048",
+    "method": "netbanking",
+    "captured": true,
+    "description": "Payment from Kavya Organics",
+    "fee": 174971,
+    "tax": 31495,
+    "net": 8542065,
+    "created_at": 1785947391,
+    "captured_date": "2026-08-05",
+    "notes": {
+      "customer": "Kavya Organics"
+    }
+  },
+  {
+    "id": "pay_R424242010",
+    "entity": "payment",
+    "amount": 122504,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242004",
+    "method": "upi",
+    "captured": true,
+    "description": "Payment from Deccan Spice Co",
+    "fee": 2450,
+    "tax": 441,
+    "net": 119613,
+    "created_at": 1785948601,
+    "captured_date": "2026-08-05",
+    "notes": {
+      "customer": "Deccan Spice Co"
+    }
+  },
+  {
+    "id": "pay_R424242013",
+    "entity": "payment",
+    "amount": 131800,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242066",
+    "method": "upi",
+    "captured": true,
+    "description": "Payment from Anand Traders",
+    "fee": 2636,
+    "tax": 474,
+    "net": 128690,
+    "created_at": 1785959603,
+    "captured_date": "2026-08-05",
+    "notes": {
+      "customer": "Anand Traders"
+    }
+  },
+  {
+    "id": "pay_R424242016",
+    "entity": "payment",
+    "amount": 1046300,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242054",
+    "method": "card",
+    "captured": true,
+    "description": "Payment from Lakshmi Silks",
+    "fee": 20926,
+    "tax": 3767,
+    "net": 1021607,
+    "created_at": 1786024400,
+    "captured_date": "2026-08-06",
+    "notes": {
+      "customer": "Lakshmi Silks"
+    }
+  },
+  {
+    "id": "pay_R424242015",
+    "entity": "payment",
+    "amount": 199800,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242018",
+    "method": "upi",
+    "captured": true,
+    "description": "Payment from Kavya Organics",
+    "fee": 3996,
+    "tax": 719,
+    "net": 195085,
+    "created_at": 1786037772,
+    "captured_date": "2026-08-06",
+    "notes": {
+      "customer": "Kavya Organics"
+    }
+  },
+  {
+    "id": "pay_R424242020",
+    "entity": "payment",
+    "amount": 233847,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242026",
+    "method": "upi",
+    "captured": true,
+    "description": "Payment from Deccan Spice Co",
+    "fee": 4677,
+    "tax": 842,
+    "net": 228328,
+    "created_at": 1786091927,
+    "captured_date": "2026-08-07",
+    "notes": {
+      "customer": "Deccan Spice Co"
+    }
+  },
+  {
+    "id": "pay_R424242022",
+    "entity": "payment",
+    "amount": 17617300,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242037",
+    "method": "card",
+    "captured": true,
+    "description": "Payment from Patel Hardware",
+    "fee": 352346,
+    "tax": 63422,
+    "net": 17201532,
+    "created_at": 1786106278,
+    "captured_date": "2026-08-07",
+    "notes": {
+      "customer": "Patel Hardware"
+    }
+  },
+  {
+    "id": "pay_R424242019",
+    "entity": "payment",
+    "amount": 90100,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242020",
+    "method": "card",
+    "captured": true,
+    "description": "Payment from Patel Hardware",
+    "fee": 1802,
+    "tax": 324,
+    "net": 87974,
+    "created_at": 1786114310,
+    "captured_date": "2026-08-07",
+    "notes": {
+      "customer": "Patel Hardware"
+    }
+  },
+  {
+    "id": "pay_R424242021",
+    "entity": "payment",
+    "amount": 22748,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242033",
+    "method": "card",
+    "captured": true,
+    "description": "Payment from Kavya Organics",
+    "fee": 455,
+    "tax": 82,
+    "net": 22211,
+    "created_at": 1786119577,
+    "captured_date": "2026-08-07",
+    "notes": {
+      "customer": "Kavya Organics"
+    }
+  },
+  {
+    "id": "pay_R424242023",
+    "entity": "payment",
+    "amount": 17617300,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242065",
+    "method": "netbanking",
+    "captured": true,
+    "description": "Payment from Anand Traders",
+    "fee": 352346,
+    "tax": 63422,
+    "net": 17201532,
+    "created_at": 1786119599,
+    "captured_date": "2026-08-07",
+    "notes": {
+      "customer": "Anand Traders"
+    }
+  },
+  {
+    "id": "pay_R424242024",
+    "entity": "payment",
+    "amount": 2095833,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242057",
+    "method": "upi",
+    "captured": true,
+    "description": "Payment from Verma Auto Parts",
+    "fee": 41917,
+    "tax": 7545,
+    "net": 2046371,
+    "created_at": 1786199350,
+    "captured_date": "2026-08-08",
+    "notes": {
+      "customer": "Verma Auto Parts"
+    }
+  },
+  {
+    "id": "pay_R424242025",
+    "entity": "payment",
+    "amount": 1566531,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242031",
+    "method": "card",
+    "captured": true,
+    "description": "Payment from Kavya Organics",
+    "fee": 31331,
+    "tax": 5640,
+    "net": 1529560,
+    "created_at": 1786270328,
+    "captured_date": "2026-08-09",
+    "notes": {
+      "customer": "Kavya Organics"
+    }
+  },
+  {
+    "id": "pay_R424242031",
+    "entity": "payment",
+    "amount": 205083,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242056",
+    "method": "netbanking",
+    "captured": true,
+    "description": "Payment from Aarav Print House",
+    "fee": 4102,
+    "tax": 738,
+    "net": 200243,
+    "created_at": 1786358491,
+    "captured_date": "2026-08-10",
+    "notes": {
+      "customer": "Aarav Print House"
+    }
+  },
+  {
+    "id": "pay_R424242030",
+    "entity": "payment",
+    "amount": 212847,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242053",
+    "method": "card",
+    "captured": true,
+    "description": "Payment from Rohit Electronics",
+    "fee": 4257,
+    "tax": 766,
+    "net": 207824,
+    "created_at": 1786361816,
+    "captured_date": "2026-08-10",
+    "notes": {
+      "customer": "Rohit Electronics"
+    }
+  },
+  {
+    "id": "pay_R424242026",
+    "entity": "payment",
+    "amount": 898664,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242023",
+    "method": "upi",
+    "captured": true,
+    "description": "Payment from Coastal Foods",
+    "fee": 17973,
+    "tax": 3235,
+    "net": 877456,
+    "created_at": 1786363896,
+    "captured_date": "2026-08-10",
+    "notes": {
+      "customer": "Coastal Foods"
+    }
+  },
+  {
+    "id": "pay_R424242028",
+    "entity": "payment",
+    "amount": 2086300,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242034",
+    "method": "card",
+    "captured": true,
+    "description": "Payment from Sunrise Stationers",
+    "fee": 41726,
+    "tax": 7511,
+    "net": 2037063,
+    "created_at": 1786378921,
+    "captured_date": "2026-08-10",
+    "notes": {
+      "customer": "Sunrise Stationers"
+    }
+  },
+  {
+    "id": "pay_R424242007",
+    "entity": "payment",
+    "amount": 681200,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242059",
+    "method": "card",
+    "captured": true,
+    "description": "Payment from Anand Traders",
+    "fee": 13624,
+    "tax": 2452,
+    "net": 665124,
+    "created_at": 1786384534,
+    "captured_date": "2026-08-10",
+    "notes": {
+      "customer": "Anand Traders"
+    }
+  },
+  {
+    "id": "pay_U424242004",
+    "entity": "payment",
+    "amount": 968200,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": null,
+    "method": "upi",
+    "captured": true,
+    "description": "Payment link",
+    "fee": 19364,
+    "tax": 3486,
+    "net": 945350,
+    "created_at": 1786441428,
+    "captured_date": "2026-08-11",
+    "notes": {}
+  },
+  {
+    "id": "pay_U424242002",
+    "entity": "payment",
+    "amount": 58700,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": null,
+    "method": "upi",
+    "captured": true,
+    "description": "Payment link",
+    "fee": 1174,
+    "tax": 211,
+    "net": 57315,
+    "created_at": 1786453678,
+    "captured_date": "2026-08-11",
+    "notes": {}
+  },
+  {
+    "id": "pay_R424242034",
+    "entity": "payment",
+    "amount": 1141200,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242055",
+    "method": "card",
+    "captured": true,
+    "description": "Payment from Patel Hardware",
+    "fee": 22824,
+    "tax": 4108,
+    "net": 1114268,
+    "created_at": 1786464487,
+    "captured_date": "2026-08-11",
+    "notes": {
+      "customer": "Patel Hardware"
+    }
+  },
+  {
+    "id": "pay_R424242029",
+    "entity": "payment",
+    "amount": 1780575,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242046",
+    "method": "netbanking",
+    "captured": true,
+    "description": "Payment from Patel Hardware",
+    "fee": 35612,
+    "tax": 6410,
+    "net": 1738553,
+    "created_at": 1786468760,
+    "captured_date": "2026-08-11",
+    "notes": {
+      "customer": "Patel Hardware"
+    }
+  },
+  {
+    "id": "pay_R424242035",
+    "entity": "payment",
+    "amount": 1063300,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242062",
+    "method": "upi",
+    "captured": true,
+    "description": "Payment from Patel Hardware",
+    "fee": 21266,
+    "tax": 3828,
+    "net": 1038206,
+    "created_at": 1786471915,
+    "captured_date": "2026-08-11",
+    "notes": {
+      "customer": "Patel Hardware"
+    }
+  },
+  {
+    "id": "pay_R424242036",
+    "entity": "payment",
+    "amount": 29600,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242071",
+    "method": "netbanking",
+    "captured": true,
+    "description": "Payment from Meera Textiles",
+    "fee": 592,
+    "tax": 107,
+    "net": 28901,
+    "created_at": 1786472609,
+    "captured_date": "2026-08-11",
+    "notes": {
+      "customer": "Meera Textiles"
+    }
+  },
+  {
+    "id": "pay_R424242033",
+    "entity": "payment",
+    "amount": 8247707,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242041",
+    "method": "wallet",
+    "captured": true,
+    "description": "Payment from Rohit Electronics",
+    "fee": 164954,
+    "tax": 29692,
+    "net": 8053061,
+    "created_at": 1786481757,
+    "captured_date": "2026-08-11",
+    "notes": {
+      "customer": "Rohit Electronics"
+    }
+  },
+  {
+    "id": "pay_R424242037",
+    "entity": "payment",
+    "amount": 887900,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242030",
+    "method": "upi",
+    "captured": true,
+    "description": "Payment from Nimbus Softworks",
+    "fee": 17758,
+    "tax": 3196,
+    "net": 866946,
+    "created_at": 1786524530,
+    "captured_date": "2026-08-12",
+    "notes": {
+      "customer": "Nimbus Softworks"
+    }
+  },
+  {
+    "id": "pay_R424242038",
+    "entity": "payment",
+    "amount": 73600,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242064",
+    "method": "wallet",
+    "captured": true,
+    "description": "Payment from Patel Hardware",
+    "fee": 1472,
+    "tax": 265,
+    "net": 71863,
+    "created_at": 1786564503,
+    "captured_date": "2026-08-12",
+    "notes": {
+      "customer": "Patel Hardware"
+    }
+  },
+  {
+    "id": "pay_R424242040",
+    "entity": "payment",
+    "amount": 741900,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242021",
+    "method": "upi",
+    "captured": true,
+    "description": "Payment from Meera Textiles",
+    "fee": 14838,
+    "tax": 2671,
+    "net": 724391,
+    "created_at": 1786622970,
+    "captured_date": "2026-08-13",
+    "notes": {
+      "customer": "Meera Textiles"
+    }
+  },
+  {
+    "id": "pay_R424242042",
+    "entity": "payment",
+    "amount": 1544191,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242044",
+    "method": "upi",
+    "captured": true,
+    "description": "Payment from Coastal Foods",
+    "fee": 30884,
+    "tax": 5559,
+    "net": 1507748,
+    "created_at": 1786629138,
+    "captured_date": "2026-08-13",
+    "notes": {
+      "customer": "Coastal Foods"
+    }
+  },
+  {
+    "id": "pay_R424242018",
+    "entity": "payment",
+    "amount": 4165313,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242014",
+    "method": "upi",
+    "captured": true,
+    "description": "Payment from Sunrise Stationers",
+    "fee": 83306,
+    "tax": 14995,
+    "net": 4067012,
+    "created_at": 1786639921,
+    "captured_date": "2026-08-13",
+    "notes": {
+      "customer": "Sunrise Stationers"
+    }
+  },
+  {
+    "id": "pay_R424242039",
+    "entity": "payment",
+    "amount": 921000,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242005",
+    "method": "netbanking",
+    "captured": true,
+    "description": "Payment from Aarav Print House",
+    "fee": 18420,
+    "tax": 3316,
+    "net": 899264,
+    "created_at": 1786646664,
+    "captured_date": "2026-08-13",
+    "notes": {
+      "customer": "Aarav Print House"
+    }
+  },
+  {
+    "id": "pay_R424242046",
+    "entity": "payment",
+    "amount": 31100,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242043",
+    "method": "card",
+    "captured": true,
+    "description": "Payment from Kavya Organics",
+    "fee": 622,
+    "tax": 112,
+    "net": 30366,
+    "created_at": 1786703366,
+    "captured_date": "2026-08-14",
+    "notes": {
+      "customer": "Kavya Organics"
+    }
+  },
+  {
+    "id": "pay_R424242047",
+    "entity": "payment",
+    "amount": 2114636,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242060",
+    "method": "wallet",
+    "captured": true,
+    "description": "Payment from Deccan Spice Co",
+    "fee": 42293,
+    "tax": 7613,
+    "net": 2064730,
+    "created_at": 1786705860,
+    "captured_date": "2026-08-14",
+    "notes": {
+      "customer": "Deccan Spice Co"
+    }
+  },
+  {
+    "id": "pay_R424242045",
+    "entity": "payment",
+    "amount": 37900,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242038",
+    "method": "card",
+    "captured": true,
+    "description": "Payment from Rohit Electronics",
+    "fee": 758,
+    "tax": 136,
+    "net": 37006,
+    "created_at": 1786707435,
+    "captured_date": "2026-08-14",
+    "notes": {
+      "customer": "Rohit Electronics"
+    }
+  },
+  {
+    "id": "pay_R424242027",
+    "entity": "payment",
+    "amount": 114715,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242027",
+    "method": "upi",
+    "captured": true,
+    "description": "Payment from Rohit Electronics",
+    "fee": 2294,
+    "tax": 413,
+    "net": 112008,
+    "created_at": 1786714443,
+    "captured_date": "2026-08-14",
+    "notes": {
+      "customer": "Rohit Electronics"
+    }
+  },
+  {
+    "id": "pay_R424242044",
+    "entity": "payment",
+    "amount": 99700,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242013",
+    "method": "wallet",
+    "captured": true,
+    "description": "Payment from Coastal Foods",
+    "fee": 1994,
+    "tax": 359,
+    "net": 97347,
+    "created_at": 1786729726,
+    "captured_date": "2026-08-14",
+    "notes": {
+      "customer": "Coastal Foods"
+    }
+  },
+  {
+    "id": "pay_R424242032",
+    "entity": "payment",
+    "amount": 403885,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242029",
+    "method": "netbanking",
+    "captured": true,
+    "description": "Payment from Nimbus Softworks",
+    "fee": 8078,
+    "tax": 1454,
+    "net": 394353,
+    "created_at": 1786807970,
+    "captured_date": "2026-08-15",
+    "notes": {
+      "customer": "Nimbus Softworks"
+    }
+  },
+  {
+    "id": "pay_R424242048",
+    "entity": "payment",
+    "amount": 354300,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242050",
+    "method": "card",
+    "captured": true,
+    "description": "Payment from Patel Hardware",
+    "fee": 7086,
+    "tax": 1275,
+    "net": 345939,
+    "created_at": 1786869075,
+    "captured_date": "2026-08-16",
+    "notes": {
+      "customer": "Patel Hardware"
+    }
+  },
+  {
+    "id": "pay_R424242041",
+    "entity": "payment",
+    "amount": 1080200,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242042",
+    "method": "upi",
+    "captured": true,
+    "description": "Payment from Nimbus Softworks",
+    "fee": 21604,
+    "tax": 3889,
+    "net": 1054707,
+    "created_at": 1786901241,
+    "captured_date": "2026-08-16",
+    "notes": {
+      "customer": "Nimbus Softworks"
+    }
+  },
+  {
+    "id": "pay_R424242050",
+    "entity": "payment",
+    "amount": 137300,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242003",
+    "method": "upi",
+    "captured": true,
+    "description": "Payment from Kavya Organics",
+    "fee": 2746,
+    "tax": 494,
+    "net": 134060,
+    "created_at": 1786974234,
+    "captured_date": "2026-08-17",
+    "notes": {
+      "customer": "Kavya Organics"
+    }
+  },
+  {
+    "id": "pay_R424242051",
+    "entity": "payment",
+    "amount": 92251,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242049",
+    "method": "upi",
+    "captured": true,
+    "description": "Payment from Lakshmi Silks",
+    "fee": 1845,
+    "tax": 332,
+    "net": 90074,
+    "created_at": 1786987958,
+    "captured_date": "2026-08-17",
+    "notes": {
+      "customer": "Lakshmi Silks"
+    }
+  },
+  {
+    "id": "pay_U424242000",
+    "entity": "payment",
+    "amount": 2695300,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": null,
+    "method": "upi",
+    "captured": true,
+    "description": "Payment link",
+    "fee": 53906,
+    "tax": 9703,
+    "net": 2631691,
+    "created_at": 1787130423,
+    "captured_date": "2026-08-19",
+    "notes": {}
+  },
+  {
+    "id": "pay_R424242053",
+    "entity": "payment",
+    "amount": 183000,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242011",
+    "method": "card",
+    "captured": true,
+    "description": "Payment from Kavya Organics",
+    "fee": 3660,
+    "tax": 659,
+    "net": 178681,
+    "created_at": 1787137105,
+    "captured_date": "2026-08-19",
+    "notes": {
+      "customer": "Kavya Organics"
+    }
+  },
+  {
+    "id": "pay_R424242054",
+    "entity": "payment",
+    "amount": 533760,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242051",
+    "method": "netbanking",
+    "captured": true,
+    "description": "Payment from Sunrise Stationers",
+    "fee": 10675,
+    "tax": 1922,
+    "net": 521163,
+    "created_at": 1787165255,
+    "captured_date": "2026-08-19",
+    "notes": {
+      "customer": "Sunrise Stationers"
+    }
+  },
+  {
+    "id": "pay_U424242001",
+    "entity": "payment",
+    "amount": 1281900,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": null,
+    "method": "upi",
+    "captured": true,
+    "description": "Payment link",
+    "fee": 25638,
+    "tax": 4615,
+    "net": 1251647,
+    "created_at": 1787172300,
+    "captured_date": "2026-08-19",
+    "notes": {}
+  },
+  {
+    "id": "pay_R424242059",
+    "entity": "payment",
+    "amount": 41879,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242069",
+    "method": "netbanking",
+    "captured": true,
+    "description": "Payment from Anand Traders",
+    "fee": 838,
+    "tax": 151,
+    "net": 40890,
+    "created_at": 1787218463,
+    "captured_date": "2026-08-20",
+    "notes": {
+      "customer": "Anand Traders"
+    }
+  },
+  {
+    "id": "pay_R424242043",
+    "entity": "payment",
+    "amount": 1019467,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242012",
+    "method": "netbanking",
+    "captured": true,
+    "description": "Payment from Rohit Electronics",
+    "fee": 20389,
+    "tax": 3670,
+    "net": 995408,
+    "created_at": 1787221334,
+    "captured_date": "2026-08-20",
+    "notes": {
+      "customer": "Rohit Electronics"
+    }
+  },
+  {
+    "id": "pay_R424242058",
+    "entity": "payment",
+    "amount": 126247,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242022",
+    "method": "wallet",
+    "captured": true,
+    "description": "Payment from Sunrise Stationers",
+    "fee": 2525,
+    "tax": 455,
+    "net": 123267,
+    "created_at": 1787226418,
+    "captured_date": "2026-08-20",
+    "notes": {
+      "customer": "Sunrise Stationers"
+    }
+  },
+  {
+    "id": "pay_R424242057",
+    "entity": "payment",
+    "amount": 237590,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242019",
+    "method": "netbanking",
+    "captured": true,
+    "description": "Payment from Patel Hardware",
+    "fee": 4752,
+    "tax": 855,
+    "net": 231983,
+    "created_at": 1787232237,
+    "captured_date": "2026-08-20",
+    "notes": {
+      "customer": "Patel Hardware"
+    }
+  },
+  {
+    "id": "pay_U424242003",
+    "entity": "payment",
+    "amount": 745500,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": null,
+    "method": "upi",
+    "captured": true,
+    "description": "Payment link",
+    "fee": 14910,
+    "tax": 2684,
+    "net": 727906,
+    "created_at": 1787303869,
+    "captured_date": "2026-08-21",
+    "notes": {}
+  },
+  {
+    "id": "pay_R424242064",
+    "entity": "payment",
+    "amount": 1622800,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242068",
+    "method": "netbanking",
+    "captured": true,
+    "description": "Payment from Verma Auto Parts",
+    "fee": 32456,
+    "tax": 5842,
+    "net": 1584502,
+    "created_at": 1787305421,
+    "captured_date": "2026-08-21",
+    "notes": {
+      "customer": "Verma Auto Parts"
+    }
+  },
+  {
+    "id": "pay_R424242062",
+    "entity": "payment",
+    "amount": 8030100,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242036",
+    "method": "upi",
+    "captured": true,
+    "description": "Payment from Anand Traders",
+    "fee": 160602,
+    "tax": 28908,
+    "net": 7840590,
+    "created_at": 1787309932,
+    "captured_date": "2026-08-21",
+    "notes": {
+      "customer": "Anand Traders"
+    }
+  },
+  {
+    "id": "pay_R424242055",
+    "entity": "payment",
+    "amount": 480300,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242063",
+    "method": "upi",
+    "captured": true,
+    "description": "Payment from Deccan Spice Co",
+    "fee": 9606,
+    "tax": 1729,
+    "net": 468965,
+    "created_at": 1787327400,
+    "captured_date": "2026-08-21",
+    "notes": {
+      "customer": "Deccan Spice Co"
+    }
+  },
+  {
+    "id": "pay_R424242063",
+    "entity": "payment",
+    "amount": 1622800,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242052",
+    "method": "wallet",
+    "captured": true,
+    "description": "Payment from Sunrise Stationers",
+    "fee": 32456,
+    "tax": 5842,
+    "net": 1584502,
+    "created_at": 1787333906,
+    "captured_date": "2026-08-21",
+    "notes": {
+      "customer": "Sunrise Stationers"
+    }
+  },
+  {
+    "id": "pay_R424242052",
+    "entity": "payment",
+    "amount": 192226,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242002",
+    "method": "netbanking",
+    "captured": true,
+    "description": "Payment from Kavya Organics",
+    "fee": 3845,
+    "tax": 692,
+    "net": 187689,
+    "created_at": 1787393043,
+    "captured_date": "2026-08-22",
+    "notes": {
+      "customer": "Kavya Organics"
+    }
+  },
+  {
+    "id": "pay_R424242056",
+    "entity": "payment",
+    "amount": 1505300,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242017",
+    "method": "upi",
+    "captured": true,
+    "description": "Payment from Kavya Organics",
+    "fee": 30106,
+    "tax": 5419,
+    "net": 1469775,
+    "created_at": 1787398740,
+    "captured_date": "2026-08-22",
+    "notes": {
+      "customer": "Kavya Organics"
+    }
+  },
+  {
+    "id": "pay_R424242061",
+    "entity": "payment",
+    "amount": 97700,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242009",
+    "method": "upi",
+    "captured": true,
+    "description": "Payment from Coastal Foods",
+    "fee": 1954,
+    "tax": 352,
+    "net": 95394,
+    "created_at": 1787404639,
+    "captured_date": "2026-08-22",
+    "notes": {
+      "customer": "Coastal Foods"
+    }
+  },
+  {
+    "id": "pay_R424242065",
+    "entity": "payment",
+    "amount": 13515453,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242007",
+    "method": "netbanking",
+    "captured": true,
+    "description": "Payment from Meera Textiles",
+    "fee": 270309,
+    "tax": 48656,
+    "net": 13196488,
+    "created_at": 1787410701,
+    "captured_date": "2026-08-22",
+    "notes": {
+      "customer": "Meera Textiles"
+    }
+  },
+  {
+    "id": "pay_R424242049",
+    "entity": "payment",
+    "amount": 1461909,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242067",
+    "method": "wallet",
+    "captured": true,
+    "description": "Payment from Patel Hardware",
+    "fee": 29238,
+    "tax": 5263,
+    "net": 1427408,
+    "created_at": 1787422648,
+    "captured_date": "2026-08-22",
+    "notes": {
+      "customer": "Patel Hardware"
+    }
+  },
+  {
+    "id": "pay_R424242066",
+    "entity": "payment",
+    "amount": 206200,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242010",
+    "method": "netbanking",
+    "captured": true,
+    "description": "Payment from Patel Hardware",
+    "fee": 4124,
+    "tax": 742,
+    "net": 201334,
+    "created_at": 1787429126,
+    "captured_date": "2026-08-22",
+    "notes": {
+      "customer": "Patel Hardware"
+    }
+  },
+  {
+    "id": "pay_R424242068",
+    "entity": "payment",
+    "amount": 684000,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242039",
+    "method": "upi",
+    "captured": true,
+    "description": "Payment from Meera Textiles",
+    "fee": 13680,
+    "tax": 2462,
+    "net": 667858,
+    "created_at": 1787473223,
+    "captured_date": "2026-08-23",
+    "notes": {
+      "customer": "Meera Textiles"
+    }
+  },
+  {
+    "id": "pay_R424242069",
+    "entity": "payment",
+    "amount": 684000,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242058",
+    "method": "upi",
+    "captured": true,
+    "description": "Payment from Nimbus Softworks",
+    "fee": 13680,
+    "tax": 2462,
+    "net": 667858,
+    "created_at": 1787514364,
+    "captured_date": "2026-08-23",
+    "notes": {
+      "customer": "Nimbus Softworks"
+    }
+  },
+  {
+    "id": "pay_R424242070",
+    "entity": "payment",
+    "amount": 910424,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242016",
+    "method": "card",
+    "captured": true,
+    "description": "Payment from Meera Textiles",
+    "fee": 18208,
+    "tax": 3277,
+    "net": 888939,
+    "created_at": 1787594438,
+    "captured_date": "2026-08-24",
+    "notes": {
+      "customer": "Meera Textiles"
+    }
+  },
+  {
+    "id": "pay_R424242071",
+    "entity": "payment",
+    "amount": 510717,
+    "currency": "INR",
+    "status": "captured",
+    "order_id": "order_R424242047",
+    "method": "wallet",
+    "captured": true,
+    "description": "Payment from Verma Auto Parts",
+    "fee": 10214,
+    "tax": 1839,
+    "net": 498664,
+    "created_at": 1787821572,
+    "captured_date": "2026-08-27",
+    "notes": {
+      "customer": "Verma Auto Parts"
+    }
+  }
+]

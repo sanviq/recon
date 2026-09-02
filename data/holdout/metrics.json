@@ -1,0 +1,66 @@
+{
+  "dataset": "data/holdout",
+  "seed": 424242,
+  "generated_at": "2026-09-02T12:15:59.268Z",
+  "throughput": {
+    "records": 173,
+    "elapsed_ms": 3.3,
+    "records_per_second": 51751
+  },
+  "volume": {
+    "ledger_rows": 72,
+    "payments": 72,
+    "bank_rows": 29,
+    "settlement_batches": 22
+  },
+  "accuracy": {
+    "match_rate": 0.5556,
+    "precision_auto_matched": 1,
+    "recall": 1,
+    "f1": 1,
+    "true_positive": 40,
+    "false_positive": 0,
+    "false_negative": 0,
+    "true_negative": 32,
+    "misrouted_matches": 0,
+    "reason_code_accuracy": 1,
+    "bank_row_accuracy": 1
+  },
+  "value": {
+    "auto_reconciled_paise": 48290913,
+    "flagged_paise": 70439818,
+    "auto_reconciled_share": 0.4067,
+    "unexplained_bank_credit_paise": 40090574
+  },
+  "exceptions_by_reason": {
+    "amount_mismatch": 11,
+    "missing_counterpart": 5,
+    "duplicate_utr": 2,
+    "date_out_of_window": 4,
+    "ambiguous_candidates": 10,
+    "unresolved": 0
+  },
+  "matches_by_rule": {
+    "A2_exact_amount_in_window+B1_batch_utr_exact": 27,
+    "A3_fuzzy_amount_in_window+B1_batch_utr_exact": 5,
+    "A1_exact_order_ref+B1_batch_utr_exact": 2,
+    "A3_fuzzy_amount_in_window+B3_batch_utr_split_credits": 3,
+    "A2_exact_amount_in_window+B3_batch_utr_split_credits": 3
+  },
+  "reason_confusion": {
+    "amount_mismatch -> amount_mismatch": 11,
+    "ambiguous_candidates -> ambiguous_candidates": 10,
+    "missing_counterpart -> missing_counterpart": 5,
+    "duplicate_utr -> duplicate_utr": 2,
+    "date_out_of_window -> date_out_of_window": 4
+  },
+  "misroutes": [],
+  "disagreements": [],
+  "ground_truth": {
+    "ledger_matched": 40,
+    "ledger_exceptions": 32,
+    "bank_matched": 18,
+    "bank_exceptions": 11,
+    "settlements": 22
+  }
+}

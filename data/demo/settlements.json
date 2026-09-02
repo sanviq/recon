@@ -2,15 +2,14 @@
   {
     "id": "setl_R00000700",
     "entity": "settlement",
-    "amount": 2120748,
+    "amount": 1889439,
     "status": "processed",
-    "fees": 43440,
-    "tax": 7820,
-    "utr": "CITIN2608057696",
+    "fees": 38702,
+    "tax": 6967,
+    "utr": "CITIN2608055104",
     "created_at": 1785927600,
     "settled_date": "2026-08-05",
     "payment_ids": [
-      "pay_R00007002",
       "pay_R00007003",
       "pay_R00007001",
       "pay_R00007000"
@@ -19,81 +18,81 @@
   {
     "id": "setl_R00000701",
     "entity": "settlement",
-    "amount": 3386347,
+    "amount": 1456420,
     "status": "processed",
-    "fees": 69363,
-    "tax": 12486,
-    "utr": "AXISN2608064498",
+    "fees": 29832,
+    "tax": 5370,
+    "utr": "CITIN2608061587",
     "created_at": 1786014000,
     "settled_date": "2026-08-06",
     "payment_ids": [
-      "pay_R00007006",
-      "pay_R00007005",
-      "pay_R00007004",
-      "pay_U00007002"
+      "pay_R00007002",
+      "pay_R00007006"
     ]
   },
   {
     "id": "setl_R00000702",
     "entity": "settlement",
-    "amount": 12935542,
+    "amount": 13050830,
     "status": "processed",
-    "fees": 264964,
-    "tax": 47694,
-    "utr": "AXISN2608078365",
+    "fees": 267325,
+    "tax": 48119,
+    "utr": "AXISN2608071357",
     "created_at": 1786100400,
     "settled_date": "2026-08-07",
     "payment_ids": [
+      "pay_R00007005",
       "pay_R00007007"
     ]
   },
   {
     "id": "setl_R00000703",
     "entity": "settlement",
-    "amount": 539259,
+    "amount": 407247,
     "status": "processed",
-    "fees": 11046,
-    "tax": 1989,
-    "utr": "HDFCN2608080530",
+    "fees": 8342,
+    "tax": 1502,
+    "utr": "CITIN2608085579",
     "created_at": 1786186800,
     "settled_date": "2026-08-08",
     "payment_ids": [
-      "pay_R00007008",
+      "pay_R00007004",
+      "pay_R00007010",
       "pay_R00007009",
       "pay_R00007011",
-      "pay_R00007014",
-      "pay_R00007010",
-      "pay_R00007013",
-      "pay_R00007012"
+      "pay_R00007008",
+      "pay_R00007013"
     ]
   },
   {
     "id": "setl_R00000704",
     "entity": "settlement",
-    "amount": 54093,
+    "amount": 177021,
     "status": "processed",
-    "fees": 1108,
-    "tax": 199,
-    "utr": "CITIN2608098091",
+    "fees": 3626,
+    "tax": 653,
+    "utr": "AXISN2608094430",
     "created_at": 1786273200,
     "settled_date": "2026-08-09",
     "payment_ids": [
-      "pay_R00007015"
+      "pay_R00007014"
     ]
   },
   {
     "id": "setl_R00000705",
     "entity": "settlement",
-    "amount": 1495391,
+    "amount": 1614808,
     "status": "processed",
-    "fees": 30631,
-    "tax": 5514,
-    "utr": "CITIN2608103674",
+    "fees": 33077,
+    "tax": 5954,
+    "utr": "AXISN2608109261",
     "created_at": 1786359600,
     "settled_date": "2026-08-10",
     "payment_ids": [
-      "pay_R00007017",
-      "pay_R00007018"
+      "pay_R00007015",
+      "pay_R00007012",
+      "pay_R00007018",
+      "pay_R00007017"
     ]
   },
   {
@@ -103,12 +102,12 @@
     "status": "processed",
     "fees": 299252,
     "tax": 53865,
-    "utr": "AXISN2608116777",
+    "utr": "HDFCN2608110044",
     "created_at": 1786446000,
     "settled_date": "2026-08-11",
     "payment_ids": [
-      "pay_R00007022",
       "pay_R00007021",
+      "pay_R00007022",
       "pay_R00007023",
       "pay_R00007020"
     ]
@@ -116,11 +115,11 @@
   {
     "id": "setl_R00000707",
     "entity": "settlement",
-    "amount": 513293,
+    "amount": 1154202,
     "status": "processed",
-    "fees": 10514,
-    "tax": 1893,
-    "utr": "HDFCN2608125089",
+    "fees": 23642,
+    "tax": 4256,
+    "utr": "CITIN2608124629",
     "created_at": 1786532400,
     "settled_date": "2026-08-12",
     "payment_ids": [
@@ -131,65 +130,63 @@
   {
     "id": "setl_R00000708",
     "entity": "settlement",
-    "amount": 4158019,
+    "amount": 2033364,
     "status": "processed",
-    "fees": 85170,
-    "tax": 15330,
-    "utr": "AXISN2608136981",
+    "fees": 41650,
+    "tax": 7496,
+    "utr": "AXISN2608138659",
     "created_at": 1786618800,
     "settled_date": "2026-08-13",
     "payment_ids": [
-      "pay_R00007026",
-      "pay_R00007027",
       "pay_R00007025",
-      "pay_R00007028"
+      "pay_R00007028",
+      "pay_R00007026"
     ]
   },
   {
     "id": "setl_R00000709",
     "entity": "settlement",
-    "amount": 2843983,
+    "amount": 2641380,
     "status": "processed",
-    "fees": 58254,
-    "tax": 10486,
-    "utr": "ICICN2608142886",
+    "fees": 54104,
+    "tax": 9739,
+    "utr": "HDFCN2608145125",
     "created_at": 1786705200,
     "settled_date": "2026-08-14",
     "payment_ids": [
       "pay_R00007031",
-      "pay_R00007029",
-      "pay_R00007032"
+      "pay_R00007029"
     ]
   },
   {
     "id": "setl_R00000710",
     "entity": "settlement",
-    "amount": 2345997,
+    "amount": 3541217,
     "status": "processed",
-    "fees": 48054,
-    "tax": 8649,
-    "utr": "CITIN2608159485",
+    "fees": 72536,
+    "tax": 13056,
+    "utr": "ICICN2608157671",
     "created_at": 1786791600,
     "settled_date": "2026-08-15",
     "payment_ids": [
-      "pay_R00007036",
+      "pay_R00007027",
+      "pay_R00007034",
       "pay_R00007033",
-      "pay_R00007035",
-      "pay_R00007034"
+      "pay_R00007035"
     ]
   },
   {
     "id": "setl_R00000711",
     "entity": "settlement",
-    "amount": 4392765,
+    "amount": 3445801,
     "status": "processed",
-    "fees": 89979,
-    "tax": 16196,
-    "utr": "AXISN2608163700",
+    "fees": 70582,
+    "tax": 12705,
+    "utr": "HDFCN2608160717",
     "created_at": 1786878000,
     "settled_date": "2026-08-16",
     "payment_ids": [
-      "pay_R00007037",
+      "pay_R00007032",
       "pay_R00007039",
       "pay_R00007038"
     ]
@@ -197,163 +194,153 @@
   {
     "id": "setl_R00000712",
     "entity": "settlement",
-    "amount": 2390325,
+    "amount": 4469327,
     "status": "processed",
-    "fees": 48962,
-    "tax": 8813,
-    "utr": "HDFCN2608176205",
+    "fees": 91547,
+    "tax": 16478,
+    "utr": "ICICN2608171628",
     "created_at": 1786964400,
     "settled_date": "2026-08-17",
     "payment_ids": [
-      "pay_R00007040"
+      "pay_R00007037",
+      "pay_R00007040",
+      "pay_R00007036"
     ]
   },
   {
     "id": "setl_R00000713",
     "entity": "settlement",
-    "amount": 3500492,
+    "amount": 13646231,
     "status": "processed",
-    "fees": 71702,
-    "tax": 12906,
-    "utr": "AXISN2608180975",
-    "created_at": 1787050800,
-    "settled_date": "2026-08-18",
+    "fees": 279521,
+    "tax": 50313,
+    "utr": "CITIN2608194900",
+    "created_at": 1787137200,
+    "settled_date": "2026-08-19",
     "payment_ids": [
-      "pay_U00007001"
+      "pay_R00007042",
+      "pay_R00007044"
     ]
   },
   {
     "id": "setl_R00000714",
     "entity": "settlement",
-    "amount": 14623022,
+    "amount": 28550932,
     "status": "processed",
-    "fees": 299529,
-    "tax": 53914,
-    "utr": "CITIN2608192620",
-    "created_at": 1787137200,
-    "settled_date": "2026-08-19",
+    "fees": 584820,
+    "tax": 105267,
+    "utr": "ICICN2608200061",
+    "created_at": 1787223600,
+    "settled_date": "2026-08-20",
     "payment_ids": [
-      "pay_R00007042",
-      "pay_R00007044",
-      "pay_R00007043"
+      "pay_R00007050",
+      "pay_R00007047",
+      "pay_R00007046",
+      "pay_R00007048",
+      "pay_R00007045"
     ]
   },
   {
     "id": "setl_R00000715",
     "entity": "settlement",
-    "amount": 28670647,
+    "amount": 3274170,
     "status": "processed",
-    "fees": 587272,
-    "tax": 105708,
-    "utr": "AXISN2608208272",
-    "created_at": 1787223600,
-    "settled_date": "2026-08-20",
+    "fees": 67066,
+    "tax": 12072,
+    "utr": "HDFCN2608219874",
+    "created_at": 1787310000,
+    "settled_date": "2026-08-21",
     "payment_ids": [
+      "pay_R00007043",
+      "pay_R00007051",
+      "pay_R00007052",
       "pay_R00007049",
-      "pay_R00007045",
-      "pay_R00007050",
-      "pay_R00007047",
-      "pay_R00007046",
-      "pay_R00007048"
+      "pay_R00007054"
     ]
   },
   {
     "id": "setl_R00000716",
     "entity": "settlement",
-    "amount": 4597183,
+    "amount": 2595209,
     "status": "processed",
-    "fees": 94166,
-    "tax": 16951,
-    "utr": "AXISN2608217887",
-    "created_at": 1787310000,
-    "settled_date": "2026-08-21",
-    "payment_ids": [
-      "pay_R00007054",
-      "pay_R00007052",
-      "pay_R00007051",
-      "pay_R00007053"
-    ]
-  },
-  {
-    "id": "setl_R00000717",
-    "entity": "settlement",
-    "amount": 175690,
-    "status": "processed",
-    "fees": 3599,
-    "tax": 647,
-    "utr": "HDFCN2608223279",
+    "fees": 53159,
+    "tax": 9568,
+    "utr": "ICICN2608227847",
     "created_at": 1787396400,
     "settled_date": "2026-08-22",
     "payment_ids": [
+      "pay_R00007053",
       "pay_R00007056",
       "pay_R00007055"
     ]
   },
   {
-    "id": "setl_R00000718",
+    "id": "setl_R00000717",
     "entity": "settlement",
-    "amount": 13289722,
+    "amount": 348575,
     "status": "processed",
-    "fees": 272219,
-    "tax": 48999,
-    "utr": "HDFCN2608230924",
+    "fees": 7140,
+    "tax": 1285,
+    "utr": "AXISN2608236750",
     "created_at": 1787482800,
     "settled_date": "2026-08-23",
     "payment_ids": [
-      "pay_R00007059",
-      "pay_R00007063",
+      "pay_R00007061",
       "pay_R00007060",
+      "pay_R00007058"
+    ]
+  },
+  {
+    "id": "setl_R00000718",
+    "entity": "settlement",
+    "amount": 2375094,
+    "status": "processed",
+    "fees": 48650,
+    "tax": 8757,
+    "utr": "HDFCN2608248497",
+    "created_at": 1787569200,
+    "settled_date": "2026-08-24",
+    "payment_ids": [
+      "pay_R00007064",
       "pay_R00007062",
-      "pay_R00007057",
-      "pay_R00007058",
-      "pay_R00007061"
+      "pay_R00007059"
     ]
   },
   {
     "id": "setl_R00000719",
     "entity": "settlement",
-    "amount": 208080,
+    "amount": 27211246,
     "status": "processed",
-    "fees": 4262,
-    "tax": 767,
-    "utr": "HDFCN2608241945",
-    "created_at": 1787569200,
-    "settled_date": "2026-08-24",
+    "fees": 557379,
+    "tax": 100327,
+    "utr": "HDFCN2608257681",
+    "created_at": 1787655600,
+    "settled_date": "2026-08-25",
     "payment_ids": [
-      "pay_R00007064"
+      "pay_R00007069",
+      "pay_R00007067",
+      "pay_R00007057",
+      "pay_U00007002",
+      "pay_R00007063",
+      "pay_R00007065",
+      "pay_R00007066",
+      "pay_U00007001"
     ]
   },
   {
     "id": "setl_R00000720",
     "entity": "settlement",
-    "amount": 10281497,
+    "amount": 1772264,
     "status": "processed",
-    "fees": 210600,
-    "tax": 37907,
-    "utr": "CITIN2608253342",
-    "created_at": 1787655600,
-    "settled_date": "2026-08-25",
-    "payment_ids": [
-      "pay_R00007065",
-      "pay_R00007068",
-      "pay_R00007067",
-      "pay_R00007069",
-      "pay_R00007066"
-    ]
-  },
-  {
-    "id": "setl_R00000721",
-    "entity": "settlement",
-    "amount": 1620531,
-    "status": "processed",
-    "fees": 33194,
-    "tax": 5975,
-    "utr": "ICICN2608262599",
+    "fees": 36302,
+    "tax": 6534,
+    "utr": "HDFCN2608260864",
     "created_at": 1787742000,
     "settled_date": "2026-08-26",
     "payment_ids": [
-      "pay_R00007071",
-      "pay_R00007070"
+      "pay_R00007068",
+      "pay_R00007070",
+      "pay_R00007071"
     ]
   }
 ]

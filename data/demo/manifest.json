@@ -11,18 +11,20 @@
     "ledgerTypoLarge": 3,
     "collisionPairs": 2,
     "blankRefRatio": 0.45,
+    "paymentDelayMaxDays": 2,
     "lateSettlements": 1,
     "shortCredits": 1,
     "duplicateCredits": 1,
+    "splitCredits": 0,
     "orphanCredits": 2
   },
-  "generated_at": "2026-09-02T12:05:40.976Z",
+  "generated_at": "2026-09-02T12:15:59.176Z",
   "counts": {
     "ledger": 72,
     "payments": 71,
-    "settlements": 22,
+    "settlements": 21,
     "recon_rows": 71,
-    "bank": 25
+    "bank": 24
   },
   "source": "synthetic"
 }

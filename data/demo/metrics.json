@@ -1,0 +1,64 @@
+{
+  "dataset": "data/demo",
+  "seed": 7,
+  "generated_at": "2026-09-02T12:10:33.538Z",
+  "throughput": {
+    "records": 167,
+    "elapsed_ms": 2.4,
+    "records_per_second": 70285
+  },
+  "volume": {
+    "ledger_rows": 72,
+    "payments": 71,
+    "bank_rows": 24,
+    "settlement_batches": 21
+  },
+  "accuracy": {
+    "match_rate": 0.6944,
+    "precision_auto_matched": 1,
+    "recall": 1,
+    "f1": 1,
+    "true_positive": 50,
+    "false_positive": 0,
+    "false_negative": 0,
+    "true_negative": 22,
+    "misrouted_matches": 0,
+    "reason_code_accuracy": 1,
+    "bank_row_accuracy": 1
+  },
+  "value": {
+    "auto_reconciled_paise": 113715163,
+    "flagged_paise": 35139563,
+    "auto_reconciled_share": 0.7639,
+    "unexplained_bank_credit_paise": 13293284
+  },
+  "exceptions_by_reason": {
+    "amount_mismatch": 8,
+    "missing_counterpart": 4,
+    "duplicate_utr": 3,
+    "date_out_of_window": 3,
+    "ambiguous_candidates": 4,
+    "unresolved": 0
+  },
+  "matches_by_rule": {
+    "A1_exact_order_ref+B1_batch_utr_exact": 28,
+    "A2_exact_amount_in_window+B1_batch_utr_exact": 18,
+    "A3_fuzzy_amount_in_window+B1_batch_utr_exact": 4
+  },
+  "reason_confusion": {
+    "amount_mismatch -> amount_mismatch": 8,
+    "ambiguous_candidates -> ambiguous_candidates": 4,
+    "missing_counterpart -> missing_counterpart": 4,
+    "duplicate_utr -> duplicate_utr": 3,
+    "date_out_of_window -> date_out_of_window": 3
+  },
+  "misroutes": [],
+  "disagreements": [],
+  "ground_truth": {
+    "ledger_matched": 50,
+    "ledger_exceptions": 22,
+    "bank_matched": 18,
+    "bank_exceptions": 6,
+    "settlements": 21
+  }
+}

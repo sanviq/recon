@@ -41,10 +41,42 @@ export const DEFAULT_FAULTS = {
   ledgerTypoLarge: 3,        // ledger amount wrong enough to be a real exception
   collisionPairs: 2,         // same amount, same day, no reference — ambiguous
   blankRefRatio: 0.45,       // share of ledger rows with no gateway reference
+  paymentDelayMaxDays: 2,    // how late a customer pays after the invoice date
   lateSettlements: 1,        // bank credit lands outside the lag window
   shortCredits: 1,           // bank deducted something the gateway did not report
   duplicateCredits: 1,       // bank double-posted a credit
+  splitCredits: 0,           // one payout arrives as two partial credits
   orphanCredits: 2,          // credit with a UTR Razorpay never issued
+};
+
+/**
+ * "standard" models a normal merchant month with an elevated fault rate.
+ *
+ * "hard" is the adversarial case, and it exists because the generator and the
+ * matcher were written by the same hand — clean numbers on friendly data prove
+ * nothing. It removes almost every gateway reference (so amount and date have to
+ * carry the load), lets customers pay up to six days after the invoice (wider
+ * than the matcher's own window, on purpose), and splits payouts across
+ * multiple credits. The engine is expected to lose recall here. It is not
+ * expected to lose precision — declining to match is acceptable, booking money
+ * to the wrong invoice is not.
+ */
+export const PROFILES = {
+  standard: {},
+  hard: {
+    blankRefRatio: 0.85,
+    paymentDelayMaxDays: 6,
+    collisionPairs: 5,
+    ledgerDriftSmall: 8,
+    ledgerTypoLarge: 4,
+    offlineInvoices: 5,
+    unrecordedPayments: 5,
+    lateSettlements: 2,
+    shortCredits: 2,
+    duplicateCredits: 2,
+    splitCredits: 2,
+    orphanCredits: 3,
+  },
 };
 
 export function generateDataset({
@@ -53,9 +85,10 @@ export function generateDataset({
   monthStart = '2026-08-03',
   days = 22,
   settlementLagDays = 2,
+  profile = 'standard',
   faults = {},
 } = {}) {
-  const f = { ...DEFAULT_FAULTS, ...faults };
+  const f = { ...DEFAULT_FAULTS, ...(PROFILES[profile] ?? {}), ...faults };
   const rng = makeRng(seed);
   const idTag = (n, width = 6) => String(n).padStart(width, '0');
 
@@ -109,12 +142,23 @@ export function generateDataset({
   const typoLargeIds = new Set(take(f.ledgerTypoLarge));
 
   // ---------------------------------------------------------------- payments
+  // Note there is deliberately no invoice number in notes or description. Real
+  // merchants frequently do not set them, and if every payment carried the
+  // invoice id the reconciliation problem would not exist — the only reliable
+  // join key here is order_ref <-> order_id, which the ledger is missing on
+  // roughly half its rows. That is the actual difficulty being modelled.
   const payments = [];
   const paymentByInvoice = new Map();
   invoices.forEach((inv, i) => {
     if (offlineIds.has(inv.invoice_id)) return; // paid by cash/cheque, no gateway record
     const { fee, tax, net } = razorpayFees(inv.amount);
-    const capturedAt = isoToUnix(inv.invoice_date) + rng.int(8 * 3600, 21 * 3600);
+    // Customers do not always pay the day the invoice is raised, so the payment
+    // date drifts from the ledger date and same-day matching is not enough.
+    // Collision invoices are held at zero drift so the tie stays genuinely
+    // unbreakable rather than being resolved by an accident of dates.
+    const delay = collisionIds.has(inv.invoice_id) ? 0
+      : rng.chance(0.35) ? rng.int(1, f.paymentDelayMaxDays) : 0;
+    const capturedDate = addDays(inv.invoice_date, delay);
     const p = {
       id: `pay_R${idTag(seed * 1000 + i, 8)}`,
       entity: 'payment',
@@ -124,13 +168,13 @@ export function generateDataset({
       order_id: inv.order_ref,
       method: rng.pick(METHODS),
       captured: true,
-      description: `Invoice ${inv.invoice_id}`,
+      description: `Payment from ${inv.customer}`,
       fee,
       tax,
       net,
-      created_at: capturedAt,
-      captured_date: inv.invoice_date,
-      notes: { invoice_ref: inv.invoice_id, customer: inv.customer },
+      created_at: isoToUnix(capturedDate) + rng.int(8 * 3600, 21 * 3600),
+      captured_date: capturedDate,
+      notes: { customer: inv.customer },
     };
     payments.push(p);
     paymentByInvoice.set(inv.invoice_id, p);
@@ -236,6 +280,10 @@ export function generateDataset({
   for (const s of pickSettlements(f.lateSettlements, isSmall)) settlementFaults.set(s.id, 'late');
   for (const s of pickSettlements(f.duplicateCredits, isSmall)) settlementFaults.set(s.id, 'duplicate');
   for (const s of pickSettlements(f.shortCredits)) settlementFaults.set(s.id, 'short');
+  // A split payout is not an error — Razorpay really does pay one settlement out
+  // in parts. It is here because a matcher that keys on "one UTR, one credit"
+  // will call it a duplicate and flag a perfectly good batch.
+  for (const s of pickSettlements(f.splitCredits, isSmall)) settlementFaults.set(s.id, 'split');
 
   // ------------------------------------------------------------------- bank
   const bank = [];
@@ -264,6 +312,28 @@ export function generateDataset({
       _settlement_id: s.id,
       _fault: fault ?? null,
     });
+
+    if (fault === 'split') {
+      // Rewrite the row just pushed as the first tranche, then post the rest a
+      // day later. The two credits sum to exactly the settlement amount.
+      const first = Math.round(credit * 0.6);
+      const row = bank[bank.length - 1];
+      row.credit = first;
+      row.balance = (balance -= credit - first);
+      const restDate = addDays(creditDate, 1);
+      balance += credit - first;
+      bank.push({
+        txn_id: nextTxnId(restDate),
+        value_date: restDate,
+        description: `NEFT CR RAZORPAY SOFTWARE PVT LTD ${s.utr}`,
+        utr: s.utr,
+        credit: credit - first,
+        debit: 0,
+        balance,
+        _settlement_id: s.id,
+        _fault: 'split',
+      });
+    }
 
     if (fault === 'duplicate') {
       // Same UTR posted twice. The cash position is now wrong by one settlement
@@ -306,26 +376,31 @@ export function generateDataset({
   // ----------------------------------------------------------------- ledger
   // The merchant's own book. Deliberately the messiest of the three: nearly half
   // the rows have no gateway reference, and a handful of amounts are wrong.
+  // Each fault is arranged to test exactly one rule, by controlling whether the
+  // gateway reference survives:
+  //   drift  -> reference stripped, so only tolerant amount matching can save it
+  //   typo   -> reference kept, so the row is identifiable and the amount is
+  //             provably wrong (a keying error does not erase the order id)
+  //   collision -> reference stripped, and nothing else can break the tie
   const ledger = invoices.map((inv) => {
-    const row = {
+    const drift = driftSmallIds.has(inv.invoice_id);
+    const typo = typoLargeIds.has(inv.invoice_id);
+    const collision = collisionIds.has(inv.invoice_id);
+    const keepRef = typo || (!drift && !collision && rng.float() >= f.blankRefRatio);
+
+    let amount = inv.amount;
+    if (drift) amount += (rng.chance(0.5) ? 1 : -1) * rng.int(1, 90);
+    if (typo) amount += (rng.chance(0.5) ? 1 : -1) * rng.int(400, 2_500) * RUPEE;
+
+    return {
       invoice_id: inv.invoice_id,
-      order_ref: rng.float() < f.blankRefRatio || collisionIds.has(inv.invoice_id) ? '' : inv.order_ref,
+      order_ref: keepRef ? inv.order_ref : '',
       customer: inv.customer,
       invoice_date: inv.invoice_date,
-      amount: inv.amount,
+      amount,
       currency: 'INR',
       status: 'paid',
     };
-    if (driftSmallIds.has(inv.invoice_id)) {
-      // Rounding the merchant did by hand. Small enough that a tolerant matcher
-      // should still resolve it — this tests that fuzzy matching earns its keep.
-      row.amount = inv.amount + (rng.chance(0.5) ? 1 : -1) * rng.int(1, 60);
-    }
-    if (typoLargeIds.has(inv.invoice_id)) {
-      // A real keying error. Must surface as an exception, not be quietly absorbed.
-      row.amount = inv.amount + (rng.chance(0.5) ? 1 : -1) * rng.int(400, 2_500) * RUPEE;
-    }
-    return row;
   });
 
   // ----------------------------------------------------------- ground truth
@@ -371,8 +446,12 @@ function buildTruth(ctx) {
 
   // A settlement whose bank leg is broken taints every invoice inside it: the
   // invoice is genuinely unconfirmed until a human resolves the batch.
+  // A split payout is deliberately absent here: it is normal gateway behaviour,
+  // not a fault, so the correct answer for a split batch is "matched". It is in
+  // the dataset to catch a matcher that assumes one UTR means one credit.
   const settlementReason = new Map();
   for (const [sid, fault] of settlementFaults) {
+    if (fault === 'split') continue;
     settlementReason.set(
       sid,
       fault === 'late' ? REASON.DATE_OUT_OF_WINDOW

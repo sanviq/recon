@@ -1,0 +1,30 @@
+{
+  "seed": 424242,
+  "invoiceCount": 72,
+  "monthStart": "2026-08-03",
+  "days": 22,
+  "settlementLagDays": 2,
+  "faults": {
+    "offlineInvoices": 5,
+    "unrecordedPayments": 5,
+    "ledgerDriftSmall": 8,
+    "ledgerTypoLarge": 4,
+    "collisionPairs": 5,
+    "blankRefRatio": 0.85,
+    "paymentDelayMaxDays": 6,
+    "lateSettlements": 2,
+    "shortCredits": 2,
+    "duplicateCredits": 2,
+    "splitCredits": 2,
+    "orphanCredits": 3
+  },
+  "generated_at": "2026-09-02T12:15:59.231Z",
+  "counts": {
+    "ledger": 72,
+    "payments": 72,
+    "settlements": 22,
+    "recon_rows": 72,
+    "bank": 29
+  },
+  "source": "synthetic"
+}
