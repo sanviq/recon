@@ -10,7 +10,8 @@
     "reconcile": "node server/src/cli/reconcile.js",
     "evaluate": "node server/src/cli/evaluate.js",
     "serve": "node server/src/index.js",
-    "test": "node --test server/test/"
+    "sweep": "node server/src/cli/sweep.js",
+    "test": "node --test \"server/test/*.test.js\""
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.0",
