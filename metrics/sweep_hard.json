@@ -1,11 +1,11 @@
 {
   "profile": "hard",
   "seeds": 40,
-  "generated_at": "2026-09-02T12:15:59.140Z",
+  "generated_at": "2026-09-02T12:31:30.421Z",
   "throughput": {
     "total_records": 6964,
-    "total_ms": 48.7,
-    "records_per_second": 142879
+    "total_ms": 51,
+    "records_per_second": 136459
   },
   "match_rate": {
     "min": 0.4306,

@@ -1,66 +1,64 @@
 {
   "dataset": "data/holdout",
   "seed": 424242,
-  "generated_at": "2026-09-02T12:15:59.268Z",
+  "generated_at": "2026-09-02T12:31:30.177Z",
   "throughput": {
-    "records": 173,
-    "elapsed_ms": 3.3,
-    "records_per_second": 51751
+    "records": 167,
+    "elapsed_ms": 2.4,
+    "records_per_second": 68860
   },
   "volume": {
     "ledger_rows": 72,
-    "payments": 72,
-    "bank_rows": 29,
-    "settlement_batches": 22
+    "payments": 71,
+    "bank_rows": 24,
+    "settlement_batches": 21
   },
   "accuracy": {
-    "match_rate": 0.5556,
+    "match_rate": 0.75,
     "precision_auto_matched": 1,
     "recall": 1,
     "f1": 1,
-    "true_positive": 40,
+    "true_positive": 54,
     "false_positive": 0,
     "false_negative": 0,
-    "true_negative": 32,
+    "true_negative": 18,
     "misrouted_matches": 0,
     "reason_code_accuracy": 1,
     "bank_row_accuracy": 1
   },
   "value": {
-    "auto_reconciled_paise": 48290913,
-    "flagged_paise": 70439818,
-    "auto_reconciled_share": 0.4067,
-    "unexplained_bank_credit_paise": 40090574
+    "auto_reconciled_paise": 89077593,
+    "flagged_paise": 12122137,
+    "auto_reconciled_share": 0.8802,
+    "unexplained_bank_credit_paise": 5170581
   },
   "exceptions_by_reason": {
-    "amount_mismatch": 11,
-    "missing_counterpart": 5,
-    "duplicate_utr": 2,
-    "date_out_of_window": 4,
-    "ambiguous_candidates": 10,
+    "amount_mismatch": 5,
+    "missing_counterpart": 4,
+    "duplicate_utr": 4,
+    "date_out_of_window": 1,
+    "ambiguous_candidates": 4,
     "unresolved": 0
   },
   "matches_by_rule": {
-    "A2_exact_amount_in_window+B1_batch_utr_exact": 27,
-    "A3_fuzzy_amount_in_window+B1_batch_utr_exact": 5,
-    "A1_exact_order_ref+B1_batch_utr_exact": 2,
-    "A3_fuzzy_amount_in_window+B3_batch_utr_split_credits": 3,
-    "A2_exact_amount_in_window+B3_batch_utr_split_credits": 3
+    "A2_exact_amount_in_window+B1_batch_utr_exact": 20,
+    "A1_exact_order_ref+B1_batch_utr_exact": 29,
+    "A3_fuzzy_amount_in_window+B1_batch_utr_exact": 5
   },
   "reason_confusion": {
-    "amount_mismatch -> amount_mismatch": 11,
-    "ambiguous_candidates -> ambiguous_candidates": 10,
-    "missing_counterpart -> missing_counterpart": 5,
-    "duplicate_utr -> duplicate_utr": 2,
-    "date_out_of_window -> date_out_of_window": 4
+    "duplicate_utr -> duplicate_utr": 4,
+    "ambiguous_candidates -> ambiguous_candidates": 4,
+    "amount_mismatch -> amount_mismatch": 5,
+    "missing_counterpart -> missing_counterpart": 4,
+    "date_out_of_window -> date_out_of_window": 1
   },
   "misroutes": [],
   "disagreements": [],
   "ground_truth": {
-    "ledger_matched": 40,
-    "ledger_exceptions": 32,
+    "ledger_matched": 54,
+    "ledger_exceptions": 18,
     "bank_matched": 18,
-    "bank_exceptions": 11,
-    "settlements": 22
+    "bank_exceptions": 6,
+    "settlements": 21
   }
 }

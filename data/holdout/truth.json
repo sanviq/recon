@@ -5,31 +5,31 @@
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242000",
-      "utr": "ICICN2608063346",
+      "utr": "CITIN2608055133",
       "fault": null
     },
     {
       "invoice_id": "INV-2026-0025",
-      "status": "exception",
-      "reason": "amount_mismatch",
+      "status": "matched",
+      "reason": null,
       "payment_id": "pay_R424242001",
-      "utr": "ICICN2608057092",
-      "fault": "settlement_short"
+      "utr": "CITIN2608055133",
+      "fault": null
     },
     {
       "invoice_id": "INV-2026-0029",
       "status": "exception",
-      "reason": "amount_mismatch",
+      "reason": "duplicate_utr",
       "payment_id": "pay_R424242002",
-      "utr": "ICICN2608057092",
-      "fault": "settlement_short"
+      "utr": "ICICN2608065112",
+      "fault": "settlement_duplicate"
     },
     {
       "invoice_id": "INV-2026-0033",
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242003",
-      "utr": "ICICN2608063346",
+      "utr": "CITIN2608055133",
       "fault": null
     },
     {
@@ -37,7 +37,7 @@
       "status": "exception",
       "reason": "ambiguous_candidates",
       "payment_id": "pay_R424242004",
-      "utr": "ICICN2608057092",
+      "utr": "CITIN2608055133",
       "fault": "amount_date_collision"
     },
     {
@@ -45,63 +45,63 @@
       "status": "exception",
       "reason": "ambiguous_candidates",
       "payment_id": "pay_R424242005",
-      "utr": "ICICN2608057092",
+      "utr": "CITIN2608055133",
       "fault": "amount_date_collision"
     },
     {
       "invoice_id": "INV-2026-0041",
-      "status": "matched",
-      "reason": null,
+      "status": "exception",
+      "reason": "duplicate_utr",
       "payment_id": "pay_R424242006",
-      "utr": "ICICN2608072153",
-      "fault": null
+      "utr": "ICICN2608065112",
+      "fault": "settlement_duplicate"
     },
     {
       "invoice_id": "INV-2026-0060",
-      "status": "matched",
-      "reason": null,
+      "status": "exception",
+      "reason": "duplicate_utr",
       "payment_id": "pay_R424242007",
-      "utr": "HDFCN2608126491",
-      "fault": null
+      "utr": "ICICN2608065112",
+      "fault": "settlement_duplicate"
     },
     {
       "invoice_id": "INV-2026-0071",
       "status": "exception",
-      "reason": "ambiguous_candidates",
+      "reason": "duplicate_utr",
       "payment_id": "pay_R424242008",
-      "utr": "ICICN2608063346",
-      "fault": "amount_date_collision"
+      "utr": "ICICN2608065112",
+      "fault": "settlement_duplicate"
     },
     {
       "invoice_id": "INV-2026-0001",
-      "status": "exception",
-      "reason": "ambiguous_candidates",
+      "status": "matched",
+      "reason": null,
       "payment_id": "pay_R424242009",
-      "utr": "ICICN2608063346",
-      "fault": "amount_date_collision"
+      "utr": "HDFCN2608075262",
+      "fault": null
     },
     {
       "invoice_id": "INV-2026-0005",
-      "status": "matched",
-      "reason": null,
+      "status": "exception",
+      "reason": "amount_mismatch",
       "payment_id": "pay_R424242010",
-      "utr": "ICICN2608072153",
-      "fault": null
+      "utr": "HDFCN2608075262",
+      "fault": "ledger_amount_typo"
     },
     {
       "invoice_id": "INV-2026-0046",
       "status": "exception",
-      "reason": "missing_counterpart",
-      "payment_id": null,
-      "utr": null,
-      "fault": "offline_invoice"
+      "reason": "amount_mismatch",
+      "payment_id": "pay_R424242011",
+      "utr": "HDFCN2608075262",
+      "fault": "ledger_amount_typo"
     },
     {
       "invoice_id": "INV-2026-0049",
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242012",
-      "utr": "ICICN2608072153",
+      "utr": "HDFCN2608075262",
       "fault": null
     },
     {
@@ -109,23 +109,23 @@
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242013",
-      "utr": "ICICN2608072153",
+      "utr": "HDFCN2608075262",
       "fault": null
     },
     {
       "invoice_id": "INV-2026-0016",
-      "status": "exception",
-      "reason": "missing_counterpart",
-      "payment_id": null,
-      "utr": null,
-      "fault": "offline_invoice"
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R424242014",
+      "utr": "CITIN2608083075",
+      "fault": null
     },
     {
       "invoice_id": "INV-2026-0019",
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242015",
-      "utr": "HDFCN2608086320",
+      "utr": "CITIN2608083075",
       "fault": null
     },
     {
@@ -133,7 +133,7 @@
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242016",
-      "utr": "HDFCN2608086320",
+      "utr": "CITIN2608083075",
       "fault": null
     },
     {
@@ -146,18 +146,18 @@
     },
     {
       "invoice_id": "INV-2026-0015",
-      "status": "exception",
-      "reason": "amount_mismatch",
+      "status": "matched",
+      "reason": null,
       "payment_id": "pay_R424242018",
-      "utr": "HDFCN2608157912",
-      "fault": "ledger_amount_typo"
+      "utr": "ICICN2608092598",
+      "fault": null
     },
     {
       "invoice_id": "INV-2026-0021",
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242019",
-      "utr": "HDFCN2608091148",
+      "utr": "ICICN2608092598",
       "fault": null
     },
     {
@@ -165,7 +165,7 @@
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242020",
-      "utr": "HDFCN2608091148",
+      "utr": "ICICN2608092598",
       "fault": null
     },
     {
@@ -173,31 +173,31 @@
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242021",
-      "utr": "HDFCN2608091148",
+      "utr": "ICICN2608092598",
       "fault": null
     },
     {
       "invoice_id": "INV-2026-0038",
-      "status": "exception",
-      "reason": "ambiguous_candidates",
+      "status": "matched",
+      "reason": null,
       "payment_id": "pay_R424242022",
-      "utr": "HDFCN2608091148",
-      "fault": "amount_date_collision"
+      "utr": "ICICN2608092598",
+      "fault": null
     },
     {
       "invoice_id": "INV-2026-0066",
-      "status": "exception",
-      "reason": "ambiguous_candidates",
+      "status": "matched",
+      "reason": null,
       "payment_id": "pay_R424242023",
-      "utr": "HDFCN2608091148",
-      "fault": "amount_date_collision"
+      "utr": "ICICN2608092598",
+      "fault": null
     },
     {
       "invoice_id": "INV-2026-0058",
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242024",
-      "utr": "ICICN2608104273",
+      "utr": "HDFCN2608126582",
       "fault": null
     },
     {
@@ -205,7 +205,7 @@
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242025",
-      "utr": "ICICN2608111299",
+      "utr": "CITIN2608115509",
       "fault": null
     },
     {
@@ -213,7 +213,7 @@
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242026",
-      "utr": "HDFCN2608126491",
+      "utr": "CITIN2608134538",
       "fault": null
     },
     {
@@ -221,23 +221,23 @@
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242027",
-      "utr": "ICICN2608162665",
+      "utr": "HDFCN2608126582",
       "fault": null
     },
     {
       "invoice_id": "INV-2026-0035",
-      "status": "matched",
-      "reason": null,
+      "status": "exception",
+      "reason": "amount_mismatch",
       "payment_id": "pay_R424242028",
-      "utr": "HDFCN2608126491",
-      "fault": null
+      "utr": "HDFCN2608126582",
+      "fault": "ledger_amount_typo"
     },
     {
       "invoice_id": "INV-2026-0047",
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242029",
-      "utr": "AXISN2608139844",
+      "utr": "ICICN2608148834",
       "fault": null
     },
     {
@@ -245,7 +245,7 @@
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242030",
-      "utr": "HDFCN2608126491",
+      "utr": "HDFCN2608126582",
       "fault": null
     },
     {
@@ -253,7 +253,7 @@
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242031",
-      "utr": "HDFCN2608126491",
+      "utr": "HDFCN2608126582",
       "fault": null
     },
     {
@@ -261,7 +261,7 @@
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242032",
-      "utr": "CITIN2608176453",
+      "utr": "CITIN2608134538",
       "fault": null
     },
     {
@@ -269,7 +269,7 @@
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242033",
-      "utr": "AXISN2608139844",
+      "utr": "CITIN2608134538",
       "fault": null
     },
     {
@@ -277,31 +277,31 @@
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242034",
-      "utr": "AXISN2608139844",
+      "utr": "CITIN2608134538",
       "fault": null
     },
     {
       "invoice_id": "INV-2026-0063",
-      "status": "exception",
-      "reason": "amount_mismatch",
+      "status": "matched",
+      "reason": null,
       "payment_id": "pay_R424242035",
-      "utr": "AXISN2608139844",
-      "fault": "ledger_amount_typo"
+      "utr": "CITIN2608134538",
+      "fault": null
     },
     {
       "invoice_id": "INV-2026-0072",
       "status": "exception",
-      "reason": "amount_mismatch",
-      "payment_id": "pay_R424242036",
-      "utr": "AXISN2608139844",
-      "fault": "ledger_amount_typo"
+      "reason": "missing_counterpart",
+      "payment_id": null,
+      "utr": null,
+      "fault": "offline_invoice"
     },
     {
       "invoice_id": "INV-2026-0031",
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242037",
-      "utr": "AXISN2608143713",
+      "utr": "ICICN2608148834",
       "fault": null
     },
     {
@@ -309,7 +309,7 @@
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242038",
-      "utr": "AXISN2608143713",
+      "utr": "ICICN2608148834",
       "fault": null
     },
     {
@@ -317,7 +317,7 @@
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242039",
-      "utr": "HDFCN2608157912",
+      "utr": "HDFCN2608162851",
       "fault": null
     },
     {
@@ -325,23 +325,23 @@
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242040",
-      "utr": "HDFCN2608157912",
+      "utr": "AXISN2608158328",
       "fault": null
     },
     {
       "invoice_id": "INV-2026-0043",
-      "status": "exception",
-      "reason": "duplicate_utr",
+      "status": "matched",
+      "reason": null,
       "payment_id": "pay_R424242041",
-      "utr": "HDFCN2608189880",
-      "fault": "settlement_duplicate"
+      "utr": "AXISN2608177135",
+      "fault": null
     },
     {
       "invoice_id": "INV-2026-0045",
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242042",
-      "utr": "HDFCN2608157912",
+      "utr": "AXISN2608158328",
       "fault": null
     },
     {
@@ -349,7 +349,7 @@
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242043",
-      "utr": "CITIN2608226506",
+      "utr": "HDFCN2608162851",
       "fault": null
     },
     {
@@ -357,7 +357,7 @@
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242044",
-      "utr": "ICICN2608162665",
+      "utr": "HDFCN2608162851",
       "fault": null
     },
     {
@@ -365,7 +365,7 @@
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242045",
-      "utr": "ICICN2608162665",
+      "utr": "HDFCN2608162851",
       "fault": null
     },
     {
@@ -373,7 +373,7 @@
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242046",
-      "utr": "ICICN2608162665",
+      "utr": "HDFCN2608162851",
       "fault": null
     },
     {
@@ -381,87 +381,87 @@
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242047",
-      "utr": "ICICN2608162665",
+      "utr": "HDFCN2608180026",
       "fault": null
     },
     {
       "invoice_id": "INV-2026-0051",
-      "status": "exception",
-      "reason": "duplicate_utr",
+      "status": "matched",
+      "reason": null,
       "payment_id": "pay_R424242048",
-      "utr": "HDFCN2608189880",
-      "fault": "settlement_duplicate"
+      "utr": "HDFCN2608180026",
+      "fault": null
     },
     {
       "invoice_id": "INV-2026-0068",
-      "status": "exception",
-      "reason": "amount_mismatch",
+      "status": "matched",
+      "reason": null,
       "payment_id": "pay_R424242049",
-      "utr": "CITIN2608242880",
-      "fault": "settlement_short"
+      "utr": "HDFCN2608180026",
+      "fault": null
     },
     {
       "invoice_id": "INV-2026-0004",
       "status": "exception",
-      "reason": "date_out_of_window",
+      "reason": "amount_mismatch",
       "payment_id": "pay_R424242050",
-      "utr": "CITIN2608190072",
-      "fault": "settlement_late"
+      "utr": "CITIN2608213245",
+      "fault": "settlement_short"
     },
     {
       "invoice_id": "INV-2026-0050",
       "status": "exception",
       "reason": "date_out_of_window",
       "payment_id": "pay_R424242051",
-      "utr": "CITIN2608190072",
+      "utr": "ICICN2608192740",
       "fault": "settlement_late"
     },
     {
       "invoice_id": "INV-2026-0003",
-      "status": "exception",
-      "reason": "amount_mismatch",
-      "payment_id": "pay_R424242052",
-      "utr": "CITIN2608242880",
-      "fault": "settlement_short"
-    },
-    {
-      "invoice_id": "INV-2026-0012",
-      "status": "exception",
-      "reason": "date_out_of_window",
-      "payment_id": "pay_R424242053",
-      "utr": "HDFCN2608210160",
-      "fault": "settlement_late"
-    },
-    {
-      "invoice_id": "INV-2026-0052",
-      "status": "exception",
-      "reason": "date_out_of_window",
-      "payment_id": "pay_R424242054",
-      "utr": "HDFCN2608210160",
-      "fault": "settlement_late"
-    },
-    {
-      "invoice_id": "INV-2026-0064",
       "status": "matched",
       "reason": null,
-      "payment_id": "pay_R424242055",
-      "utr": "AXISN2608233605",
+      "payment_id": "pay_R424242052",
+      "utr": "AXISN2608200613",
       "fault": null
     },
     {
-      "invoice_id": "INV-2026-0018",
+      "invoice_id": "INV-2026-0012",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R424242053",
+      "utr": "CITIN2608220593",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0052",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R424242054",
+      "utr": "CITIN2608220593",
+      "fault": null
+    },
+    {
+      "invoice_id": "INV-2026-0064",
       "status": "exception",
       "reason": "amount_mismatch",
-      "payment_id": "pay_R424242056",
-      "utr": "CITIN2608242880",
+      "payment_id": "pay_R424242055",
+      "utr": "CITIN2608213245",
       "fault": "settlement_short"
+    },
+    {
+      "invoice_id": "INV-2026-0018",
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R424242056",
+      "utr": "CITIN2608220593",
+      "fault": null
     },
     {
       "invoice_id": "INV-2026-0020",
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242057",
-      "utr": "CITIN2608226506",
+      "utr": "CITIN2608220593",
       "fault": null
     },
     {
@@ -469,16 +469,16 @@
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242058",
-      "utr": "CITIN2608226506",
+      "utr": "ICICN2608237586",
       "fault": null
     },
     {
       "invoice_id": "INV-2026-0070",
-      "status": "matched",
-      "reason": null,
-      "payment_id": "pay_R424242059",
-      "utr": "CITIN2608226506",
-      "fault": null
+      "status": "exception",
+      "reason": "missing_counterpart",
+      "payment_id": null,
+      "utr": null,
+      "fault": "offline_invoice"
     },
     {
       "invoice_id": "INV-2026-0009",
@@ -490,18 +490,18 @@
     },
     {
       "invoice_id": "INV-2026-0010",
-      "status": "exception",
-      "reason": "amount_mismatch",
+      "status": "matched",
+      "reason": null,
       "payment_id": "pay_R424242061",
-      "utr": "CITIN2608242880",
-      "fault": "settlement_short"
+      "utr": "ICICN2608237586",
+      "fault": null
     },
     {
       "invoice_id": "INV-2026-0037",
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242062",
-      "utr": "AXISN2608233605",
+      "utr": "ICICN2608237586",
       "fault": null
     },
     {
@@ -509,7 +509,7 @@
       "status": "exception",
       "reason": "ambiguous_candidates",
       "payment_id": "pay_R424242063",
-      "utr": "AXISN2608233605",
+      "utr": "ICICN2608237586",
       "fault": "amount_date_collision"
     },
     {
@@ -517,55 +517,55 @@
       "status": "exception",
       "reason": "ambiguous_candidates",
       "payment_id": "pay_R424242064",
-      "utr": "AXISN2608233605",
+      "utr": "ICICN2608237586",
       "fault": "amount_date_collision"
     },
     {
       "invoice_id": "INV-2026-0008",
-      "status": "exception",
-      "reason": "amount_mismatch",
+      "status": "matched",
+      "reason": null,
       "payment_id": "pay_R424242065",
-      "utr": "CITIN2608242880",
-      "fault": "ledger_amount_typo"
+      "utr": "HDFCN2608242164",
+      "fault": null
     },
     {
       "invoice_id": "INV-2026-0011",
-      "status": "exception",
-      "reason": "amount_mismatch",
+      "status": "matched",
+      "reason": null,
       "payment_id": "pay_R424242066",
-      "utr": "CITIN2608242880",
-      "fault": "settlement_short"
+      "utr": "HDFCN2608242164",
+      "fault": null
     },
     {
       "invoice_id": "INV-2026-0026",
-      "status": "exception",
-      "reason": "missing_counterpart",
-      "payment_id": null,
-      "utr": null,
-      "fault": "offline_invoice"
+      "status": "matched",
+      "reason": null,
+      "payment_id": "pay_R424242067",
+      "utr": "HDFCN2608242164",
+      "fault": null
     },
     {
       "invoice_id": "INV-2026-0040",
-      "status": "exception",
-      "reason": "ambiguous_candidates",
+      "status": "matched",
+      "reason": null,
       "payment_id": "pay_R424242068",
-      "utr": "HDFCN2608257646",
-      "fault": "amount_date_collision"
+      "utr": "HDFCN2608253792",
+      "fault": null
     },
     {
       "invoice_id": "INV-2026-0059",
-      "status": "exception",
-      "reason": "ambiguous_candidates",
+      "status": "matched",
+      "reason": null,
       "payment_id": "pay_R424242069",
-      "utr": "HDFCN2608257646",
-      "fault": "amount_date_collision"
+      "utr": "HDFCN2608253792",
+      "fault": null
     },
     {
       "invoice_id": "INV-2026-0017",
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242070",
-      "utr": "CITIN2608262078",
+      "utr": "AXISN2608260039",
       "fault": null
     },
     {
@@ -573,585 +573,578 @@
       "status": "matched",
       "reason": null,
       "payment_id": "pay_R424242071",
-      "utr": "HDFCN2608294975",
+      "utr": "AXISN2608260039",
       "fault": null
     }
   ],
   "payments": [
     {
-      "payment_id": "pay_R424242002",
-      "status": "exception",
-      "reason": "amount_mismatch",
-      "utr": "ICICN2608057092",
-      "fault": "settlement_short"
-    },
-    {
-      "payment_id": "pay_R424242004",
-      "status": "exception",
-      "reason": "amount_mismatch",
-      "utr": "ICICN2608057092",
-      "fault": "settlement_short"
-    },
-    {
-      "payment_id": "pay_R424242001",
-      "status": "exception",
-      "reason": "amount_mismatch",
-      "utr": "ICICN2608057092",
-      "fault": "settlement_short"
-    },
-    {
       "payment_id": "pay_R424242005",
-      "status": "exception",
-      "reason": "amount_mismatch",
-      "utr": "ICICN2608057092",
-      "fault": "settlement_short"
-    },
-    {
-      "payment_id": "pay_R424242008",
       "status": "matched",
       "reason": null,
-      "utr": "ICICN2608063346",
-      "fault": null
-    },
-    {
-      "payment_id": "pay_R424242009",
-      "status": "matched",
-      "reason": null,
-      "utr": "ICICN2608063346",
-      "fault": null
-    },
-    {
-      "payment_id": "pay_R424242003",
-      "status": "matched",
-      "reason": null,
-      "utr": "ICICN2608063346",
+      "utr": "CITIN2608055133",
       "fault": null
     },
     {
       "payment_id": "pay_R424242000",
       "status": "matched",
       "reason": null,
-      "utr": "ICICN2608063346",
+      "utr": "CITIN2608055133",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242003",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608055133",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242001",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608055133",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242004",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608055133",
       "fault": null
     },
     {
       "payment_id": "pay_R424242006",
-      "status": "matched",
-      "reason": null,
-      "utr": "ICICN2608072153",
-      "fault": null
+      "status": "exception",
+      "reason": "duplicate_utr",
+      "utr": "ICICN2608065112",
+      "fault": "settlement_duplicate"
     },
     {
-      "payment_id": "pay_R424242012",
-      "status": "matched",
-      "reason": null,
-      "utr": "ICICN2608072153",
-      "fault": null
+      "payment_id": "pay_R424242008",
+      "status": "exception",
+      "reason": "duplicate_utr",
+      "utr": "ICICN2608065112",
+      "fault": "settlement_duplicate"
     },
     {
-      "payment_id": "pay_R424242010",
+      "payment_id": "pay_R424242007",
+      "status": "exception",
+      "reason": "duplicate_utr",
+      "utr": "ICICN2608065112",
+      "fault": "settlement_duplicate"
+    },
+    {
+      "payment_id": "pay_R424242002",
+      "status": "exception",
+      "reason": "duplicate_utr",
+      "utr": "ICICN2608065112",
+      "fault": "settlement_duplicate"
+    },
+    {
+      "payment_id": "pay_R424242011",
       "status": "matched",
       "reason": null,
-      "utr": "ICICN2608072153",
+      "utr": "HDFCN2608075262",
       "fault": null
     },
     {
       "payment_id": "pay_R424242013",
       "status": "matched",
       "reason": null,
-      "utr": "ICICN2608072153",
+      "utr": "HDFCN2608075262",
       "fault": null
     },
     {
-      "payment_id": "pay_R424242016",
+      "payment_id": "pay_R424242010",
       "status": "matched",
       "reason": null,
-      "utr": "HDFCN2608086320",
+      "utr": "HDFCN2608075262",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242012",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608075262",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_U424242002",
+      "status": "exception",
+      "reason": "missing_counterpart",
+      "utr": "HDFCN2608075262",
+      "fault": "unrecorded_payment"
+    },
+    {
+      "payment_id": "pay_R424242009",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608075262",
       "fault": null
     },
     {
       "payment_id": "pay_R424242015",
       "status": "matched",
       "reason": null,
-      "utr": "HDFCN2608086320",
+      "utr": "CITIN2608083075",
       "fault": null
     },
     {
-      "payment_id": "pay_R424242020",
+      "payment_id": "pay_R424242016",
       "status": "matched",
       "reason": null,
-      "utr": "HDFCN2608091148",
+      "utr": "CITIN2608083075",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242014",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608083075",
       "fault": null
     },
     {
       "payment_id": "pay_R424242022",
       "status": "matched",
       "reason": null,
-      "utr": "HDFCN2608091148",
-      "fault": null
-    },
-    {
-      "payment_id": "pay_R424242019",
-      "status": "matched",
-      "reason": null,
-      "utr": "HDFCN2608091148",
-      "fault": null
-    },
-    {
-      "payment_id": "pay_R424242021",
-      "status": "matched",
-      "reason": null,
-      "utr": "HDFCN2608091148",
+      "utr": "ICICN2608092598",
       "fault": null
     },
     {
       "payment_id": "pay_R424242023",
       "status": "matched",
       "reason": null,
-      "utr": "HDFCN2608091148",
+      "utr": "ICICN2608092598",
       "fault": null
     },
     {
-      "payment_id": "pay_R424242024",
+      "payment_id": "pay_R424242021",
       "status": "matched",
       "reason": null,
-      "utr": "ICICN2608104273",
+      "utr": "ICICN2608092598",
       "fault": null
     },
     {
-      "payment_id": "pay_R424242025",
+      "payment_id": "pay_R424242020",
       "status": "matched",
       "reason": null,
-      "utr": "ICICN2608111299",
+      "utr": "ICICN2608092598",
       "fault": null
     },
     {
-      "payment_id": "pay_R424242031",
+      "payment_id": "pay_R424242019",
       "status": "matched",
       "reason": null,
-      "utr": "HDFCN2608126491",
-      "fault": null
-    },
-    {
-      "payment_id": "pay_R424242030",
-      "status": "matched",
-      "reason": null,
-      "utr": "HDFCN2608126491",
-      "fault": null
-    },
-    {
-      "payment_id": "pay_R424242026",
-      "status": "matched",
-      "reason": null,
-      "utr": "HDFCN2608126491",
-      "fault": null
-    },
-    {
-      "payment_id": "pay_R424242028",
-      "status": "matched",
-      "reason": null,
-      "utr": "HDFCN2608126491",
-      "fault": null
-    },
-    {
-      "payment_id": "pay_R424242007",
-      "status": "matched",
-      "reason": null,
-      "utr": "HDFCN2608126491",
-      "fault": null
-    },
-    {
-      "payment_id": "pay_U424242004",
-      "status": "exception",
-      "reason": "missing_counterpart",
-      "utr": "AXISN2608139844",
-      "fault": "unrecorded_payment"
-    },
-    {
-      "payment_id": "pay_U424242002",
-      "status": "exception",
-      "reason": "missing_counterpart",
-      "utr": "AXISN2608139844",
-      "fault": "unrecorded_payment"
-    },
-    {
-      "payment_id": "pay_R424242034",
-      "status": "matched",
-      "reason": null,
-      "utr": "AXISN2608139844",
-      "fault": null
-    },
-    {
-      "payment_id": "pay_R424242029",
-      "status": "matched",
-      "reason": null,
-      "utr": "AXISN2608139844",
-      "fault": null
-    },
-    {
-      "payment_id": "pay_R424242035",
-      "status": "matched",
-      "reason": null,
-      "utr": "AXISN2608139844",
-      "fault": null
-    },
-    {
-      "payment_id": "pay_R424242036",
-      "status": "matched",
-      "reason": null,
-      "utr": "AXISN2608139844",
-      "fault": null
-    },
-    {
-      "payment_id": "pay_R424242033",
-      "status": "matched",
-      "reason": null,
-      "utr": "AXISN2608139844",
-      "fault": null
-    },
-    {
-      "payment_id": "pay_R424242037",
-      "status": "matched",
-      "reason": null,
-      "utr": "AXISN2608143713",
-      "fault": null
-    },
-    {
-      "payment_id": "pay_R424242038",
-      "status": "matched",
-      "reason": null,
-      "utr": "AXISN2608143713",
-      "fault": null
-    },
-    {
-      "payment_id": "pay_R424242040",
-      "status": "matched",
-      "reason": null,
-      "utr": "HDFCN2608157912",
-      "fault": null
-    },
-    {
-      "payment_id": "pay_R424242042",
-      "status": "matched",
-      "reason": null,
-      "utr": "HDFCN2608157912",
+      "utr": "ICICN2608092598",
       "fault": null
     },
     {
       "payment_id": "pay_R424242018",
       "status": "matched",
       "reason": null,
-      "utr": "HDFCN2608157912",
+      "utr": "ICICN2608092598",
       "fault": null
     },
     {
-      "payment_id": "pay_R424242039",
+      "payment_id": "pay_R424242025",
       "status": "matched",
       "reason": null,
-      "utr": "HDFCN2608157912",
+      "utr": "CITIN2608115509",
       "fault": null
     },
     {
-      "payment_id": "pay_R424242046",
+      "payment_id": "pay_R424242028",
       "status": "matched",
       "reason": null,
-      "utr": "ICICN2608162665",
-      "fault": null
-    },
-    {
-      "payment_id": "pay_R424242047",
-      "status": "matched",
-      "reason": null,
-      "utr": "ICICN2608162665",
-      "fault": null
-    },
-    {
-      "payment_id": "pay_R424242045",
-      "status": "matched",
-      "reason": null,
-      "utr": "ICICN2608162665",
+      "utr": "HDFCN2608126582",
       "fault": null
     },
     {
       "payment_id": "pay_R424242027",
       "status": "matched",
       "reason": null,
-      "utr": "ICICN2608162665",
+      "utr": "HDFCN2608126582",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242024",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608126582",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242031",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608126582",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242030",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608126582",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242034",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608134538",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242026",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608134538",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_U424242001",
+      "status": "exception",
+      "reason": "missing_counterpart",
+      "utr": "CITIN2608134538",
+      "fault": "unrecorded_payment"
+    },
+    {
+      "payment_id": "pay_R424242032",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608134538",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242033",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608134538",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242035",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608134538",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242038",
+      "status": "matched",
+      "reason": null,
+      "utr": "ICICN2608148834",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242029",
+      "status": "matched",
+      "reason": null,
+      "utr": "ICICN2608148834",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242037",
+      "status": "matched",
+      "reason": null,
+      "utr": "ICICN2608148834",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242040",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608158328",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242042",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608158328",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242046",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608162851",
       "fault": null
     },
     {
       "payment_id": "pay_R424242044",
       "status": "matched",
       "reason": null,
-      "utr": "ICICN2608162665",
+      "utr": "HDFCN2608162851",
       "fault": null
     },
     {
-      "payment_id": "pay_R424242032",
+      "payment_id": "pay_R424242045",
       "status": "matched",
       "reason": null,
-      "utr": "CITIN2608176453",
-      "fault": null
-    },
-    {
-      "payment_id": "pay_R424242048",
-      "status": "exception",
-      "reason": "duplicate_utr",
-      "utr": "HDFCN2608189880",
-      "fault": "settlement_duplicate"
-    },
-    {
-      "payment_id": "pay_R424242041",
-      "status": "exception",
-      "reason": "duplicate_utr",
-      "utr": "HDFCN2608189880",
-      "fault": "settlement_duplicate"
-    },
-    {
-      "payment_id": "pay_R424242050",
-      "status": "exception",
-      "reason": "date_out_of_window",
-      "utr": "CITIN2608190072",
-      "fault": "settlement_late"
-    },
-    {
-      "payment_id": "pay_R424242051",
-      "status": "exception",
-      "reason": "date_out_of_window",
-      "utr": "CITIN2608190072",
-      "fault": "settlement_late"
-    },
-    {
-      "payment_id": "pay_U424242000",
-      "status": "exception",
-      "reason": "missing_counterpart",
-      "utr": "HDFCN2608210160",
-      "fault": "unrecorded_payment"
-    },
-    {
-      "payment_id": "pay_R424242053",
-      "status": "exception",
-      "reason": "date_out_of_window",
-      "utr": "HDFCN2608210160",
-      "fault": "settlement_late"
-    },
-    {
-      "payment_id": "pay_R424242054",
-      "status": "exception",
-      "reason": "date_out_of_window",
-      "utr": "HDFCN2608210160",
-      "fault": "settlement_late"
-    },
-    {
-      "payment_id": "pay_U424242001",
-      "status": "exception",
-      "reason": "missing_counterpart",
-      "utr": "HDFCN2608210160",
-      "fault": "unrecorded_payment"
-    },
-    {
-      "payment_id": "pay_R424242059",
-      "status": "matched",
-      "reason": null,
-      "utr": "CITIN2608226506",
+      "utr": "HDFCN2608162851",
       "fault": null
     },
     {
       "payment_id": "pay_R424242043",
       "status": "matched",
       "reason": null,
-      "utr": "CITIN2608226506",
+      "utr": "HDFCN2608162851",
       "fault": null
     },
     {
-      "payment_id": "pay_R424242058",
+      "payment_id": "pay_R424242039",
       "status": "matched",
       "reason": null,
-      "utr": "CITIN2608226506",
+      "utr": "HDFCN2608162851",
       "fault": null
+    },
+    {
+      "payment_id": "pay_R424242041",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608177135",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242048",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608180026",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242049",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608180026",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242047",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608180026",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242051",
+      "status": "exception",
+      "reason": "date_out_of_window",
+      "utr": "ICICN2608192740",
+      "fault": "settlement_late"
+    },
+    {
+      "payment_id": "pay_R424242052",
+      "status": "matched",
+      "reason": null,
+      "utr": "AXISN2608200613",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242050",
+      "status": "exception",
+      "reason": "amount_mismatch",
+      "utr": "CITIN2608213245",
+      "fault": "settlement_short"
+    },
+    {
+      "payment_id": "pay_R424242055",
+      "status": "exception",
+      "reason": "amount_mismatch",
+      "utr": "CITIN2608213245",
+      "fault": "settlement_short"
     },
     {
       "payment_id": "pay_R424242057",
       "status": "matched",
       "reason": null,
-      "utr": "CITIN2608226506",
+      "utr": "CITIN2608220593",
       "fault": null
     },
     {
-      "payment_id": "pay_U424242003",
-      "status": "exception",
-      "reason": "missing_counterpart",
-      "utr": "AXISN2608233605",
-      "fault": "unrecorded_payment"
-    },
-    {
-      "payment_id": "pay_R424242064",
+      "payment_id": "pay_R424242054",
       "status": "matched",
       "reason": null,
-      "utr": "AXISN2608233605",
+      "utr": "CITIN2608220593",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242056",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608220593",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242053",
+      "status": "matched",
+      "reason": null,
+      "utr": "CITIN2608220593",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242061",
+      "status": "matched",
+      "reason": null,
+      "utr": "ICICN2608237586",
       "fault": null
     },
     {
       "payment_id": "pay_R424242062",
       "status": "matched",
       "reason": null,
-      "utr": "AXISN2608233605",
+      "utr": "ICICN2608237586",
       "fault": null
     },
     {
-      "payment_id": "pay_R424242055",
+      "payment_id": "pay_R424242058",
       "status": "matched",
       "reason": null,
-      "utr": "AXISN2608233605",
+      "utr": "ICICN2608237586",
+      "fault": null
+    },
+    {
+      "payment_id": "pay_R424242064",
+      "status": "matched",
+      "reason": null,
+      "utr": "ICICN2608237586",
       "fault": null
     },
     {
       "payment_id": "pay_R424242063",
       "status": "matched",
       "reason": null,
-      "utr": "AXISN2608233605",
+      "utr": "ICICN2608237586",
       "fault": null
     },
     {
-      "payment_id": "pay_R424242052",
-      "status": "exception",
-      "reason": "amount_mismatch",
-      "utr": "CITIN2608242880",
-      "fault": "settlement_short"
-    },
-    {
-      "payment_id": "pay_R424242056",
-      "status": "exception",
-      "reason": "amount_mismatch",
-      "utr": "CITIN2608242880",
-      "fault": "settlement_short"
-    },
-    {
-      "payment_id": "pay_R424242061",
-      "status": "exception",
-      "reason": "amount_mismatch",
-      "utr": "CITIN2608242880",
-      "fault": "settlement_short"
+      "payment_id": "pay_R424242066",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608242164",
+      "fault": null
     },
     {
       "payment_id": "pay_R424242065",
-      "status": "exception",
-      "reason": "amount_mismatch",
-      "utr": "CITIN2608242880",
-      "fault": "settlement_short"
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608242164",
+      "fault": null
     },
     {
-      "payment_id": "pay_R424242049",
-      "status": "exception",
-      "reason": "amount_mismatch",
-      "utr": "CITIN2608242880",
-      "fault": "settlement_short"
-    },
-    {
-      "payment_id": "pay_R424242066",
-      "status": "exception",
-      "reason": "amount_mismatch",
-      "utr": "CITIN2608242880",
-      "fault": "settlement_short"
+      "payment_id": "pay_R424242067",
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608242164",
+      "fault": null
     },
     {
       "payment_id": "pay_R424242068",
-      "status": "exception",
-      "reason": "duplicate_utr",
-      "utr": "HDFCN2608257646",
-      "fault": "settlement_duplicate"
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608253792",
+      "fault": null
     },
     {
       "payment_id": "pay_R424242069",
-      "status": "exception",
-      "reason": "duplicate_utr",
-      "utr": "HDFCN2608257646",
-      "fault": "settlement_duplicate"
+      "status": "matched",
+      "reason": null,
+      "utr": "HDFCN2608253792",
+      "fault": null
     },
     {
       "payment_id": "pay_R424242070",
       "status": "matched",
       "reason": null,
-      "utr": "CITIN2608262078",
+      "utr": "AXISN2608260039",
       "fault": null
+    },
+    {
+      "payment_id": "pay_U424242000",
+      "status": "exception",
+      "reason": "missing_counterpart",
+      "utr": "AXISN2608260039",
+      "fault": "unrecorded_payment"
     },
     {
       "payment_id": "pay_R424242071",
       "status": "matched",
       "reason": null,
-      "utr": "HDFCN2608294975",
+      "utr": "AXISN2608260039",
       "fault": null
     }
   ],
   "bank": [
     {
       "txn_id": "TXN202608050001",
-      "status": "exception",
-      "reason": "amount_mismatch",
-      "settlement_id": "setl_R42424200",
-      "fault": "settlement_short"
-    },
-    {
-      "txn_id": "TXN202608060002",
       "status": "matched",
       "reason": null,
-      "settlement_id": "setl_R42424201",
+      "settlement_id": "setl_R42424200",
       "fault": null
     },
     {
-      "txn_id": "TXN202608070003",
+      "txn_id": "TXN202608060002",
+      "status": "exception",
+      "reason": "duplicate_utr",
+      "settlement_id": "setl_R42424201",
+      "fault": "settlement_duplicate"
+    },
+    {
+      "txn_id": "TXN202608060003",
+      "status": "exception",
+      "reason": "duplicate_utr",
+      "settlement_id": "setl_R42424201",
+      "fault": "settlement_duplicate"
+    },
+    {
+      "txn_id": "TXN202608070004",
       "status": "matched",
       "reason": null,
       "settlement_id": "setl_R42424202",
       "fault": null
     },
     {
-      "txn_id": "TXN202608080004",
+      "txn_id": "TXN202608080005",
       "status": "matched",
       "reason": null,
       "settlement_id": "setl_R42424203",
       "fault": null
     },
     {
-      "txn_id": "TXN202608090005",
+      "txn_id": "TXN202608090006",
       "status": "matched",
       "reason": null,
       "settlement_id": "setl_R42424204",
       "fault": null
     },
     {
-      "txn_id": "TXN202608100006",
+      "txn_id": "TXN202608110007",
       "status": "matched",
       "reason": null,
       "settlement_id": "setl_R42424205",
       "fault": null
     },
     {
-      "txn_id": "TXN202608110007",
+      "txn_id": "TXN202608120008",
       "status": "matched",
       "reason": null,
       "settlement_id": "setl_R42424206",
       "fault": null
     },
     {
-      "txn_id": "TXN202608120008",
+      "txn_id": "TXN202608130009",
       "status": "matched",
       "reason": null,
       "settlement_id": "setl_R42424207",
       "fault": null
     },
     {
-      "txn_id": "TXN202608130009",
-      "status": "matched",
-      "reason": null,
-      "settlement_id": "setl_R42424208",
-      "fault": null
-    },
-    {
       "txn_id": "TXN202608140010",
       "status": "matched",
       "reason": null,
-      "settlement_id": "setl_R42424209",
+      "settlement_id": "setl_R42424208",
       "fault": null
     },
     {
@@ -1162,137 +1155,102 @@
       "fault": null
     },
     {
-      "txn_id": "TXN202608150012",
+      "txn_id": "TXN202608160012",
       "status": "matched",
       "reason": null,
       "settlement_id": "setl_R42424210",
       "fault": null
     },
     {
-      "txn_id": "TXN202608160013",
+      "txn_id": "TXN202608170013",
       "status": "matched",
       "reason": null,
       "settlement_id": "setl_R42424211",
       "fault": null
     },
     {
-      "txn_id": "TXN202608170014",
+      "txn_id": "TXN202608180014",
       "status": "matched",
       "reason": null,
       "settlement_id": "setl_R42424212",
       "fault": null
     },
     {
-      "txn_id": "TXN202608170027",
+      "txn_id": "TXN202608190023",
       "status": "exception",
       "reason": "missing_counterpart",
       "settlement_id": null,
       "fault": "orphan_credit"
     },
     {
-      "txn_id": "TXN202608170029",
-      "status": "exception",
-      "reason": "missing_counterpart",
-      "settlement_id": null,
-      "fault": "orphan_credit"
+      "txn_id": "TXN202608200016",
+      "status": "matched",
+      "reason": null,
+      "settlement_id": "setl_R42424214",
+      "fault": null
     },
     {
-      "txn_id": "TXN202608180015",
+      "txn_id": "TXN202608210017",
       "status": "exception",
-      "reason": "duplicate_utr",
-      "settlement_id": "setl_R42424213",
-      "fault": "settlement_duplicate"
+      "reason": "amount_mismatch",
+      "settlement_id": "setl_R42424215",
+      "fault": "settlement_short"
     },
     {
-      "txn_id": "TXN202608180016",
-      "status": "exception",
-      "reason": "duplicate_utr",
-      "settlement_id": "setl_R42424213",
-      "fault": "settlement_duplicate"
-    },
-    {
-      "txn_id": "TXN202608180028",
-      "status": "exception",
-      "reason": "missing_counterpart",
-      "settlement_id": null,
-      "fault": "orphan_credit"
-    },
-    {
-      "txn_id": "TXN202608220019",
+      "txn_id": "TXN202608220018",
       "status": "matched",
       "reason": null,
       "settlement_id": "setl_R42424216",
       "fault": null
     },
     {
-      "txn_id": "TXN202608230020",
-      "status": "matched",
-      "reason": null,
-      "settlement_id": "setl_R42424216",
-      "fault": null
-    },
-    {
-      "txn_id": "TXN202608230021",
+      "txn_id": "TXN202608230019",
       "status": "matched",
       "reason": null,
       "settlement_id": "setl_R42424217",
       "fault": null
     },
     {
-      "txn_id": "TXN202608240022",
-      "status": "exception",
-      "reason": "amount_mismatch",
+      "txn_id": "TXN202608240020",
+      "status": "matched",
+      "reason": null,
       "settlement_id": "setl_R42424218",
-      "fault": "settlement_short"
+      "fault": null
     },
     {
-      "txn_id": "TXN202608250017",
+      "txn_id": "TXN202608250015",
       "status": "exception",
       "reason": "date_out_of_window",
-      "settlement_id": "setl_R42424214",
+      "settlement_id": "setl_R42424213",
       "fault": "settlement_late"
     },
     {
-      "txn_id": "TXN202608250023",
-      "status": "exception",
-      "reason": "duplicate_utr",
+      "txn_id": "TXN202608250021",
+      "status": "matched",
+      "reason": null,
       "settlement_id": "setl_R42424219",
-      "fault": "settlement_duplicate"
+      "fault": null
     },
     {
-      "txn_id": "TXN202608250024",
-      "status": "exception",
-      "reason": "duplicate_utr",
-      "settlement_id": "setl_R42424219",
-      "fault": "settlement_duplicate"
-    },
-    {
-      "txn_id": "TXN202608260025",
+      "txn_id": "TXN202608260022",
       "status": "matched",
       "reason": null,
       "settlement_id": "setl_R42424220",
       "fault": null
     },
     {
-      "txn_id": "TXN202608280018",
+      "txn_id": "TXN202608260024",
       "status": "exception",
-      "reason": "date_out_of_window",
-      "settlement_id": "setl_R42424215",
-      "fault": "settlement_late"
-    },
-    {
-      "txn_id": "TXN202608290026",
-      "status": "matched",
-      "reason": null,
-      "settlement_id": "setl_R42424221",
-      "fault": null
+      "reason": "missing_counterpart",
+      "settlement_id": null,
+      "fault": "orphan_credit"
     }
   ],
   "summary": {
-    "ledger_matched": 40,
-    "ledger_exceptions": 32,
+    "ledger_matched": 54,
+    "ledger_exceptions": 18,
     "bank_matched": 18,
-    "bank_exceptions": 11,
-    "settlements": 22
+    "bank_exceptions": 6,
+    "settlements": 21
   }
 }

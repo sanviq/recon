@@ -1,0 +1,294 @@
+# Architecture
+
+How Recon is put together, what the matching algorithm actually does, and why every
+threshold has the value it has.
+
+---
+
+## 1. Data flow
+
+```
+                 ┌──────────────────────────── sources ────────────────────────────┐
+                 │                                                                  │
+  Razorpay API   │  payments.all()          ─┐                                      │
+  (test mode)    │  settlements.all()        ├─▶ recon_report.json  (payment ↔ UTR) │
+                 │  settlements.reports()   ─┘                                      │
+                 │                                                                  │
+  Merchant       │  ledger.csv               ──▶ invoice, amount, date, order_ref   │
+  Bank           │  bank_statement.csv       ──▶ txn, value_date, UTR, credit        │
+                 └──────────────────────────────────┬───────────────────────────────┘
+                                                    │
+                                      sources/load.js — normalisation
+                             (one internal shape, integer paise, UTR extraction)
+                                                    │
+                                      match/engine.js — deterministic
+                             ┌──────────────────────┴──────────────────────┐
+                        Leg A: ledger ↔ payment              Leg B: UTR group ↔ bank credit
+                        A1 reference → A2 exact → A3 fuzzy    B1 exact → B2 tolerance → B3 split
+                             └──────────────────────┬──────────────────────┘
+                                                    │
+                                        combine: matched only if BOTH hold
+                                                    │
+                          ┌─────────────────────────┼─────────────────────────┐
+                    result.json                audit.jsonl               eval/score.js
+                (per-record decisions)      (append-only trail)      (vs. truth.json → metrics)
+                          │                                                    │
+                explain/explainer.js                                    metrics.json
+             (Claude, or deterministic templates)                              │
+                          │                                                    │
+                          └────────────────▶ web/index.html ◀──────────────────┘
+                                    (read-only dashboard over the artefacts)
+```
+
+The CLI does all the work and writes files; the server only serves them. That is
+deliberate — what the dashboard shows is the same artefact the metrics table was
+computed from, not a second code path that can disagree with it.
+
+### Normalisation is the seam
+
+`sources/load.js` is the only place that knows three sources speak three
+vocabularies. Everything downstream sees one shape and integer paise, so the engine
+never knows whether a record came from a CSV export, a bank download, or the API.
+Swapping the fixture loader for the live client changes nothing below that file.
+
+Two details in there earn their keep:
+
+- **UTR extraction.** Real bank statements frequently have no UTR column — it is
+  buried in the narration string. The loader takes the column when it exists and
+  otherwise digs it out of the description with `\b([A-Z]{4}[A-Z0-9]{6,18})\b`.
+  Getting this wrong silently destroys the entire bank leg.
+- **Net is recomputed, never trusted.** `net = amount − fee − tax` is calculated
+  locally rather than read from a reported field, so a gateway that reports a fee
+  differently from what it charged shows up as a real discrepancy.
+
+---
+
+## 2. The matching algorithm
+
+### Leg A — ledger invoice ↔ Razorpay payment
+
+Three **global passes**, not a per-row decision. Order matters: every reference
+match across the whole ledger is settled before any amount-based inference is
+allowed, so a strong match can never lose its payment to a weaker one that happened
+to be evaluated first. A payment, once claimed, is removed from the candidate pool —
+one payment can never be claimed by two invoices.
+
+**A1 — gateway reference.** `ledger.order_ref` ↔ `payment.order_id`. The only join
+key that is an *identity claim* rather than an inference, so it wins outright —
+including when the amounts disagree. A row we can positively identify whose amount is
+wrong is an `amount_mismatch` to investigate, not an unmatched row. Confidence 1.00.
+
+**A2 — exact amount + date window.** For rows with no usable reference. Requires the
+amount to be exactly equal and the payment date inside the window. Confidence 0.92.
+
+**A3 — tolerant amount + date window.** Same, but allowing rounding tolerance.
+Confidence 0.78.
+
+Both A2 and A3 **refuse to choose when more than one payment fits.** More than one
+candidate → `ambiguous_candidates`, confidence 0, no payment assigned. This is the
+single most important safety property in the system: guessing here is what produces a
+confident, wrong reconciliation, and money booked to the wrong invoice is never found
+again.
+
+Whatever remains has no counterpart in the gateway at all → `missing_counterpart`.
+The mirror image — captured payments no ledger row ever claimed — is reported on the
+payment side, because that is a bookkeeping hole rather than a missing payment.
+
+### Window calibration
+
+Between A1 and A2, the engine derives the date window from the A1 matches it just
+made. Those are pairs the gateway reference already proved correct, so each one is a
+free, ground-truth observation of this merchant's actual payment lag.
+
+```
+window.max = min(maxDays, max(configured_default, observed_max_gap))
+window.min = min(configured_default, observed_min_gap)
+```
+
+- **Only ever widened past the configured default, never tightened below it.** The
+  default is a floor on coverage, not a target.
+- **Uses the observed maximum** (`percentile: 1.0`), not a trimmed percentile. These
+  gaps come from pairs already proved correct, so the largest is a lag that genuinely
+  happened — not an outlier to smooth away. Measured over 40 unseen hard-profile
+  seeds: p95 gave 90.9% recall with one misroute; the observed max gave 95.4% with
+  none.
+- **`maxDays: 14`** stops a single garbage date from opening the window indefinitely.
+- **Needs ≥ 8 samples**, else it falls back to the configured default. A window fitted
+  to three data points is not a measurement, and silently trusting it would be worse
+  than a sensible constant.
+
+Precision is protected by the ambiguity guard, not by keeping the window narrow — see
+the sensitivity table in the README for the measurement behind that claim.
+
+### Leg B — settlement UTR ↔ bank credit
+
+This is the batch match, and it is the part row-to-row matching cannot do at all.
+Payments are grouped by the UTR the recon report says paid them out; the group's
+expected credit is the sum of the recomputed nets; that one number is matched against
+the bank.
+
+| Bank rows for the UTR | Outcome |
+|---|---|
+| 0 | `missing_counterpart` — Razorpay says it paid, the bank has no record. Never auto-cleared. |
+| 1, date outside window | `date_out_of_window` |
+| 1, \|Δ\| > tolerance | `amount_mismatch` |
+| 1, within tolerance | matched — `B1` if Δ is exactly 0, else `B2` |
+| >1, sum within tolerance | matched — `B3`, a split payout |
+| >1, sum overshoots | `duplicate_utr` |
+
+**Date is checked before amount, deliberately.** A credit that arrives nine days late
+may still be the right amount, and reporting it as an amount match would hide the
+fact that the cash was not where the books said it was.
+
+**Split vs. duplicate is decided by the sum.** Tranches that add up to the payout are
+normal Razorpay behaviour — treating them as a duplicate would flag a perfectly good
+batch. A sum that overshoots is a genuine double-post: the cash position is
+overstated, no rule can safely pick which row is real, and a human has to decide.
+
+Bank credits whose UTR Razorpay never issued are flagged `missing_counterpart` on the
+bank side. A reconciliation that only looks for what it expects will happily miss cash
+it cannot account for.
+
+### Combining the legs
+
+An invoice is `matched` only if both legs hold.
+
+- Leg A failed → leg A's reason wins (we don't know which settlement to look at).
+- Leg A held, leg B failed → the invoice inherits its batch's problem, because that is
+  the reason its money is not confirmed.
+- Confidence is `min(legA, legB)`, never the average — a chain is not more trustworthy
+  than its weakest link.
+
+That inheritance is why an invoice can match its payment to the paise and still be
+flagged `amount_mismatch`: the batch that paid it out was short-credited. The
+explainer carries a `failing_leg` field precisely so the note describes the leg that
+actually broke.
+
+---
+
+## 3. Thresholds, and why
+
+| Threshold | Value | Reasoning |
+|---|---|---|
+| `ledgerDateWindow` | −1 to +3 days (floor; calibrated upward) | Customers pay a day or two after the invoice; nobody pays before it exists, so the window is asymmetric. One day back only absorbs a late-entered ledger row. |
+| `bankCreditWindow` | −1 to +3 days | Razorpay's standard cycle is T+2 and the recon report already gives the settled date, so this only has to absorb bank posting lag and weekends. |
+| `amountTolerance` | floor ₹2, 5 bps, cap ₹100 | Absorbs **rounding only** — GST on the fee is rounded to the paise, and merchants round by hand. Deliberately far too small to swallow a keying error: injected drift is sub-rupee, injected typos start at ₹400. The cap means a large invoice never gets a proportionally large blind spot. |
+| `batchTolerance` | floor ₹5, 5 bps, cap ₹100 | Slightly looser: a settlement total is a sum of many rounded nets, so rounding accumulates across the batch. Injected short-credits start at ₹150. |
+| `calibration.minSamples` | 8 | Below this, a fitted window is noise. |
+| `calibration.percentile` | 1.0 (observed max) | See above — measured, not assumed. |
+| `calibration.maxDays` | 14 | Bounds the blast radius of one bad date. |
+
+Every one of these is overridable per run via the `reconcile(dataset, config)`
+argument; the sweep exposes `--ledger-window-max` and `--amount-tolerance-bps` so
+sensitivity can be measured rather than argued about.
+
+**Confidence values are assigned by the rule that fired, not guessed.** They are the
+only values the engine can emit, which is what makes "precision on high-confidence
+matches" a meaningful number rather than a vibe.
+
+---
+
+## 4. The audit trail
+
+`audit.jsonl` — one JSON object per line, one line per decision.
+
+```json
+{"run_id":"run_1756...","seq":42,"at":"2026-09-02T...","leg":"A","subject":"ledger",
+ "subject_id":"INV-2026-0046","decision":"matched","rule":"A1_exact_order_ref",
+ "reason":null,"confidence":1,"counterpart":"pay_R00007043",
+ "detail":{"matched_on":"order_ref","date_gap_days":2}}
+```
+
+Append-only **by construction**: every run appends its decisions and nothing ever
+rewrites an earlier line. Sequence numbers are dense and ordered within a run, so a
+removed line is detectable. That is the property that makes it evidence rather than a
+report.
+
+It records the calibration decision, every leg-A and leg-B decision, the combined
+per-invoice verdict, and every explanation — including whether a model or a template
+wrote it, and the hash of the facts it was given. If a note looks wrong, you can tell
+from the trail whether the engine or the writer was at fault.
+
+---
+
+## 5. Where the language model sits, and where it does not
+
+```
+records ─▶ [deterministic engine] ─▶ decision + reason code ─▶ [Claude] ─▶ prose
+                    ▲                                              │
+              money decisions                              explanation only
+              happen HERE                                  never revisits the decision
+```
+
+By the time an exception reaches the explainer, the reason code, the confidence and
+the counterpart records are all fixed. The model receives a narrow set of facts —
+already converted to rupees, so it never does arithmetic — and writes three fields
+under a JSON schema: `explanation`, `suggested_action`, `severity`.
+
+**Why the matching is not routed through a model.** A model that is 97% right about a
+settlement is 3% wrong about a bank balance, and there is no way to audit which 3%.
+Every decision here is reproducible from the inputs and the config, and a test asserts
+that the same input always produces the same decisions.
+
+**Request shape.** `claude-opus-5`, `effort: low` (this is formatting over settled
+facts, not reasoning), structured output, `max_tokens: 2048`. The system prompt is
+constant and carries the `cache_control` breakpoint; the per-exception facts go in the
+user turn *after* it, so the whole batch shares one cached prefix. One request is sent
+alone to warm the cache before the rest fan out at a bounded concurrency — a cache
+entry only becomes readable once the first response starts streaming, so firing
+everything at once would mean every call pays full price.
+
+**Every failure path falls back to deterministic templates** carrying the same facts:
+no API key, a refusal, a rate limit, a parse failure. A reconciliation report with a
+blank reason column is worse than one written stiffly.
+
+---
+
+## 6. Synthetic data and ground truth
+
+The generator produces a merchant-month plus a `truth.json` stating the correct answer
+for every record. Truth is derived from *how the data was built*, never from anything
+the matcher does, and the engine never sees it.
+
+Injected faults are **explicit counts, not probabilities** — "roughly three duplicates"
+is not a testable statement. Each is arranged to test exactly one rule, controlled by
+whether the gateway reference survives:
+
+| Fault | Reference | Tests |
+|---|---|---|
+| sub-rupee drift | stripped | tolerant amount matching (A3) earns its keep |
+| large keying typo | **kept** | a positively-identified row with a wrong amount is `amount_mismatch`, not unmatched |
+| same amount + same day pair | stripped | the ambiguity guard refuses to guess |
+| offline invoice | n/a | ledger row with no payment at all |
+| unrecorded payment | n/a | captured money with no invoice behind it |
+| late settlement | — | `date_out_of_window` |
+| short credit | — | batch-level `amount_mismatch` |
+| duplicate credit | — | `duplicate_utr` |
+| **split credit** | — | *not a fault* — catches a matcher that assumes one UTR means one credit |
+| orphan bank credit | — | money the gateway never sent |
+
+Two profiles: `standard` (a normal month with an elevated fault rate) and `hard` (85%
+of references stripped, payment lag up to 6 days — deliberately wider than the
+matcher's own default window — split payouts, and every fault multiplied). The `hard`
+profile exists because the generator and the matcher were written by the same hand:
+clean numbers on friendly data prove nothing.
+
+---
+
+## 7. Known limitations
+
+1. **The live Claude path is unexercised** — no credentials on the build machine. Only
+   the template path has run end to end.
+2. **Standard-profile accuracy grades its own homework.** Generator and matcher share a
+   spec; the hard-profile numbers are the honest ones.
+3. **Refunds, chargebacks and partial captures are not modelled.** Bank debits are
+   filtered out; only inbound settlement credits are reconciled. A refund netted off a
+   settlement would currently surface as a batch `amount_mismatch` with a correct
+   reason code but an incomplete explanation.
+4. **On-hold and unsettled payments** are reported as `missing_counterpart` rather than
+   getting a distinct "not yet settled" state.
+5. **Single currency.** INR only; no FX.
+6. **Calibration is one-dimensional** — it fits the ledger date window and nothing else.
+   Amount tolerance and the bank window stay static.
+7. **The live pull injects no amount/date collisions**, since real payment amounts
+   cannot be forced to collide.

@@ -37,6 +37,10 @@ if (args['ledger-window-max'] !== undefined) {
 if (args['amount-tolerance-bps'] !== undefined) {
   configOverride.amountTolerance = { bps: Number(args['amount-tolerance-bps']) };
 }
+// Calibration widens the window past the configured floor, so a window-sensitivity
+// study has to switch it off — otherwise every setting below the observed lag
+// silently converges to the same calibrated window and the study measures nothing.
+if (args['no-calibrate']) configOverride.autoCalibrateWindow = false;
 
 const runs = [];
 const allMisroutes = [];

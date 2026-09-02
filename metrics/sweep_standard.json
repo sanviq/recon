@@ -1,11 +1,11 @@
 {
   "profile": "standard",
   "seeds": 40,
-  "generated_at": "2026-09-02T12:15:59.020Z",
+  "generated_at": "2026-09-02T12:31:30.292Z",
   "throughput": {
     "total_records": 6726,
-    "total_ms": 26.2,
-    "records_per_second": 256984
+    "total_ms": 26.9,
+    "records_per_second": 249732
   },
   "match_rate": {
     "min": 0.6806,
