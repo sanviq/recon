@@ -1,6 +1,6 @@
 {
-  "started_at": "2026-09-02T12:09:43.652Z",
-  "finished_at": "2026-09-02T12:09:43.655Z",
+  "started_at": "2026-09-02T12:24:08.483Z",
+  "finished_at": "2026-09-02T12:24:08.488Z",
   "dataset": {
     "dir": "/Users/SANVI/recon/data/demo",
     "manifest": {
@@ -16,12 +16,14 @@
         "ledgerTypoLarge": 3,
         "collisionPairs": 2,
         "blankRefRatio": 0.45,
+        "paymentDelayMaxDays": 2,
         "lateSettlements": 1,
         "shortCredits": 1,
         "duplicateCredits": 1,
+        "splitCredits": 0,
         "orphanCredits": 2
       },
-      "generated_at": "2026-09-02T12:09:43.586Z",
+      "generated_at": "2026-09-02T12:15:59.176Z",
       "counts": {
         "ledger": 72,
         "payments": 71,
@@ -50,7 +52,17 @@
       "floorPaise": 500,
       "bps": 5,
       "capPaise": 10000
+    },
+    "autoCalibrateWindow": true,
+    "calibration": {
+      "minSamples": 8,
+      "percentile": 1,
+      "maxDays": 14
     }
+  },
+  "calibrated_ledger_window": {
+    "min": -1,
+    "max": 3
   },
   "ledger": [
     {
@@ -58,115 +70,13 @@
       "customer": "Lakshmi Silks",
       "date": "2026-08-03",
       "ledger_amount": 244600,
-      "order_ref": "order_R00007000",
+      "order_ref": "",
       "payment_id": "pay_R00007000",
       "utr": "CITIN2608055104",
       "payment_amount": 244600,
       "fee": 4892,
       "tax": 881,
       "net": 238827,
-      "settled_date": "2026-08-05",
-      "delta": 0,
-      "leg_a": {
-        "status": "matched",
-        "rule": "A1_exact_order_ref",
-        "reason": null
-      },
-      "leg_b": {
-        "status": "matched",
-        "rule": "B1_batch_utr_exact",
-        "reason": null
-      },
-      "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007000"
-      },
-      "status": "matched",
-      "reason": null,
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
-      "confidence": 1
-    },
-    {
-      "invoice_id": "INV-2026-0008",
-      "customer": "Deccan Spice Co",
-      "date": "2026-08-03",
-      "ledger_amount": 102008,
-      "order_ref": "order_R00007007",
-      "payment_id": "pay_R00007001",
-      "utr": "CITIN2608055104",
-      "payment_amount": 102008,
-      "fee": 2040,
-      "tax": 367,
-      "net": 99601,
-      "settled_date": "2026-08-05",
-      "delta": 0,
-      "leg_a": {
-        "status": "matched",
-        "rule": "A1_exact_order_ref",
-        "reason": null
-      },
-      "leg_b": {
-        "status": "matched",
-        "rule": "B1_batch_utr_exact",
-        "reason": null
-      },
-      "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007007"
-      },
-      "status": "matched",
-      "reason": null,
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
-      "confidence": 1
-    },
-    {
-      "invoice_id": "INV-2026-0018",
-      "customer": "Coastal Foods",
-      "date": "2026-08-03",
-      "ledger_amount": 430200,
-      "order_ref": "order_R00007017",
-      "payment_id": "pay_R00007002",
-      "utr": "CITIN2608061587",
-      "payment_amount": 236900,
-      "fee": 4738,
-      "tax": 853,
-      "net": 231309,
-      "settled_date": "2026-08-06",
-      "delta": 193300,
-      "leg_a": {
-        "status": "exception",
-        "rule": "A1_exact_order_ref",
-        "reason": "amount_mismatch"
-      },
-      "leg_b": {
-        "status": "matched",
-        "rule": "B1_batch_utr_exact",
-        "reason": null
-      },
-      "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007017",
-        "ledger_amount": 430200,
-        "payment_amount": 236900,
-        "tolerance": 200
-      },
-      "status": "exception",
-      "reason": "amount_mismatch",
-      "rule": "A1_exact_order_ref",
-      "confidence": 1
-    },
-    {
-      "invoice_id": "INV-2026-0019",
-      "customer": "Lakshmi Silks",
-      "date": "2026-08-03",
-      "ledger_amount": 1588500,
-      "order_ref": "",
-      "payment_id": "pay_R00007003",
-      "utr": "CITIN2608055104",
-      "payment_amount": 1588500,
-      "fee": 31770,
-      "tax": 5719,
-      "net": 1551011,
       "settled_date": "2026-08-05",
       "delta": 0,
       "leg_a": {
@@ -187,6 +97,117 @@
       "reason": null,
       "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
       "confidence": 0.92
+    },
+    {
+      "invoice_id": "INV-2026-0008",
+      "customer": "Deccan Spice Co",
+      "date": "2026-08-03",
+      "ledger_amount": 102008,
+      "order_ref": "",
+      "payment_id": "pay_R00007001",
+      "utr": "CITIN2608055104",
+      "payment_amount": 102008,
+      "fee": 2040,
+      "tax": 367,
+      "net": 99601,
+      "settled_date": "2026-08-05",
+      "delta": 0,
+      "leg_a": {
+        "status": "matched",
+        "rule": "A2_exact_amount_in_window",
+        "reason": null
+      },
+      "leg_b": {
+        "status": "matched",
+        "rule": "B1_batch_utr_exact",
+        "reason": null
+      },
+      "detail": {
+        "matched_on": "amount+date",
+        "date_gap_days": 0
+      },
+      "status": "matched",
+      "reason": null,
+      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
+      "confidence": 0.92
+    },
+    {
+      "invoice_id": "INV-2026-0018",
+      "customer": "Coastal Foods",
+      "date": "2026-08-03",
+      "ledger_amount": 318500,
+      "order_ref": "order_R00007017",
+      "payment_id": "pay_R00007002",
+      "utr": "CITIN2608061587",
+      "payment_amount": 236900,
+      "fee": 4738,
+      "tax": 853,
+      "net": 231309,
+      "settled_date": "2026-08-06",
+      "delta": 81600,
+      "leg_a": {
+        "status": "exception",
+        "rule": "A1_exact_order_ref",
+        "reason": "amount_mismatch"
+      },
+      "leg_b": {
+        "status": "matched",
+        "rule": "B1_batch_utr_exact",
+        "reason": null
+      },
+      "detail": {
+        "matched_on": "order_ref",
+        "order_ref": "order_R00007017",
+        "date_gap_days": 1,
+        "ledger_amount": 318500,
+        "payment_amount": 236900,
+        "tolerance": 200
+      },
+      "status": "exception",
+      "reason": "amount_mismatch",
+      "rule": "A1_exact_order_ref",
+      "confidence": 1,
+      "note": {
+        "explanation": "Invoice INV-2026-0018 is booked at Rs 3,185.00 but Razorpay captured Rs 2,369.00 against the same order reference. The two records are the same transaction, so one of the amounts was entered wrong.",
+        "suggested_action": "Open invoice INV-2026-0018 and compare it against payment pay_R00007002 in the Razorpay dashboard, then correct whichever side is wrong.",
+        "severity": "medium",
+        "source": "template",
+        "facts_hash": "3c5a9835bb29f39f"
+      }
+    },
+    {
+      "invoice_id": "INV-2026-0019",
+      "customer": "Lakshmi Silks",
+      "date": "2026-08-03",
+      "ledger_amount": 1588500,
+      "order_ref": "order_R00007018",
+      "payment_id": "pay_R00007003",
+      "utr": "CITIN2608055104",
+      "payment_amount": 1588500,
+      "fee": 31770,
+      "tax": 5719,
+      "net": 1551011,
+      "settled_date": "2026-08-05",
+      "delta": 0,
+      "leg_a": {
+        "status": "matched",
+        "rule": "A1_exact_order_ref",
+        "reason": null
+      },
+      "leg_b": {
+        "status": "matched",
+        "rule": "B1_batch_utr_exact",
+        "reason": null
+      },
+      "detail": {
+        "matched_on": "order_ref",
+        "order_ref": "order_R00007018",
+        "date_gap_days": 0
+      },
+      "status": "matched",
+      "reason": null,
+      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
+      "confidence": 1
     },
     {
       "invoice_id": "INV-2026-0028",
@@ -214,7 +235,8 @@
       },
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007027"
+        "order_ref": "order_R00007027",
+        "date_gap_days": 2
       },
       "status": "matched",
       "reason": null,
@@ -226,7 +248,7 @@
       "customer": "Verma Auto Parts",
       "date": "2026-08-04",
       "ledger_amount": 118074,
-      "order_ref": "order_R00007054",
+      "order_ref": "",
       "payment_id": "pay_R00007005",
       "utr": "AXISN2608071357",
       "payment_amount": 118074,
@@ -237,7 +259,7 @@
       "delta": 0,
       "leg_a": {
         "status": "matched",
-        "rule": "A1_exact_order_ref",
+        "rule": "A2_exact_amount_in_window",
         "reason": null
       },
       "leg_b": {
@@ -246,13 +268,13 @@
         "reason": null
       },
       "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007054"
+        "matched_on": "amount+date",
+        "date_gap_days": 1
       },
       "status": "matched",
       "reason": null,
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
-      "confidence": 1
+      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
+      "confidence": 0.92
     },
     {
       "invoice_id": "INV-2026-0068",
@@ -313,7 +335,8 @@
       },
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007053"
+        "order_ref": "order_R00007053",
+        "date_gap_days": 0
       },
       "status": "matched",
       "reason": null,
@@ -351,7 +374,14 @@
       "status": "exception",
       "reason": "ambiguous_candidates",
       "rule": null,
-      "confidence": 0
+      "confidence": 0,
+      "note": {
+        "explanation": "Invoice INV-2026-0022 for Rs 683.00 on 2026-08-06 matches more than one Razorpay payment equally well, and the invoice has no gateway reference to break the tie. Assigning it to either payment would be a guess.",
+        "suggested_action": "Look up the customer name on the candidate payments in the Razorpay dashboard and link invoice INV-2026-0022 to the right one by hand.",
+        "severity": "medium",
+        "source": "template",
+        "facts_hash": "cb39cd81bf8fb2e0"
+      }
     },
     {
       "invoice_id": "INV-2026-0026",
@@ -384,7 +414,14 @@
       "status": "exception",
       "reason": "ambiguous_candidates",
       "rule": null,
-      "confidence": 0
+      "confidence": 0,
+      "note": {
+        "explanation": "Invoice INV-2026-0026 for Rs 683.00 on 2026-08-06 matches more than one Razorpay payment equally well, and the invoice has no gateway reference to break the tie. Assigning it to either payment would be a guess.",
+        "suggested_action": "Look up the customer name on the candidate payments in the Razorpay dashboard and link invoice INV-2026-0026 to the right one by hand.",
+        "severity": "medium",
+        "source": "template",
+        "facts_hash": "565c3d027bda21c4"
+      }
     },
     {
       "invoice_id": "INV-2026-0027",
@@ -412,7 +449,8 @@
       },
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007026"
+        "order_ref": "order_R00007026",
+        "date_gap_days": 0
       },
       "status": "matched",
       "reason": null,
@@ -478,7 +516,8 @@
       },
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007055"
+        "order_ref": "order_R00007055",
+        "date_gap_days": 2
       },
       "status": "matched",
       "reason": null,
@@ -523,7 +562,7 @@
       "customer": "Verma Auto Parts",
       "date": "2026-08-06",
       "ledger_amount": 181300,
-      "order_ref": "",
+      "order_ref": "order_R00007069",
       "payment_id": "pay_R00007014",
       "utr": "AXISN2608094430",
       "payment_amount": 181300,
@@ -534,7 +573,7 @@
       "delta": 0,
       "leg_a": {
         "status": "matched",
-        "rule": "A2_exact_amount_in_window",
+        "rule": "A1_exact_order_ref",
         "reason": null
       },
       "leg_b": {
@@ -543,13 +582,14 @@
         "reason": null
       },
       "detail": {
-        "matched_on": "amount+date",
+        "matched_on": "order_ref",
+        "order_ref": "order_R00007069",
         "date_gap_days": 1
       },
       "status": "matched",
       "reason": null,
-      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
-      "confidence": 0.92
+      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
+      "confidence": 1
     },
     {
       "invoice_id": "INV-2026-0005",
@@ -589,7 +629,7 @@
       "customer": "Nimbus Softworks",
       "date": "2026-08-07",
       "ledger_amount": 6880271,
-      "order_ref": "",
+      "order_ref": "order_R00007039",
       "payment_id": null,
       "utr": null,
       "payment_amount": null,
@@ -615,7 +655,14 @@
       "status": "exception",
       "reason": "missing_counterpart",
       "rule": null,
-      "confidence": 0
+      "confidence": 0,
+      "note": {
+        "explanation": "Invoice INV-2026-0040 for Rs 68,802.71 dated 2026-08-07 has no matching Razorpay payment. Either it was settled outside the gateway, or the money was never collected.",
+        "suggested_action": "Check with Nimbus Softworks whether invoice INV-2026-0040 was paid by cash, cheque or direct transfer, and record the method against it.",
+        "severity": "high",
+        "source": "template",
+        "facts_hash": "92bffc7215889eb2"
+      }
     },
     {
       "invoice_id": "INV-2026-0003",
@@ -654,7 +701,7 @@
       "invoice_id": "INV-2026-0042",
       "customer": "Anand Traders",
       "date": "2026-08-08",
-      "ledger_amount": 1335854,
+      "ledger_amount": 1335757,
       "order_ref": "",
       "payment_id": "pay_R00007018",
       "utr": "AXISN2608109261",
@@ -663,7 +710,7 @@
       "tax": 4809,
       "net": 1304275,
       "settled_date": "2026-08-10",
-      "delta": 54,
+      "delta": -43,
       "leg_a": {
         "status": "matched",
         "rule": "A3_fuzzy_amount_in_window",
@@ -714,13 +761,20 @@
       "status": "exception",
       "reason": "missing_counterpart",
       "rule": null,
-      "confidence": 0
+      "confidence": 0,
+      "note": {
+        "explanation": "Invoice INV-2026-0004 for Rs 880.87 dated 2026-08-09 has no matching Razorpay payment. Either it was settled outside the gateway, or the money was never collected.",
+        "suggested_action": "Check with Aarav Print House whether invoice INV-2026-0004 was paid by cash, cheque or direct transfer, and record the method against it.",
+        "severity": "high",
+        "source": "template",
+        "facts_hash": "f57db871749eb50a"
+      }
     },
     {
       "invoice_id": "INV-2026-0020",
       "customer": "Verma Auto Parts",
       "date": "2026-08-09",
-      "ledger_amount": 12574608,
+      "ledger_amount": 12574645,
       "order_ref": "",
       "payment_id": "pay_R00007020",
       "utr": "HDFCN2608110044",
@@ -729,7 +783,7 @@
       "tax": 45269,
       "net": 12277839,
       "settled_date": "2026-08-11",
-      "delta": 8,
+      "delta": 45,
       "leg_a": {
         "status": "matched",
         "rule": "A3_fuzzy_amount_in_window",
@@ -775,7 +829,8 @@
       },
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007051"
+        "order_ref": "order_R00007051",
+        "date_gap_days": 0
       },
       "status": "matched",
       "reason": null,
@@ -808,7 +863,8 @@
       },
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007059"
+        "order_ref": "order_R00007059",
+        "date_gap_days": 0
       },
       "status": "matched",
       "reason": null,
@@ -820,7 +876,7 @@
       "customer": "Rohit Electronics",
       "date": "2026-08-09",
       "ledger_amount": 179863,
-      "order_ref": "",
+      "order_ref": "order_R00007071",
       "payment_id": "pay_R00007023",
       "utr": "HDFCN2608110044",
       "payment_amount": 179863,
@@ -828,6 +884,40 @@
       "tax": 647,
       "net": 175619,
       "settled_date": "2026-08-11",
+      "delta": 0,
+      "leg_a": {
+        "status": "matched",
+        "rule": "A1_exact_order_ref",
+        "reason": null
+      },
+      "leg_b": {
+        "status": "matched",
+        "rule": "B1_batch_utr_exact",
+        "reason": null
+      },
+      "detail": {
+        "matched_on": "order_ref",
+        "order_ref": "order_R00007071",
+        "date_gap_days": 0
+      },
+      "status": "matched",
+      "reason": null,
+      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
+      "confidence": 1
+    },
+    {
+      "invoice_id": "INV-2026-0063",
+      "customer": "Patel Hardware",
+      "date": "2026-08-10",
+      "ledger_amount": 134100,
+      "order_ref": "",
+      "payment_id": "pay_R00007024",
+      "utr": "CITIN2608124629",
+      "payment_amount": 134100,
+      "fee": 2682,
+      "tax": 483,
+      "net": 130935,
+      "settled_date": "2026-08-12",
       "delta": 0,
       "leg_a": {
         "status": "matched",
@@ -847,39 +937,6 @@
       "reason": null,
       "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
       "confidence": 0.92
-    },
-    {
-      "invoice_id": "INV-2026-0063",
-      "customer": "Patel Hardware",
-      "date": "2026-08-10",
-      "ledger_amount": 134100,
-      "order_ref": "order_R00007062",
-      "payment_id": "pay_R00007024",
-      "utr": "CITIN2608124629",
-      "payment_amount": 134100,
-      "fee": 2682,
-      "tax": 483,
-      "net": 130935,
-      "settled_date": "2026-08-12",
-      "delta": 0,
-      "leg_a": {
-        "status": "matched",
-        "rule": "A1_exact_order_ref",
-        "reason": null
-      },
-      "leg_b": {
-        "status": "matched",
-        "rule": "B1_batch_utr_exact",
-        "reason": null
-      },
-      "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007062"
-      },
-      "status": "matched",
-      "reason": null,
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
-      "confidence": 1
     },
     {
       "invoice_id": "INV-2026-0002",
@@ -919,7 +976,7 @@
       "customer": "Lakshmi Silks",
       "date": "2026-08-11",
       "ledger_amount": 202000,
-      "order_ref": "order_R00007028",
+      "order_ref": "",
       "payment_id": "pay_R00007026",
       "utr": "AXISN2608138659",
       "payment_amount": 202000,
@@ -930,7 +987,7 @@
       "delta": 0,
       "leg_a": {
         "status": "matched",
-        "rule": "A1_exact_order_ref",
+        "rule": "A2_exact_amount_in_window",
         "reason": null
       },
       "leg_b": {
@@ -939,19 +996,19 @@
         "reason": null
       },
       "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007028"
+        "matched_on": "amount+date",
+        "date_gap_days": 0
       },
       "status": "matched",
       "reason": null,
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
-      "confidence": 1
+      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
+      "confidence": 0.92
     },
     {
       "invoice_id": "INV-2026-0037",
       "customer": "Sunrise Stationers",
       "date": "2026-08-11",
-      "ledger_amount": 2392009,
+      "ledger_amount": 2231509,
       "order_ref": "order_R00007036",
       "payment_id": "pay_R00007027",
       "utr": "ICICN2608157671",
@@ -960,7 +1017,7 @@
       "tax": 7834,
       "net": 2124655,
       "settled_date": "2026-08-15",
-      "delta": 216000,
+      "delta": 55500,
       "leg_a": {
         "status": "exception",
         "rule": "A1_exact_order_ref",
@@ -974,14 +1031,22 @@
       "detail": {
         "matched_on": "order_ref",
         "order_ref": "order_R00007036",
-        "ledger_amount": 2392009,
+        "date_gap_days": 2,
+        "ledger_amount": 2231509,
         "payment_amount": 2176009,
         "tolerance": 1088
       },
       "status": "exception",
       "reason": "amount_mismatch",
       "rule": "A1_exact_order_ref",
-      "confidence": 1
+      "confidence": 1,
+      "note": {
+        "explanation": "Invoice INV-2026-0037 is booked at Rs 22,315.09 but Razorpay captured Rs 21,760.09 against the same order reference. The two records are the same transaction, so one of the amounts was entered wrong.",
+        "suggested_action": "Open invoice INV-2026-0037 and compare it against payment pay_R00007027 in the Razorpay dashboard, then correct whichever side is wrong.",
+        "severity": "medium",
+        "source": "template",
+        "facts_hash": "66bd565cc8c6b218"
+      }
     },
     {
       "invoice_id": "INV-2026-0050",
@@ -1021,7 +1086,7 @@
       "customer": "Nimbus Softworks",
       "date": "2026-08-12",
       "ledger_amount": 1911723,
-      "order_ref": "order_R00007016",
+      "order_ref": "",
       "payment_id": "pay_R00007029",
       "utr": "HDFCN2608145125",
       "payment_amount": 1911723,
@@ -1032,7 +1097,7 @@
       "delta": 0,
       "leg_a": {
         "status": "matched",
-        "rule": "A1_exact_order_ref",
+        "rule": "A2_exact_amount_in_window",
         "reason": null
       },
       "leg_b": {
@@ -1041,13 +1106,13 @@
         "reason": null
       },
       "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007016"
+        "matched_on": "amount+date",
+        "date_gap_days": 0
       },
       "status": "matched",
       "reason": null,
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
-      "confidence": 1
+      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
+      "confidence": 0.92
     },
     {
       "invoice_id": "INV-2026-0034",
@@ -1080,13 +1145,20 @@
       "status": "exception",
       "reason": "missing_counterpart",
       "rule": null,
-      "confidence": 0
+      "confidence": 0,
+      "note": {
+        "explanation": "Invoice INV-2026-0034 for Rs 1,434.00 dated 2026-08-12 has no matching Razorpay payment. Either it was settled outside the gateway, or the money was never collected.",
+        "suggested_action": "Check with Rohit Electronics whether invoice INV-2026-0034 was paid by cash, cheque or direct transfer, and record the method against it.",
+        "severity": "high",
+        "source": "template",
+        "facts_hash": "40cb554645d02268"
+      }
     },
     {
       "invoice_id": "INV-2026-0064",
       "customer": "Lakshmi Silks",
       "date": "2026-08-12",
-      "ledger_amount": 686400,
+      "ledger_amount": 625600,
       "order_ref": "order_R00007063",
       "payment_id": "pay_R00007031",
       "utr": "HDFCN2608145125",
@@ -1095,7 +1167,7 @@
       "tax": 2857,
       "net": 774773,
       "settled_date": "2026-08-14",
-      "delta": -107100,
+      "delta": -167900,
       "leg_a": {
         "status": "exception",
         "rule": "A1_exact_order_ref",
@@ -1109,14 +1181,22 @@
       "detail": {
         "matched_on": "order_ref",
         "order_ref": "order_R00007063",
-        "ledger_amount": 686400,
+        "date_gap_days": 0,
+        "ledger_amount": 625600,
         "payment_amount": 793500,
         "tolerance": 397
       },
       "status": "exception",
       "reason": "amount_mismatch",
       "rule": "A1_exact_order_ref",
-      "confidence": 1
+      "confidence": 1,
+      "note": {
+        "explanation": "Invoice INV-2026-0064 is booked at Rs 6,256.00 but Razorpay captured Rs 7,935.00 against the same order reference. The two records are the same transaction, so one of the amounts was entered wrong.",
+        "suggested_action": "Open invoice INV-2026-0064 and compare it against payment pay_R00007031 in the Razorpay dashboard, then correct whichever side is wrong.",
+        "severity": "medium",
+        "source": "template",
+        "facts_hash": "0253d55890b00a0c"
+      }
     },
     {
       "invoice_id": "INV-2026-0065",
@@ -1144,7 +1224,8 @@
       },
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007064"
+        "order_ref": "order_R00007064",
+        "date_gap_days": 2
       },
       "status": "matched",
       "reason": null,
@@ -1156,7 +1237,7 @@
       "customer": "Aarav Print House",
       "date": "2026-08-13",
       "ledger_amount": 1159000,
-      "order_ref": "order_R00007032",
+      "order_ref": "",
       "payment_id": "pay_R00007033",
       "utr": "ICICN2608157671",
       "payment_amount": 1159000,
@@ -1167,7 +1248,7 @@
       "delta": 0,
       "leg_a": {
         "status": "matched",
-        "rule": "A1_exact_order_ref",
+        "rule": "A2_exact_amount_in_window",
         "reason": null
       },
       "leg_b": {
@@ -1176,13 +1257,13 @@
         "reason": null
       },
       "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007032"
+        "matched_on": "amount+date",
+        "date_gap_days": 0
       },
       "status": "matched",
       "reason": null,
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
-      "confidence": 1
+      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
+      "confidence": 0.92
     },
     {
       "invoice_id": "INV-2026-0043",
@@ -1210,7 +1291,8 @@
       },
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007042"
+        "order_ref": "order_R00007042",
+        "date_gap_days": 0
       },
       "status": "matched",
       "reason": null,
@@ -1222,7 +1304,7 @@
       "customer": "Kavya Organics",
       "date": "2026-08-13",
       "ledger_amount": 145100,
-      "order_ref": "order_R00007050",
+      "order_ref": "",
       "payment_id": "pay_R00007035",
       "utr": "ICICN2608157671",
       "payment_amount": 145100,
@@ -1230,6 +1312,39 @@
       "tax": 522,
       "net": 141676,
       "settled_date": "2026-08-15",
+      "delta": 0,
+      "leg_a": {
+        "status": "matched",
+        "rule": "A2_exact_amount_in_window",
+        "reason": null
+      },
+      "leg_b": {
+        "status": "matched",
+        "rule": "B1_batch_utr_exact",
+        "reason": null
+      },
+      "detail": {
+        "matched_on": "amount+date",
+        "date_gap_days": 0
+      },
+      "status": "matched",
+      "reason": null,
+      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
+      "confidence": 0.92
+    },
+    {
+      "invoice_id": "INV-2026-0071",
+      "customer": "Nimbus Softworks",
+      "date": "2026-08-13",
+      "ledger_amount": 951900,
+      "order_ref": "order_R00007070",
+      "payment_id": "pay_R00007036",
+      "utr": "ICICN2608171628",
+      "payment_amount": 951900,
+      "fee": 19038,
+      "tax": 3427,
+      "net": 929435,
+      "settled_date": "2026-08-17",
       "delta": 0,
       "leg_a": {
         "status": "matched",
@@ -1243,7 +1358,8 @@
       },
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007050"
+        "order_ref": "order_R00007070",
+        "date_gap_days": 2
       },
       "status": "matched",
       "reason": null,
@@ -1251,44 +1367,11 @@
       "confidence": 1
     },
     {
-      "invoice_id": "INV-2026-0071",
-      "customer": "Nimbus Softworks",
-      "date": "2026-08-13",
-      "ledger_amount": 951900,
-      "order_ref": "",
-      "payment_id": "pay_R00007036",
-      "utr": "ICICN2608171628",
-      "payment_amount": 951900,
-      "fee": 19038,
-      "tax": 3427,
-      "net": 929435,
-      "settled_date": "2026-08-17",
-      "delta": 0,
-      "leg_a": {
-        "status": "matched",
-        "rule": "A2_exact_amount_in_window",
-        "reason": null
-      },
-      "leg_b": {
-        "status": "matched",
-        "rule": "B1_batch_utr_exact",
-        "reason": null
-      },
-      "detail": {
-        "matched_on": "amount+date",
-        "date_gap_days": 2
-      },
-      "status": "matched",
-      "reason": null,
-      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
-      "confidence": 0.92
-    },
-    {
       "invoice_id": "INV-2026-0030",
       "customer": "Nimbus Softworks",
       "date": "2026-08-14",
       "ledger_amount": 1177352,
-      "order_ref": "",
+      "order_ref": "order_R00007029",
       "payment_id": "pay_R00007037",
       "utr": "ICICN2608171628",
       "payment_amount": 1177352,
@@ -1299,7 +1382,7 @@
       "delta": 0,
       "leg_a": {
         "status": "matched",
-        "rule": "A2_exact_amount_in_window",
+        "rule": "A1_exact_order_ref",
         "reason": null
       },
       "leg_b": {
@@ -1308,13 +1391,14 @@
         "reason": null
       },
       "detail": {
-        "matched_on": "amount+date",
+        "matched_on": "order_ref",
+        "order_ref": "order_R00007029",
         "date_gap_days": 1
       },
       "status": "matched",
       "reason": null,
-      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
-      "confidence": 0.92
+      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
+      "confidence": 1
     },
     {
       "invoice_id": "INV-2026-0066",
@@ -1347,7 +1431,14 @@
       "status": "exception",
       "reason": "ambiguous_candidates",
       "rule": null,
-      "confidence": 0
+      "confidence": 0,
+      "note": {
+        "explanation": "Invoice INV-2026-0066 for Rs 16,607.94 on 2026-08-14 matches more than one Razorpay payment equally well, and the invoice has no gateway reference to break the tie. Assigning it to either payment would be a guess.",
+        "suggested_action": "Look up the customer name on the candidate payments in the Razorpay dashboard and link invoice INV-2026-0066 to the right one by hand.",
+        "severity": "medium",
+        "source": "template",
+        "facts_hash": "ec02ee9167b1415a"
+      }
     },
     {
       "invoice_id": "INV-2026-0015",
@@ -1380,7 +1471,14 @@
       "status": "exception",
       "reason": "ambiguous_candidates",
       "rule": null,
-      "confidence": 0
+      "confidence": 0,
+      "note": {
+        "explanation": "Invoice INV-2026-0015 for Rs 16,607.94 on 2026-08-14 matches more than one Razorpay payment equally well, and the invoice has no gateway reference to break the tie. Assigning it to either payment would be a guess.",
+        "suggested_action": "Look up the customer name on the candidate payments in the Razorpay dashboard and link invoice INV-2026-0015 to the right one by hand.",
+        "severity": "medium",
+        "source": "template",
+        "facts_hash": "966f317e9cd98958"
+      }
     },
     {
       "invoice_id": "INV-2026-0016",
@@ -1446,14 +1544,21 @@
       "status": "exception",
       "reason": "missing_counterpart",
       "rule": null,
-      "confidence": 0
+      "confidence": 0,
+      "note": {
+        "explanation": "Invoice INV-2026-0035 for Rs 1,55,356.69 dated 2026-08-15 has no matching Razorpay payment. Either it was settled outside the gateway, or the money was never collected.",
+        "suggested_action": "Check with Deccan Spice Co whether invoice INV-2026-0035 was paid by cash, cheque or direct transfer, and record the method against it.",
+        "severity": "high",
+        "source": "template",
+        "facts_hash": "9e06bcced04bedc5"
+      }
     },
     {
       "invoice_id": "INV-2026-0007",
       "customer": "Aarav Print House",
       "date": "2026-08-17",
       "ledger_amount": 12177900,
-      "order_ref": "",
+      "order_ref": "order_R00007006",
       "payment_id": "pay_R00007042",
       "utr": "CITIN2608194900",
       "payment_amount": 12177900,
@@ -1464,7 +1569,7 @@
       "delta": 0,
       "leg_a": {
         "status": "matched",
-        "rule": "A2_exact_amount_in_window",
+        "rule": "A1_exact_order_ref",
         "reason": null
       },
       "leg_b": {
@@ -1473,20 +1578,21 @@
         "reason": null
       },
       "detail": {
-        "matched_on": "amount+date",
+        "matched_on": "order_ref",
+        "order_ref": "order_R00007006",
         "date_gap_days": 0
       },
       "status": "matched",
       "reason": null,
-      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
-      "confidence": 0.92
+      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
+      "confidence": 1
     },
     {
       "invoice_id": "INV-2026-0046",
       "customer": "Coastal Foods",
       "date": "2026-08-17",
       "ledger_amount": 1000400,
-      "order_ref": "",
+      "order_ref": "order_R00007045",
       "payment_id": "pay_R00007043",
       "utr": "HDFCN2608219874",
       "payment_amount": 1000400,
@@ -1497,7 +1603,7 @@
       "delta": 0,
       "leg_a": {
         "status": "matched",
-        "rule": "A2_exact_amount_in_window",
+        "rule": "A1_exact_order_ref",
         "reason": null
       },
       "leg_b": {
@@ -1506,27 +1612,35 @@
         "reason": "amount_mismatch"
       },
       "detail": {
-        "matched_on": "amount+date",
+        "matched_on": "order_ref",
+        "order_ref": "order_R00007045",
         "date_gap_days": 2,
         "batch": {
           "expected_credit": 3274170,
-          "credited": 3217870,
-          "delta": -56300,
+          "credited": 3219670,
+          "delta": -54500,
           "tolerance": 1637,
           "txn_id": "TXN202608210016"
         }
       },
       "status": "exception",
       "reason": "amount_mismatch",
-      "rule": "A2_exact_amount_in_window",
-      "confidence": 0
+      "rule": "A1_exact_order_ref",
+      "confidence": 0,
+      "note": {
+        "explanation": "Invoice INV-2026-0046 is booked at Rs 10,004.00 but Razorpay captured Rs 10,004.00 against the same order reference. The two records are the same transaction, so one of the amounts was entered wrong.",
+        "suggested_action": "Open invoice INV-2026-0046 and compare it against payment pay_R00007043 in the Razorpay dashboard, then correct whichever side is wrong.",
+        "severity": "medium",
+        "source": "template",
+        "facts_hash": "da88f589f24c7cc8"
+      }
     },
     {
       "invoice_id": "INV-2026-0062",
       "customer": "Rohit Electronics",
       "date": "2026-08-17",
       "ledger_amount": 1798165,
-      "order_ref": "",
+      "order_ref": "order_R00007061",
       "payment_id": "pay_R00007044",
       "utr": "CITIN2608194900",
       "payment_amount": 1798165,
@@ -1537,7 +1651,7 @@
       "delta": 0,
       "leg_a": {
         "status": "matched",
-        "rule": "A2_exact_amount_in_window",
+        "rule": "A1_exact_order_ref",
         "reason": null
       },
       "leg_b": {
@@ -1546,13 +1660,14 @@
         "reason": null
       },
       "detail": {
-        "matched_on": "amount+date",
+        "matched_on": "order_ref",
+        "order_ref": "order_R00007061",
         "date_gap_days": 0
       },
       "status": "matched",
       "reason": null,
-      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
-      "confidence": 0.92
+      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
+      "confidence": 1
     },
     {
       "invoice_id": "INV-2026-0010",
@@ -1580,7 +1695,8 @@
       },
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007009"
+        "order_ref": "order_R00007009",
+        "date_gap_days": 0
       },
       "status": "matched",
       "reason": null,
@@ -1592,7 +1708,7 @@
       "customer": "Verma Auto Parts",
       "date": "2026-08-18",
       "ledger_amount": 10992000,
-      "order_ref": "order_R00007011",
+      "order_ref": "",
       "payment_id": "pay_R00007046",
       "utr": "ICICN2608200061",
       "payment_amount": 10992000,
@@ -1603,7 +1719,7 @@
       "delta": 0,
       "leg_a": {
         "status": "matched",
-        "rule": "A1_exact_order_ref",
+        "rule": "A2_exact_amount_in_window",
         "reason": null
       },
       "leg_b": {
@@ -1612,13 +1728,13 @@
         "reason": null
       },
       "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007011"
+        "matched_on": "amount+date",
+        "date_gap_days": 0
       },
       "status": "matched",
       "reason": null,
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
-      "confidence": 1
+      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
+      "confidence": 0.92
     },
     {
       "invoice_id": "INV-2026-0038",
@@ -1646,7 +1762,8 @@
       },
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007037"
+        "order_ref": "order_R00007037",
+        "date_gap_days": 0
       },
       "status": "matched",
       "reason": null,
@@ -1657,7 +1774,7 @@
       "invoice_id": "INV-2026-0039",
       "customer": "Verma Auto Parts",
       "date": "2026-08-18",
-      "ledger_amount": 14654895,
+      "ledger_amount": 14654861,
       "order_ref": "",
       "payment_id": "pay_R00007048",
       "utr": "ICICN2608200061",
@@ -1666,7 +1783,7 @@
       "tax": 52758,
       "net": 14309044,
       "settled_date": "2026-08-20",
-      "delta": -5,
+      "delta": -39,
       "leg_a": {
         "status": "matched",
         "rule": "A3_fuzzy_amount_in_window",
@@ -1713,10 +1830,11 @@
       "detail": {
         "matched_on": "order_ref",
         "order_ref": "order_R00007048",
+        "date_gap_days": 1,
         "batch": {
           "expected_credit": 3274170,
-          "credited": 3217870,
-          "delta": -56300,
+          "credited": 3219670,
+          "delta": -54500,
           "tolerance": 1637,
           "txn_id": "TXN202608210016"
         }
@@ -1724,13 +1842,20 @@
       "status": "exception",
       "reason": "amount_mismatch",
       "rule": "A1_exact_order_ref",
-      "confidence": 0
+      "confidence": 0,
+      "note": {
+        "explanation": "Invoice INV-2026-0049 is booked at Rs 1,226.08 but Razorpay captured Rs 1,226.08 against the same order reference. The two records are the same transaction, so one of the amounts was entered wrong.",
+        "suggested_action": "Open invoice INV-2026-0049 and compare it against payment pay_R00007049 in the Razorpay dashboard, then correct whichever side is wrong.",
+        "severity": "medium",
+        "source": "template",
+        "facts_hash": "1823b36b47ddcc25"
+      }
     },
     {
       "invoice_id": "INV-2026-0067",
       "customer": "Rohit Electronics",
       "date": "2026-08-18",
-      "ledger_amount": 179880,
+      "ledger_amount": 179742,
       "order_ref": "",
       "payment_id": "pay_R00007050",
       "utr": "ICICN2608200061",
@@ -1739,7 +1864,7 @@
       "tax": 647,
       "net": 175557,
       "settled_date": "2026-08-20",
-      "delta": 80,
+      "delta": -58,
       "leg_a": {
         "status": "matched",
         "rule": "A3_fuzzy_amount_in_window",
@@ -1764,53 +1889,13 @@
       "customer": "Nimbus Softworks",
       "date": "2026-08-19",
       "ledger_amount": 229900,
-      "order_ref": "order_R00007005",
+      "order_ref": "",
       "payment_id": "pay_R00007051",
       "utr": "HDFCN2608219874",
       "payment_amount": 229900,
       "fee": 4598,
       "tax": 828,
       "net": 224474,
-      "settled_date": "2026-08-21",
-      "delta": 0,
-      "leg_a": {
-        "status": "matched",
-        "rule": "A1_exact_order_ref",
-        "reason": null
-      },
-      "leg_b": {
-        "status": "exception",
-        "rule": null,
-        "reason": "amount_mismatch"
-      },
-      "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007005",
-        "batch": {
-          "expected_credit": 3274170,
-          "credited": 3217870,
-          "delta": -56300,
-          "tolerance": 1637,
-          "txn_id": "TXN202608210016"
-        }
-      },
-      "status": "exception",
-      "reason": "amount_mismatch",
-      "rule": "A1_exact_order_ref",
-      "confidence": 0
-    },
-    {
-      "invoice_id": "INV-2026-0009",
-      "customer": "Deccan Spice Co",
-      "date": "2026-08-19",
-      "ledger_amount": 118000,
-      "order_ref": "",
-      "payment_id": "pay_R00007052",
-      "utr": "HDFCN2608219874",
-      "payment_amount": 118000,
-      "fee": 2360,
-      "tax": 425,
-      "net": 115215,
       "settled_date": "2026-08-21",
       "delta": 0,
       "leg_a": {
@@ -1828,8 +1913,8 @@
         "date_gap_days": 0,
         "batch": {
           "expected_credit": 3274170,
-          "credited": 3217870,
-          "delta": -56300,
+          "credited": 3219670,
+          "delta": -54500,
           "tolerance": 1637,
           "txn_id": "TXN202608210016"
         }
@@ -1837,14 +1922,69 @@
       "status": "exception",
       "reason": "amount_mismatch",
       "rule": "A2_exact_amount_in_window",
-      "confidence": 0
+      "confidence": 0,
+      "note": {
+        "explanation": "Invoice INV-2026-0006 is booked at Rs 2,299.00 but Razorpay captured Rs 2,299.00 against the same order reference. The two records are the same transaction, so one of the amounts was entered wrong.",
+        "suggested_action": "Open invoice INV-2026-0006 and compare it against payment pay_R00007051 in the Razorpay dashboard, then correct whichever side is wrong.",
+        "severity": "medium",
+        "source": "template",
+        "facts_hash": "8d9b42a4872fdbbd"
+      }
+    },
+    {
+      "invoice_id": "INV-2026-0009",
+      "customer": "Deccan Spice Co",
+      "date": "2026-08-19",
+      "ledger_amount": 118000,
+      "order_ref": "order_R00007008",
+      "payment_id": "pay_R00007052",
+      "utr": "HDFCN2608219874",
+      "payment_amount": 118000,
+      "fee": 2360,
+      "tax": 425,
+      "net": 115215,
+      "settled_date": "2026-08-21",
+      "delta": 0,
+      "leg_a": {
+        "status": "matched",
+        "rule": "A1_exact_order_ref",
+        "reason": null
+      },
+      "leg_b": {
+        "status": "exception",
+        "rule": null,
+        "reason": "amount_mismatch"
+      },
+      "detail": {
+        "matched_on": "order_ref",
+        "order_ref": "order_R00007008",
+        "date_gap_days": 0,
+        "batch": {
+          "expected_credit": 3274170,
+          "credited": 3219670,
+          "delta": -54500,
+          "tolerance": 1637,
+          "txn_id": "TXN202608210016"
+        }
+      },
+      "status": "exception",
+      "reason": "amount_mismatch",
+      "rule": "A1_exact_order_ref",
+      "confidence": 0,
+      "note": {
+        "explanation": "Invoice INV-2026-0009 is booked at Rs 1,180.00 but Razorpay captured Rs 1,180.00 against the same order reference. The two records are the same transaction, so one of the amounts was entered wrong.",
+        "suggested_action": "Open invoice INV-2026-0009 and compare it against payment pay_R00007052 in the Razorpay dashboard, then correct whichever side is wrong.",
+        "severity": "medium",
+        "source": "template",
+        "facts_hash": "5399dcf543d4360c"
+      }
     },
     {
       "invoice_id": "INV-2026-0023",
       "customer": "Patel Hardware",
       "date": "2026-08-19",
       "ledger_amount": 2478000,
-      "order_ref": "",
+      "order_ref": "order_R00007022",
       "payment_id": "pay_R00007053",
       "utr": "ICICN2608227847",
       "payment_amount": 2478000,
@@ -1855,7 +1995,7 @@
       "delta": 0,
       "leg_a": {
         "status": "matched",
-        "rule": "A2_exact_amount_in_window",
+        "rule": "A1_exact_order_ref",
         "reason": null
       },
       "leg_b": {
@@ -1864,19 +2004,20 @@
         "reason": null
       },
       "detail": {
-        "matched_on": "amount+date",
+        "matched_on": "order_ref",
+        "order_ref": "order_R00007022",
         "date_gap_days": 1
       },
       "status": "matched",
       "reason": null,
-      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
-      "confidence": 0.92
+      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
+      "confidence": 1
     },
     {
       "invoice_id": "INV-2026-0041",
       "customer": "Patel Hardware",
       "date": "2026-08-19",
-      "ledger_amount": 1882331,
+      "ledger_amount": 1882374,
       "order_ref": "",
       "payment_id": "pay_R00007054",
       "utr": "HDFCN2608219874",
@@ -1885,7 +2026,7 @@
       "tax": 6777,
       "net": 1837975,
       "settled_date": "2026-08-21",
-      "delta": -69,
+      "delta": -26,
       "leg_a": {
         "status": "matched",
         "rule": "A3_fuzzy_amount_in_window",
@@ -1901,8 +2042,8 @@
         "date_gap_days": 0,
         "batch": {
           "expected_credit": 3274170,
-          "credited": 3217870,
-          "delta": -56300,
+          "credited": 3219670,
+          "delta": -54500,
           "tolerance": 1637,
           "txn_id": "TXN202608210016"
         }
@@ -1910,7 +2051,14 @@
       "status": "exception",
       "reason": "amount_mismatch",
       "rule": "A3_fuzzy_amount_in_window",
-      "confidence": 0
+      "confidence": 0,
+      "note": {
+        "explanation": "Invoice INV-2026-0041 is booked at Rs 18,823.74 but Razorpay captured Rs 18,824.00 against the same order reference. The two records are the same transaction, so one of the amounts was entered wrong.",
+        "suggested_action": "Open invoice INV-2026-0041 and compare it against payment pay_R00007054 in the Razorpay dashboard, then correct whichever side is wrong.",
+        "severity": "medium",
+        "source": "template",
+        "facts_hash": "19284d8d182ff902"
+      }
     },
     {
       "invoice_id": "INV-2026-0031",
@@ -1938,7 +2086,8 @@
       },
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007030"
+        "order_ref": "order_R00007030",
+        "date_gap_days": 0
       },
       "status": "matched",
       "reason": null,
@@ -1971,7 +2120,8 @@
       },
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007031"
+        "order_ref": "order_R00007031",
+        "date_gap_days": 0
       },
       "status": "matched",
       "reason": null,
@@ -2038,83 +2188,6 @@
       "detail": {
         "matched_on": "order_ref",
         "order_ref": "order_R00007024",
-        "batch": {
-          "count": 2,
-          "txn_ids": [
-            "TXN202608230018",
-            "TXN202608230019"
-          ],
-          "credits": [
-            348575,
-            348575
-          ],
-          "expected_credit": 348575
-        }
-      },
-      "status": "exception",
-      "reason": "duplicate_utr",
-      "rule": "A1_exact_order_ref",
-      "confidence": 0
-    },
-    {
-      "invoice_id": "INV-2026-0045",
-      "customer": "Rohit Electronics",
-      "date": "2026-08-21",
-      "ledger_amount": 228892,
-      "order_ref": "order_R00007044",
-      "payment_id": "pay_R00007059",
-      "utr": "HDFCN2608248497",
-      "payment_amount": 228892,
-      "fee": 4578,
-      "tax": 824,
-      "net": 223490,
-      "settled_date": "2026-08-24",
-      "delta": 0,
-      "leg_a": {
-        "status": "matched",
-        "rule": "A1_exact_order_ref",
-        "reason": null
-      },
-      "leg_b": {
-        "status": "matched",
-        "rule": "B1_batch_utr_exact",
-        "reason": null
-      },
-      "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007044"
-      },
-      "status": "matched",
-      "reason": null,
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
-      "confidence": 1
-    },
-    {
-      "invoice_id": "INV-2026-0047",
-      "customer": "Verma Auto Parts",
-      "date": "2026-08-21",
-      "ledger_amount": 58408,
-      "order_ref": "",
-      "payment_id": "pay_R00007060",
-      "utr": "AXISN2608236750",
-      "payment_amount": 58408,
-      "fee": 1168,
-      "tax": 210,
-      "net": 57030,
-      "settled_date": "2026-08-23",
-      "delta": 0,
-      "leg_a": {
-        "status": "matched",
-        "rule": "A2_exact_amount_in_window",
-        "reason": null
-      },
-      "leg_b": {
-        "status": "exception",
-        "rule": null,
-        "reason": "duplicate_utr"
-      },
-      "detail": {
-        "matched_on": "amount+date",
         "date_gap_days": 0,
         "batch": {
           "count": 2,
@@ -2126,13 +2199,110 @@
             348575,
             348575
           ],
-          "expected_credit": 348575
+          "total_credited": 697150,
+          "expected_credit": 348575,
+          "overstated_by": 348575
         }
       },
       "status": "exception",
       "reason": "duplicate_utr",
-      "rule": "A2_exact_amount_in_window",
-      "confidence": 0
+      "rule": "A1_exact_order_ref",
+      "confidence": 0,
+      "note": {
+        "explanation": "UTR AXISN2608236750 was credited to the bank 2 times, but Razorpay only paid it out once. The bank balance is currently overstated, and invoice INV-2026-0025 sits inside that batch.",
+        "suggested_action": "Compare bank transactions TXN202608230018 and TXN202608230019 and have the bank reverse the duplicate posting before this month's books are closed.",
+        "severity": "high",
+        "source": "template",
+        "facts_hash": "4cb7737ac67da5fa"
+      }
+    },
+    {
+      "invoice_id": "INV-2026-0045",
+      "customer": "Rohit Electronics",
+      "date": "2026-08-21",
+      "ledger_amount": 228892,
+      "order_ref": "",
+      "payment_id": "pay_R00007059",
+      "utr": "HDFCN2608248497",
+      "payment_amount": 228892,
+      "fee": 4578,
+      "tax": 824,
+      "net": 223490,
+      "settled_date": "2026-08-24",
+      "delta": 0,
+      "leg_a": {
+        "status": "matched",
+        "rule": "A2_exact_amount_in_window",
+        "reason": null
+      },
+      "leg_b": {
+        "status": "matched",
+        "rule": "B1_batch_utr_exact",
+        "reason": null
+      },
+      "detail": {
+        "matched_on": "amount+date",
+        "date_gap_days": 1
+      },
+      "status": "matched",
+      "reason": null,
+      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
+      "confidence": 0.92
+    },
+    {
+      "invoice_id": "INV-2026-0047",
+      "customer": "Verma Auto Parts",
+      "date": "2026-08-21",
+      "ledger_amount": 58408,
+      "order_ref": "order_R00007046",
+      "payment_id": "pay_R00007060",
+      "utr": "AXISN2608236750",
+      "payment_amount": 58408,
+      "fee": 1168,
+      "tax": 210,
+      "net": 57030,
+      "settled_date": "2026-08-23",
+      "delta": 0,
+      "leg_a": {
+        "status": "matched",
+        "rule": "A1_exact_order_ref",
+        "reason": null
+      },
+      "leg_b": {
+        "status": "exception",
+        "rule": null,
+        "reason": "duplicate_utr"
+      },
+      "detail": {
+        "matched_on": "order_ref",
+        "order_ref": "order_R00007046",
+        "date_gap_days": 0,
+        "batch": {
+          "count": 2,
+          "txn_ids": [
+            "TXN202608230018",
+            "TXN202608230019"
+          ],
+          "credits": [
+            348575,
+            348575
+          ],
+          "total_credited": 697150,
+          "expected_credit": 348575,
+          "overstated_by": 348575
+        }
+      },
+      "status": "exception",
+      "reason": "duplicate_utr",
+      "rule": "A1_exact_order_ref",
+      "confidence": 0,
+      "note": {
+        "explanation": "UTR AXISN2608236750 was credited to the bank 2 times, but Razorpay only paid it out once. The bank balance is currently overstated, and invoice INV-2026-0047 sits inside that batch.",
+        "suggested_action": "Compare bank transactions TXN202608230018 and TXN202608230019 and have the bank reverse the duplicate posting before this month's books are closed.",
+        "severity": "high",
+        "source": "template",
+        "facts_hash": "faa6b42616da530c"
+      }
     },
     {
       "invoice_id": "INV-2026-0059",
@@ -2161,6 +2331,7 @@
       "detail": {
         "matched_on": "order_ref",
         "order_ref": "order_R00007058",
+        "date_gap_days": 0,
         "batch": {
           "count": 2,
           "txn_ids": [
@@ -2171,20 +2342,29 @@
             348575,
             348575
           ],
-          "expected_credit": 348575
+          "total_credited": 697150,
+          "expected_credit": 348575,
+          "overstated_by": 348575
         }
       },
       "status": "exception",
       "reason": "duplicate_utr",
       "rule": "A1_exact_order_ref",
-      "confidence": 0
+      "confidence": 0,
+      "note": {
+        "explanation": "UTR AXISN2608236750 was credited to the bank 2 times, but Razorpay only paid it out once. The bank balance is currently overstated, and invoice INV-2026-0059 sits inside that batch.",
+        "suggested_action": "Compare bank transactions TXN202608230018 and TXN202608230019 and have the bank reverse the duplicate posting before this month's books are closed.",
+        "severity": "high",
+        "source": "template",
+        "facts_hash": "53840c3259bed024"
+      }
     },
     {
       "invoice_id": "INV-2026-0061",
       "customer": "Lakshmi Silks",
       "date": "2026-08-21",
       "ledger_amount": 1990500,
-      "order_ref": "order_R00007060",
+      "order_ref": "",
       "payment_id": "pay_R00007062",
       "utr": "HDFCN2608248497",
       "payment_amount": 1990500,
@@ -2195,7 +2375,7 @@
       "delta": 0,
       "leg_a": {
         "status": "matched",
-        "rule": "A1_exact_order_ref",
+        "rule": "A2_exact_amount_in_window",
         "reason": null
       },
       "leg_b": {
@@ -2204,13 +2384,13 @@
         "reason": null
       },
       "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007060"
+        "matched_on": "amount+date",
+        "date_gap_days": 1
       },
       "status": "matched",
       "reason": null,
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
-      "confidence": 1
+      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
+      "confidence": 0.92
     },
     {
       "invoice_id": "INV-2026-0069",
@@ -2238,7 +2418,8 @@
       },
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007068"
+        "order_ref": "order_R00007068",
+        "date_gap_days": 2
       },
       "status": "matched",
       "reason": null,
@@ -2250,7 +2431,7 @@
       "customer": "Patel Hardware",
       "date": "2026-08-22",
       "ledger_amount": 213109,
-      "order_ref": "",
+      "order_ref": "order_R00007052",
       "payment_id": "pay_R00007064",
       "utr": "HDFCN2608248497",
       "payment_amount": 213109,
@@ -2258,6 +2439,40 @@
       "tax": 767,
       "net": 208080,
       "settled_date": "2026-08-24",
+      "delta": 0,
+      "leg_a": {
+        "status": "matched",
+        "rule": "A1_exact_order_ref",
+        "reason": null
+      },
+      "leg_b": {
+        "status": "matched",
+        "rule": "B1_batch_utr_exact",
+        "reason": null
+      },
+      "detail": {
+        "matched_on": "order_ref",
+        "order_ref": "order_R00007052",
+        "date_gap_days": 0
+      },
+      "status": "matched",
+      "reason": null,
+      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
+      "confidence": 1
+    },
+    {
+      "invoice_id": "INV-2026-0011",
+      "customer": "Patel Hardware",
+      "date": "2026-08-23",
+      "ledger_amount": 63704,
+      "order_ref": "",
+      "payment_id": "pay_R00007065",
+      "utr": "HDFCN2608257681",
+      "payment_amount": 63704,
+      "fee": 1274,
+      "tax": 229,
+      "net": 62201,
+      "settled_date": "2026-08-25",
       "delta": 0,
       "leg_a": {
         "status": "matched",
@@ -2277,39 +2492,6 @@
       "reason": null,
       "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
       "confidence": 0.92
-    },
-    {
-      "invoice_id": "INV-2026-0011",
-      "customer": "Patel Hardware",
-      "date": "2026-08-23",
-      "ledger_amount": 63704,
-      "order_ref": "order_R00007010",
-      "payment_id": "pay_R00007065",
-      "utr": "HDFCN2608257681",
-      "payment_amount": 63704,
-      "fee": 1274,
-      "tax": 229,
-      "net": 62201,
-      "settled_date": "2026-08-25",
-      "delta": 0,
-      "leg_a": {
-        "status": "matched",
-        "rule": "A1_exact_order_ref",
-        "reason": null
-      },
-      "leg_b": {
-        "status": "matched",
-        "rule": "B1_batch_utr_exact",
-        "reason": null
-      },
-      "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007010"
-      },
-      "status": "matched",
-      "reason": null,
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
-      "confidence": 1
     },
     {
       "invoice_id": "INV-2026-0013",
@@ -2337,7 +2519,8 @@
       },
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007012"
+        "order_ref": "order_R00007012",
+        "date_gap_days": 0
       },
       "status": "matched",
       "reason": null,
@@ -2349,7 +2532,7 @@
       "customer": "Anand Traders",
       "date": "2026-08-23",
       "ledger_amount": 171100,
-      "order_ref": "order_R00007035",
+      "order_ref": "",
       "payment_id": "pay_R00007067",
       "utr": "HDFCN2608257681",
       "payment_amount": 171100,
@@ -2360,7 +2543,7 @@
       "delta": 0,
       "leg_a": {
         "status": "matched",
-        "rule": "A1_exact_order_ref",
+        "rule": "A2_exact_amount_in_window",
         "reason": null
       },
       "leg_b": {
@@ -2369,13 +2552,13 @@
         "reason": null
       },
       "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007035"
+        "matched_on": "amount+date",
+        "date_gap_days": 0
       },
       "status": "matched",
       "reason": null,
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
-      "confidence": 1
+      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
+      "confidence": 0.92
     },
     {
       "invoice_id": "INV-2026-0048",
@@ -2406,20 +2589,27 @@
         "date_gap_days": 1,
         "batch": {
           "settled_date": "2026-08-26",
-          "credited_date": "2026-09-03",
-          "gap_days": 8,
+          "credited_date": "2026-09-02",
+          "gap_days": 7,
           "window": {
             "min": -1,
             "max": 3
           },
-          "txn_id": "TXN202609030022",
+          "txn_id": "TXN202609020022",
           "delta": 0
         }
       },
       "status": "exception",
       "reason": "date_out_of_window",
       "rule": "A2_exact_amount_in_window",
-      "confidence": 0
+      "confidence": 0,
+      "note": {
+        "explanation": "Razorpay settled UTR HDFCN2608260864 on 2026-08-26, but the credit did not reach the bank until 7 days later. Invoice INV-2026-0048 is in that batch, so its money is not yet confirmed as received on the expected date.",
+        "suggested_action": "Confirm the credit for UTR HDFCN2608260864 has now landed, and move it to the correct accounting period if it crossed a month end.",
+        "severity": "medium",
+        "source": "template",
+        "facts_hash": "f82819c68ece5b6f"
+      }
     },
     {
       "invoice_id": "INV-2026-0057",
@@ -2447,7 +2637,8 @@
       },
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007056"
+        "order_ref": "order_R00007056",
+        "date_gap_days": 0
       },
       "status": "matched",
       "reason": null,
@@ -2481,29 +2672,37 @@
       "detail": {
         "matched_on": "order_ref",
         "order_ref": "order_R00007013",
+        "date_gap_days": 0,
         "batch": {
           "settled_date": "2026-08-26",
-          "credited_date": "2026-09-03",
-          "gap_days": 8,
+          "credited_date": "2026-09-02",
+          "gap_days": 7,
           "window": {
             "min": -1,
             "max": 3
           },
-          "txn_id": "TXN202609030022",
+          "txn_id": "TXN202609020022",
           "delta": 0
         }
       },
       "status": "exception",
       "reason": "date_out_of_window",
       "rule": "A1_exact_order_ref",
-      "confidence": 0
+      "confidence": 0,
+      "note": {
+        "explanation": "Razorpay settled UTR HDFCN2608260864 on 2026-08-26, but the credit did not reach the bank until 7 days later. Invoice INV-2026-0014 is in that batch, so its money is not yet confirmed as received on the expected date.",
+        "suggested_action": "Confirm the credit for UTR HDFCN2608260864 has now landed, and move it to the correct accounting period if it crossed a month end.",
+        "severity": "medium",
+        "source": "template",
+        "facts_hash": "633cdf12a0b33f22"
+      }
     },
     {
       "invoice_id": "INV-2026-0024",
       "customer": "Patel Hardware",
       "date": "2026-08-24",
       "ledger_amount": 72700,
-      "order_ref": "",
+      "order_ref": "order_R00007023",
       "payment_id": "pay_R00007071",
       "utr": "HDFCN2608260864",
       "payment_amount": 72700,
@@ -2514,7 +2713,7 @@
       "delta": 0,
       "leg_a": {
         "status": "matched",
-        "rule": "A2_exact_amount_in_window",
+        "rule": "A1_exact_order_ref",
         "reason": null
       },
       "leg_b": {
@@ -2523,24 +2722,32 @@
         "reason": "date_out_of_window"
       },
       "detail": {
-        "matched_on": "amount+date",
+        "matched_on": "order_ref",
+        "order_ref": "order_R00007023",
         "date_gap_days": 0,
         "batch": {
           "settled_date": "2026-08-26",
-          "credited_date": "2026-09-03",
-          "gap_days": 8,
+          "credited_date": "2026-09-02",
+          "gap_days": 7,
           "window": {
             "min": -1,
             "max": 3
           },
-          "txn_id": "TXN202609030022",
+          "txn_id": "TXN202609020022",
           "delta": 0
         }
       },
       "status": "exception",
       "reason": "date_out_of_window",
-      "rule": "A2_exact_amount_in_window",
-      "confidence": 0
+      "rule": "A1_exact_order_ref",
+      "confidence": 0,
+      "note": {
+        "explanation": "Razorpay settled UTR HDFCN2608260864 on 2026-08-26, but the credit did not reach the bank until 7 days later. Invoice INV-2026-0024 is in that batch, so its money is not yet confirmed as received on the expected date.",
+        "suggested_action": "Confirm the credit for UTR HDFCN2608260864 has now landed, and move it to the correct accounting period if it crossed a month end.",
+        "severity": "medium",
+        "source": "template",
+        "facts_hash": "0b9e2399e7ee9a53"
+      }
     }
   ],
   "payments": [
@@ -4088,34 +4295,6 @@
     },
     {
       "row_index": 4,
-      "txn_id": "TXN202608080024",
-      "date": "2026-08-08",
-      "utr": "IMPS2608083487",
-      "credit": 4142700,
-      "debit": 0,
-      "description": "IMPS CR CUSTOMER TRANSFER",
-      "raw": {
-        "txn_id": "TXN202608080024",
-        "value_date": "2026-08-08",
-        "description": "IMPS CR CUSTOMER TRANSFER",
-        "utr": "IMPS2608083487",
-        "credit": "41427.00",
-        "debit": "0.00",
-        "balance": "1806625.69"
-      },
-      "status": "exception",
-      "reason": "missing_counterpart",
-      "rule": null,
-      "confidence": 0,
-      "detail": {
-        "note": "bank credit with no matching Razorpay settlement",
-        "credit": 4142700,
-        "utr": "IMPS2608083487",
-        "description": "IMPS CR CUSTOMER TRANSFER"
-      }
-    },
-    {
-      "row_index": 5,
       "txn_id": "TXN202608090005",
       "date": "2026-08-09",
       "utr": "AXISN2608094430",
@@ -4145,7 +4324,7 @@
       }
     },
     {
-      "row_index": 6,
+      "row_index": 5,
       "txn_id": "TXN202608100006",
       "date": "2026-08-10",
       "utr": "AXISN2608109261",
@@ -4175,7 +4354,7 @@
       }
     },
     {
-      "row_index": 7,
+      "row_index": 6,
       "txn_id": "TXN202608110007",
       "date": "2026-08-11",
       "utr": "HDFCN2608110044",
@@ -4205,7 +4384,7 @@
       }
     },
     {
-      "row_index": 8,
+      "row_index": 7,
       "txn_id": "TXN202608120008",
       "date": "2026-08-12",
       "utr": "CITIN2608124629",
@@ -4235,35 +4414,7 @@
       }
     },
     {
-      "row_index": 9,
-      "txn_id": "TXN202608120023",
-      "date": "2026-08-12",
-      "utr": "IMPS2608120891",
-      "credit": 3463300,
-      "debit": 0,
-      "description": "IMPS CR CUSTOMER TRANSFER",
-      "raw": {
-        "txn_id": "TXN202608120023",
-        "value_date": "2026-08-12",
-        "description": "IMPS CR CUSTOMER TRANSFER",
-        "utr": "IMPS2608120891",
-        "credit": "34633.00",
-        "debit": "0.00",
-        "balance": "1765198.69"
-      },
-      "status": "exception",
-      "reason": "missing_counterpart",
-      "rule": null,
-      "confidence": 0,
-      "detail": {
-        "note": "bank credit with no matching Razorpay settlement",
-        "credit": 3463300,
-        "utr": "IMPS2608120891",
-        "description": "IMPS CR CUSTOMER TRANSFER"
-      }
-    },
-    {
-      "row_index": 10,
+      "row_index": 8,
       "txn_id": "TXN202608130009",
       "date": "2026-08-13",
       "utr": "AXISN2608138659",
@@ -4293,7 +4444,7 @@
       }
     },
     {
-      "row_index": 11,
+      "row_index": 9,
       "txn_id": "TXN202608140010",
       "date": "2026-08-14",
       "utr": "HDFCN2608145125",
@@ -4323,7 +4474,7 @@
       }
     },
     {
-      "row_index": 12,
+      "row_index": 10,
       "txn_id": "TXN202608150011",
       "date": "2026-08-15",
       "utr": "ICICN2608157671",
@@ -4353,7 +4504,7 @@
       }
     },
     {
-      "row_index": 13,
+      "row_index": 11,
       "txn_id": "TXN202608160012",
       "date": "2026-08-16",
       "utr": "HDFCN2608160717",
@@ -4383,7 +4534,7 @@
       }
     },
     {
-      "row_index": 14,
+      "row_index": 12,
       "txn_id": "TXN202608170013",
       "date": "2026-08-17",
       "utr": "ICICN2608171628",
@@ -4413,7 +4564,42 @@
       }
     },
     {
-      "row_index": 15,
+      "row_index": 13,
+      "txn_id": "TXN202608170023",
+      "date": "2026-08-17",
+      "utr": "IMPS2608173907",
+      "credit": 4525100,
+      "debit": 0,
+      "description": "IMPS CR CUSTOMER TRANSFER",
+      "raw": {
+        "txn_id": "TXN202608170023",
+        "value_date": "2026-08-17",
+        "description": "IMPS CR CUSTOMER TRANSFER",
+        "utr": "IMPS2608173907",
+        "credit": "45251.00",
+        "debit": "0.00",
+        "balance": "1775834.69"
+      },
+      "status": "exception",
+      "reason": "missing_counterpart",
+      "rule": null,
+      "confidence": 0,
+      "detail": {
+        "note": "bank credit with no matching Razorpay settlement",
+        "credit": 4525100,
+        "utr": "IMPS2608173907",
+        "description": "IMPS CR CUSTOMER TRANSFER"
+      },
+      "note": {
+        "explanation": "A credit of Rs 45,251.00 landed on 2026-08-17 under reference IMPS2608173907, but Razorpay never issued a settlement with that UTR. This money is in the account and is not attributable to any gateway payout.",
+        "suggested_action": "Trace bank transaction TXN202608170023 in the statement narration to find who sent it, and book it against the correct invoice or income head.",
+        "severity": "high",
+        "source": "template",
+        "facts_hash": "88f209b8beb2e841"
+      }
+    },
+    {
+      "row_index": 14,
       "txn_id": "TXN202608190014",
       "date": "2026-08-19",
       "utr": "CITIN2608194900",
@@ -4440,6 +4626,41 @@
         "gap_days": 0,
         "txn_id": "TXN202608190014",
         "invoices_in_batch": 2
+      }
+    },
+    {
+      "row_index": 15,
+      "txn_id": "TXN202608190024",
+      "date": "2026-08-19",
+      "utr": "IMPS2608191977",
+      "credit": 2806700,
+      "debit": 0,
+      "description": "IMPS CR CUSTOMER TRANSFER",
+      "raw": {
+        "txn_id": "TXN202608190024",
+        "value_date": "2026-08-19",
+        "description": "IMPS CR CUSTOMER TRANSFER",
+        "utr": "IMPS2608191977",
+        "credit": "28067.00",
+        "debit": "0.00",
+        "balance": "1803901.69"
+      },
+      "status": "exception",
+      "reason": "missing_counterpart",
+      "rule": null,
+      "confidence": 0,
+      "detail": {
+        "note": "bank credit with no matching Razorpay settlement",
+        "credit": 2806700,
+        "utr": "IMPS2608191977",
+        "description": "IMPS CR CUSTOMER TRANSFER"
+      },
+      "note": {
+        "explanation": "A credit of Rs 28,067.00 landed on 2026-08-19 under reference IMPS2608191977, but Razorpay never issued a settlement with that UTR. This money is in the account and is not attributable to any gateway payout.",
+        "suggested_action": "Trace bank transaction TXN202608190024 in the statement narration to find who sent it, and book it against the correct invoice or income head.",
+        "severity": "high",
+        "source": "template",
+        "facts_hash": "d48404c5199f3faf"
       }
     },
     {
@@ -4477,7 +4698,7 @@
       "txn_id": "TXN202608210016",
       "date": "2026-08-21",
       "utr": "HDFCN2608219874",
-      "credit": 3217870,
+      "credit": 3219670,
       "debit": 0,
       "description": "NEFT CR RAZORPAY SOFTWARE PVT LTD HDFCN2608219874",
       "raw": {
@@ -4485,9 +4706,9 @@
         "value_date": "2026-08-21",
         "description": "NEFT CR RAZORPAY SOFTWARE PVT LTD HDFCN2608219874",
         "utr": "HDFCN2608219874",
-        "credit": "32178.70",
+        "credit": "32196.70",
         "debit": "0.00",
-        "balance": "1384056.06"
+        "balance": "1384074.06"
       },
       "status": "exception",
       "reason": "amount_mismatch",
@@ -4495,8 +4716,8 @@
       "confidence": 0,
       "detail": {
         "expected_credit": 3274170,
-        "credited": 3217870,
-        "delta": -56300,
+        "credited": 3219670,
+        "delta": -54500,
         "tolerance": 1637,
         "txn_id": "TXN202608210016"
       }
@@ -4516,7 +4737,7 @@
         "utr": "ICICN2608227847",
         "credit": "25952.09",
         "debit": "0.00",
-        "balance": "1410008.15"
+        "balance": "1410026.15"
       },
       "status": "matched",
       "reason": null,
@@ -4546,7 +4767,7 @@
         "utr": "AXISN2608236750",
         "credit": "3485.75",
         "debit": "0.00",
-        "balance": "1413493.90"
+        "balance": "1413511.90"
       },
       "status": "exception",
       "reason": "duplicate_utr",
@@ -4562,7 +4783,9 @@
           348575,
           348575
         ],
-        "expected_credit": 348575
+        "total_credited": 697150,
+        "expected_credit": 348575,
+        "overstated_by": 348575
       }
     },
     {
@@ -4580,7 +4803,7 @@
         "utr": "AXISN2608236750",
         "credit": "3485.75",
         "debit": "0.00",
-        "balance": "1416979.65"
+        "balance": "1416997.65"
       },
       "status": "exception",
       "reason": "duplicate_utr",
@@ -4596,7 +4819,9 @@
           348575,
           348575
         ],
-        "expected_credit": 348575
+        "total_credited": 697150,
+        "expected_credit": 348575,
+        "overstated_by": 348575
       }
     },
     {
@@ -4614,7 +4839,7 @@
         "utr": "HDFCN2608248497",
         "credit": "23750.94",
         "debit": "0.00",
-        "balance": "1440730.59"
+        "balance": "1440748.59"
       },
       "status": "matched",
       "reason": null,
@@ -4644,7 +4869,7 @@
         "utr": "HDFCN2608257681",
         "credit": "272112.46",
         "debit": "0.00",
-        "balance": "1712843.05"
+        "balance": "1712861.05"
       },
       "status": "matched",
       "reason": null,
@@ -4661,20 +4886,20 @@
     },
     {
       "row_index": 23,
-      "txn_id": "TXN202609030022",
-      "date": "2026-09-03",
+      "txn_id": "TXN202609020022",
+      "date": "2026-09-02",
       "utr": "HDFCN2608260864",
       "credit": 1772264,
       "debit": 0,
       "description": "NEFT CR RAZORPAY SOFTWARE PVT LTD HDFCN2608260864",
       "raw": {
-        "txn_id": "TXN202609030022",
-        "value_date": "2026-09-03",
+        "txn_id": "TXN202609020022",
+        "value_date": "2026-09-02",
         "description": "NEFT CR RAZORPAY SOFTWARE PVT LTD HDFCN2608260864",
         "utr": "HDFCN2608260864",
         "credit": "17722.64",
         "debit": "0.00",
-        "balance": "1730565.69"
+        "balance": "1730583.69"
       },
       "status": "exception",
       "reason": "date_out_of_window",
@@ -4682,13 +4907,13 @@
       "confidence": 0,
       "detail": {
         "settled_date": "2026-08-26",
-        "credited_date": "2026-09-03",
-        "gap_days": 8,
+        "credited_date": "2026-09-02",
+        "gap_days": 7,
         "window": {
           "min": -1,
           "max": 3
         },
-        "txn_id": "TXN202609030022",
+        "txn_id": "TXN202609020022",
         "delta": 0
       }
     }
@@ -5167,11 +5392,11 @@
       "bank_txn_ids": [
         "TXN202608210016"
       ],
-      "credited": 3217870,
+      "credited": 3219670,
       "detail": {
         "expected_credit": 3274170,
-        "credited": 3217870,
-        "delta": -56300,
+        "credited": 3219670,
+        "delta": -54500,
         "tolerance": 1637,
         "txn_id": "TXN202608210016"
       }
@@ -5227,7 +5452,7 @@
         "TXN202608230018",
         "TXN202608230019"
       ],
-      "credited": null,
+      "credited": 697150,
       "detail": {
         "count": 2,
         "txn_ids": [
@@ -5238,7 +5463,9 @@
           348575,
           348575
         ],
-        "expected_credit": 348575
+        "total_credited": 697150,
+        "expected_credit": 348575,
+        "overstated_by": 348575
       }
     },
     {
@@ -5324,18 +5551,18 @@
       "rule": null,
       "confidence": 0,
       "bank_txn_ids": [
-        "TXN202609030022"
+        "TXN202609020022"
       ],
       "credited": 1772264,
       "detail": {
         "settled_date": "2026-08-26",
-        "credited_date": "2026-09-03",
-        "gap_days": 8,
+        "credited_date": "2026-09-02",
+        "gap_days": 7,
         "window": {
           "min": -1,
           "max": 3
         },
-        "txn_id": "TXN202609030022",
+        "txn_id": "TXN202609020022",
         "delta": 0
       }
     }
@@ -5345,8 +5572,8 @@
     "matched": 50,
     "exceptions": 22,
     "match_rate": 0.6944444444444444,
-    "value_matched_paise": 113715163,
-    "value_flagged_paise": 35139563,
+    "value_matched_paise": 113714931,
+    "value_flagged_paise": 34806606,
     "exceptions_by_reason": {
       "amount_mismatch": 8,
       "ambiguous_candidates": 4,
@@ -5358,44 +5585,12 @@
     "settlements_matched": 18,
     "bank_rows": 24,
     "bank_exceptions": 6,
-    "bank_unexplained_credit_paise": 13293284
+    "bank_unexplained_credit_paise": 13020884
   },
   "audit": [
     {
       "seq": 1,
-      "at": "2026-09-02T12:09:43.652Z",
-      "leg": "A",
-      "subject": "ledger",
-      "subject_id": "INV-2026-0001",
-      "decision": "matched",
-      "rule": "A1_exact_order_ref",
-      "reason": null,
-      "confidence": 1,
-      "counterpart": "pay_R00007000",
-      "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007000"
-      }
-    },
-    {
-      "seq": 2,
-      "at": "2026-09-02T12:09:43.652Z",
-      "leg": "A",
-      "subject": "ledger",
-      "subject_id": "INV-2026-0008",
-      "decision": "matched",
-      "rule": "A1_exact_order_ref",
-      "reason": null,
-      "confidence": 1,
-      "counterpart": "pay_R00007001",
-      "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007007"
-      }
-    },
-    {
-      "seq": 3,
-      "at": "2026-09-02T12:09:43.652Z",
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0018",
@@ -5407,14 +5602,32 @@
       "detail": {
         "matched_on": "order_ref",
         "order_ref": "order_R00007017",
-        "ledger_amount": 430200,
+        "date_gap_days": 1,
+        "ledger_amount": 318500,
         "payment_amount": 236900,
         "tolerance": 200
       }
     },
     {
-      "seq": 4,
-      "at": "2026-09-02T12:09:43.652Z",
+      "seq": 2,
+      "at": "2026-09-02T12:24:08.486Z",
+      "leg": "A",
+      "subject": "ledger",
+      "subject_id": "INV-2026-0019",
+      "decision": "matched",
+      "rule": "A1_exact_order_ref",
+      "reason": null,
+      "confidence": 1,
+      "counterpart": "pay_R00007003",
+      "detail": {
+        "matched_on": "order_ref",
+        "order_ref": "order_R00007018",
+        "date_gap_days": 0
+      }
+    },
+    {
+      "seq": 3,
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0028",
@@ -5425,28 +5638,13 @@
       "counterpart": "pay_R00007004",
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007027"
+        "order_ref": "order_R00007027",
+        "date_gap_days": 2
       }
     },
     {
-      "seq": 5,
-      "at": "2026-09-02T12:09:43.652Z",
-      "leg": "A",
-      "subject": "ledger",
-      "subject_id": "INV-2026-0055",
-      "decision": "matched",
-      "rule": "A1_exact_order_ref",
-      "reason": null,
-      "confidence": 1,
-      "counterpart": "pay_R00007005",
-      "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007054"
-      }
-    },
-    {
-      "seq": 6,
-      "at": "2026-09-02T12:09:43.652Z",
+      "seq": 4,
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0054",
@@ -5457,12 +5655,13 @@
       "counterpart": "pay_R00007007",
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007053"
+        "order_ref": "order_R00007053",
+        "date_gap_days": 0
       }
     },
     {
-      "seq": 7,
-      "at": "2026-09-02T12:09:43.652Z",
+      "seq": 5,
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0027",
@@ -5473,12 +5672,13 @@
       "counterpart": "pay_R00007010",
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007026"
+        "order_ref": "order_R00007026",
+        "date_gap_days": 0
       }
     },
     {
-      "seq": 8,
-      "at": "2026-09-02T12:09:43.652Z",
+      "seq": 6,
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0056",
@@ -5489,12 +5689,30 @@
       "counterpart": "pay_R00007012",
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007055"
+        "order_ref": "order_R00007055",
+        "date_gap_days": 2
       }
     },
     {
-      "seq": 9,
-      "at": "2026-09-02T12:09:43.652Z",
+      "seq": 7,
+      "at": "2026-09-02T12:24:08.486Z",
+      "leg": "A",
+      "subject": "ledger",
+      "subject_id": "INV-2026-0070",
+      "decision": "matched",
+      "rule": "A1_exact_order_ref",
+      "reason": null,
+      "confidence": 1,
+      "counterpart": "pay_R00007014",
+      "detail": {
+        "matched_on": "order_ref",
+        "order_ref": "order_R00007069",
+        "date_gap_days": 1
+      }
+    },
+    {
+      "seq": 8,
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0052",
@@ -5505,12 +5723,13 @@
       "counterpart": "pay_R00007021",
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007051"
+        "order_ref": "order_R00007051",
+        "date_gap_days": 0
       }
     },
     {
-      "seq": 10,
-      "at": "2026-09-02T12:09:43.652Z",
+      "seq": 9,
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0060",
@@ -5521,44 +5740,30 @@
       "counterpart": "pay_R00007022",
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007059"
+        "order_ref": "order_R00007059",
+        "date_gap_days": 0
+      }
+    },
+    {
+      "seq": 10,
+      "at": "2026-09-02T12:24:08.486Z",
+      "leg": "A",
+      "subject": "ledger",
+      "subject_id": "INV-2026-0072",
+      "decision": "matched",
+      "rule": "A1_exact_order_ref",
+      "reason": null,
+      "confidence": 1,
+      "counterpart": "pay_R00007023",
+      "detail": {
+        "matched_on": "order_ref",
+        "order_ref": "order_R00007071",
+        "date_gap_days": 0
       }
     },
     {
       "seq": 11,
-      "at": "2026-09-02T12:09:43.652Z",
-      "leg": "A",
-      "subject": "ledger",
-      "subject_id": "INV-2026-0063",
-      "decision": "matched",
-      "rule": "A1_exact_order_ref",
-      "reason": null,
-      "confidence": 1,
-      "counterpart": "pay_R00007024",
-      "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007062"
-      }
-    },
-    {
-      "seq": 12,
-      "at": "2026-09-02T12:09:43.652Z",
-      "leg": "A",
-      "subject": "ledger",
-      "subject_id": "INV-2026-0029",
-      "decision": "matched",
-      "rule": "A1_exact_order_ref",
-      "reason": null,
-      "confidence": 1,
-      "counterpart": "pay_R00007026",
-      "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007028"
-      }
-    },
-    {
-      "seq": 13,
-      "at": "2026-09-02T12:09:43.652Z",
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0037",
@@ -5570,30 +5775,15 @@
       "detail": {
         "matched_on": "order_ref",
         "order_ref": "order_R00007036",
-        "ledger_amount": 2392009,
+        "date_gap_days": 2,
+        "ledger_amount": 2231509,
         "payment_amount": 2176009,
         "tolerance": 1088
       }
     },
     {
-      "seq": 14,
-      "at": "2026-09-02T12:09:43.652Z",
-      "leg": "A",
-      "subject": "ledger",
-      "subject_id": "INV-2026-0017",
-      "decision": "matched",
-      "rule": "A1_exact_order_ref",
-      "reason": null,
-      "confidence": 1,
-      "counterpart": "pay_R00007029",
-      "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007016"
-      }
-    },
-    {
-      "seq": 15,
-      "at": "2026-09-02T12:09:43.652Z",
+      "seq": 12,
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0064",
@@ -5605,14 +5795,15 @@
       "detail": {
         "matched_on": "order_ref",
         "order_ref": "order_R00007063",
-        "ledger_amount": 686400,
+        "date_gap_days": 0,
+        "ledger_amount": 625600,
         "payment_amount": 793500,
         "tolerance": 397
       }
     },
     {
-      "seq": 16,
-      "at": "2026-09-02T12:09:43.652Z",
+      "seq": 13,
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0065",
@@ -5623,28 +5814,13 @@
       "counterpart": "pay_R00007032",
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007064"
+        "order_ref": "order_R00007064",
+        "date_gap_days": 2
       }
     },
     {
-      "seq": 17,
-      "at": "2026-09-02T12:09:43.652Z",
-      "leg": "A",
-      "subject": "ledger",
-      "subject_id": "INV-2026-0033",
-      "decision": "matched",
-      "rule": "A1_exact_order_ref",
-      "reason": null,
-      "confidence": 1,
-      "counterpart": "pay_R00007033",
-      "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007032"
-      }
-    },
-    {
-      "seq": 18,
-      "at": "2026-09-02T12:09:43.652Z",
+      "seq": 14,
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0043",
@@ -5655,28 +5831,98 @@
       "counterpart": "pay_R00007034",
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007042"
+        "order_ref": "order_R00007042",
+        "date_gap_days": 0
       }
     },
     {
-      "seq": 19,
-      "at": "2026-09-02T12:09:43.652Z",
+      "seq": 15,
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
-      "subject_id": "INV-2026-0051",
+      "subject_id": "INV-2026-0071",
       "decision": "matched",
       "rule": "A1_exact_order_ref",
       "reason": null,
       "confidence": 1,
-      "counterpart": "pay_R00007035",
+      "counterpart": "pay_R00007036",
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007050"
+        "order_ref": "order_R00007070",
+        "date_gap_days": 2
+      }
+    },
+    {
+      "seq": 16,
+      "at": "2026-09-02T12:24:08.486Z",
+      "leg": "A",
+      "subject": "ledger",
+      "subject_id": "INV-2026-0030",
+      "decision": "matched",
+      "rule": "A1_exact_order_ref",
+      "reason": null,
+      "confidence": 1,
+      "counterpart": "pay_R00007037",
+      "detail": {
+        "matched_on": "order_ref",
+        "order_ref": "order_R00007029",
+        "date_gap_days": 1
+      }
+    },
+    {
+      "seq": 17,
+      "at": "2026-09-02T12:24:08.486Z",
+      "leg": "A",
+      "subject": "ledger",
+      "subject_id": "INV-2026-0007",
+      "decision": "matched",
+      "rule": "A1_exact_order_ref",
+      "reason": null,
+      "confidence": 1,
+      "counterpart": "pay_R00007042",
+      "detail": {
+        "matched_on": "order_ref",
+        "order_ref": "order_R00007006",
+        "date_gap_days": 0
+      }
+    },
+    {
+      "seq": 18,
+      "at": "2026-09-02T12:24:08.486Z",
+      "leg": "A",
+      "subject": "ledger",
+      "subject_id": "INV-2026-0046",
+      "decision": "matched",
+      "rule": "A1_exact_order_ref",
+      "reason": null,
+      "confidence": 1,
+      "counterpart": "pay_R00007043",
+      "detail": {
+        "matched_on": "order_ref",
+        "order_ref": "order_R00007045",
+        "date_gap_days": 2
+      }
+    },
+    {
+      "seq": 19,
+      "at": "2026-09-02T12:24:08.486Z",
+      "leg": "A",
+      "subject": "ledger",
+      "subject_id": "INV-2026-0062",
+      "decision": "matched",
+      "rule": "A1_exact_order_ref",
+      "reason": null,
+      "confidence": 1,
+      "counterpart": "pay_R00007044",
+      "detail": {
+        "matched_on": "order_ref",
+        "order_ref": "order_R00007061",
+        "date_gap_days": 0
       }
     },
     {
       "seq": 20,
-      "at": "2026-09-02T12:09:43.652Z",
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0010",
@@ -5687,28 +5933,13 @@
       "counterpart": "pay_R00007045",
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007009"
+        "order_ref": "order_R00007009",
+        "date_gap_days": 0
       }
     },
     {
       "seq": 21,
-      "at": "2026-09-02T12:09:43.652Z",
-      "leg": "A",
-      "subject": "ledger",
-      "subject_id": "INV-2026-0012",
-      "decision": "matched",
-      "rule": "A1_exact_order_ref",
-      "reason": null,
-      "confidence": 1,
-      "counterpart": "pay_R00007046",
-      "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007011"
-      }
-    },
-    {
-      "seq": 22,
-      "at": "2026-09-02T12:09:43.652Z",
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0038",
@@ -5719,12 +5950,13 @@
       "counterpart": "pay_R00007047",
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007037"
+        "order_ref": "order_R00007037",
+        "date_gap_days": 0
       }
     },
     {
-      "seq": 23,
-      "at": "2026-09-02T12:09:43.652Z",
+      "seq": 22,
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0049",
@@ -5735,28 +5967,47 @@
       "counterpart": "pay_R00007049",
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007048"
+        "order_ref": "order_R00007048",
+        "date_gap_days": 1
       }
     },
     {
-      "seq": 24,
-      "at": "2026-09-02T12:09:43.652Z",
+      "seq": 23,
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
-      "subject_id": "INV-2026-0006",
+      "subject_id": "INV-2026-0009",
       "decision": "matched",
       "rule": "A1_exact_order_ref",
       "reason": null,
       "confidence": 1,
-      "counterpart": "pay_R00007051",
+      "counterpart": "pay_R00007052",
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007005"
+        "order_ref": "order_R00007008",
+        "date_gap_days": 0
+      }
+    },
+    {
+      "seq": 24,
+      "at": "2026-09-02T12:24:08.486Z",
+      "leg": "A",
+      "subject": "ledger",
+      "subject_id": "INV-2026-0023",
+      "decision": "matched",
+      "rule": "A1_exact_order_ref",
+      "reason": null,
+      "confidence": 1,
+      "counterpart": "pay_R00007053",
+      "detail": {
+        "matched_on": "order_ref",
+        "order_ref": "order_R00007022",
+        "date_gap_days": 1
       }
     },
     {
       "seq": 25,
-      "at": "2026-09-02T12:09:43.652Z",
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0031",
@@ -5767,12 +6018,13 @@
       "counterpart": "pay_R00007055",
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007030"
+        "order_ref": "order_R00007030",
+        "date_gap_days": 0
       }
     },
     {
       "seq": 26,
-      "at": "2026-09-02T12:09:43.652Z",
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0032",
@@ -5783,12 +6035,13 @@
       "counterpart": "pay_R00007056",
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007031"
+        "order_ref": "order_R00007031",
+        "date_gap_days": 0
       }
     },
     {
       "seq": 27,
-      "at": "2026-09-02T12:09:43.652Z",
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0025",
@@ -5799,28 +6052,30 @@
       "counterpart": "pay_R00007058",
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007024"
+        "order_ref": "order_R00007024",
+        "date_gap_days": 0
       }
     },
     {
       "seq": 28,
-      "at": "2026-09-02T12:09:43.652Z",
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
-      "subject_id": "INV-2026-0045",
+      "subject_id": "INV-2026-0047",
       "decision": "matched",
       "rule": "A1_exact_order_ref",
       "reason": null,
       "confidence": 1,
-      "counterpart": "pay_R00007059",
+      "counterpart": "pay_R00007060",
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007044"
+        "order_ref": "order_R00007046",
+        "date_gap_days": 0
       }
     },
     {
       "seq": 29,
-      "at": "2026-09-02T12:09:43.652Z",
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0059",
@@ -5831,28 +6086,13 @@
       "counterpart": "pay_R00007061",
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007058"
+        "order_ref": "order_R00007058",
+        "date_gap_days": 0
       }
     },
     {
       "seq": 30,
-      "at": "2026-09-02T12:09:43.652Z",
-      "leg": "A",
-      "subject": "ledger",
-      "subject_id": "INV-2026-0061",
-      "decision": "matched",
-      "rule": "A1_exact_order_ref",
-      "reason": null,
-      "confidence": 1,
-      "counterpart": "pay_R00007062",
-      "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007060"
-      }
-    },
-    {
-      "seq": 31,
-      "at": "2026-09-02T12:09:43.652Z",
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0069",
@@ -5863,28 +6103,30 @@
       "counterpart": "pay_R00007063",
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007068"
+        "order_ref": "order_R00007068",
+        "date_gap_days": 2
       }
     },
     {
-      "seq": 32,
-      "at": "2026-09-02T12:09:43.652Z",
+      "seq": 31,
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
-      "subject_id": "INV-2026-0011",
+      "subject_id": "INV-2026-0053",
       "decision": "matched",
       "rule": "A1_exact_order_ref",
       "reason": null,
       "confidence": 1,
-      "counterpart": "pay_R00007065",
+      "counterpart": "pay_R00007064",
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007010"
+        "order_ref": "order_R00007052",
+        "date_gap_days": 0
       }
     },
     {
-      "seq": 33,
-      "at": "2026-09-02T12:09:43.652Z",
+      "seq": 32,
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0013",
@@ -5895,28 +6137,13 @@
       "counterpart": "pay_R00007066",
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007012"
+        "order_ref": "order_R00007012",
+        "date_gap_days": 0
       }
     },
     {
-      "seq": 34,
-      "at": "2026-09-02T12:09:43.652Z",
-      "leg": "A",
-      "subject": "ledger",
-      "subject_id": "INV-2026-0036",
-      "decision": "matched",
-      "rule": "A1_exact_order_ref",
-      "reason": null,
-      "confidence": 1,
-      "counterpart": "pay_R00007067",
-      "detail": {
-        "matched_on": "order_ref",
-        "order_ref": "order_R00007035"
-      }
-    },
-    {
-      "seq": 35,
-      "at": "2026-09-02T12:09:43.652Z",
+      "seq": 33,
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0057",
@@ -5927,12 +6154,13 @@
       "counterpart": "pay_R00007069",
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007056"
+        "order_ref": "order_R00007056",
+        "date_gap_days": 0
       }
     },
     {
-      "seq": 36,
-      "at": "2026-09-02T12:09:43.652Z",
+      "seq": 34,
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0014",
@@ -5943,20 +6171,64 @@
       "counterpart": "pay_R00007070",
       "detail": {
         "matched_on": "order_ref",
-        "order_ref": "order_R00007013"
+        "order_ref": "order_R00007013",
+        "date_gap_days": 0
+      }
+    },
+    {
+      "seq": 35,
+      "at": "2026-09-02T12:24:08.486Z",
+      "leg": "A",
+      "subject": "ledger",
+      "subject_id": "INV-2026-0024",
+      "decision": "matched",
+      "rule": "A1_exact_order_ref",
+      "reason": null,
+      "confidence": 1,
+      "counterpart": "pay_R00007071",
+      "detail": {
+        "matched_on": "order_ref",
+        "order_ref": "order_R00007023",
+        "date_gap_days": 0
+      }
+    },
+    {
+      "seq": 36,
+      "at": "2026-09-02T12:24:08.486Z",
+      "leg": "A",
+      "subject": "calibration",
+      "subject_id": "ledger_date_window",
+      "decision": "calibrated",
+      "rule": null,
+      "reason": null,
+      "confidence": null,
+      "counterpart": null,
+      "detail": {
+        "samples": 35,
+        "p50": 0,
+        "p95": 2,
+        "observed_max": 2,
+        "configured": {
+          "min": -1,
+          "max": 3
+        },
+        "window": {
+          "min": -1,
+          "max": 3
+        }
       }
     },
     {
       "seq": 37,
-      "at": "2026-09-02T12:09:43.652Z",
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
-      "subject_id": "INV-2026-0019",
+      "subject_id": "INV-2026-0001",
       "decision": "matched",
       "rule": "A2_exact_amount_in_window",
       "reason": null,
       "confidence": 0.92,
-      "counterpart": "pay_R00007003",
+      "counterpart": "pay_R00007000",
       "detail": {
         "matched_on": "amount+date",
         "date_gap_days": 0
@@ -5964,7 +6236,39 @@
     },
     {
       "seq": 38,
-      "at": "2026-09-02T12:09:43.652Z",
+      "at": "2026-09-02T12:24:08.486Z",
+      "leg": "A",
+      "subject": "ledger",
+      "subject_id": "INV-2026-0008",
+      "decision": "matched",
+      "rule": "A2_exact_amount_in_window",
+      "reason": null,
+      "confidence": 0.92,
+      "counterpart": "pay_R00007001",
+      "detail": {
+        "matched_on": "amount+date",
+        "date_gap_days": 0
+      }
+    },
+    {
+      "seq": 39,
+      "at": "2026-09-02T12:24:08.486Z",
+      "leg": "A",
+      "subject": "ledger",
+      "subject_id": "INV-2026-0055",
+      "decision": "matched",
+      "rule": "A2_exact_amount_in_window",
+      "reason": null,
+      "confidence": 0.92,
+      "counterpart": "pay_R00007005",
+      "detail": {
+        "matched_on": "amount+date",
+        "date_gap_days": 1
+      }
+    },
+    {
+      "seq": 40,
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0068",
@@ -5979,8 +6283,8 @@
       }
     },
     {
-      "seq": 39,
-      "at": "2026-09-02T12:09:43.652Z",
+      "seq": 41,
+      "at": "2026-09-02T12:24:08.486Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0022",
@@ -5999,8 +6303,8 @@
       }
     },
     {
-      "seq": 40,
-      "at": "2026-09-02T12:09:43.652Z",
+      "seq": 42,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0026",
@@ -6019,8 +6323,8 @@
       }
     },
     {
-      "seq": 41,
-      "at": "2026-09-02T12:09:43.652Z",
+      "seq": 43,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0044",
@@ -6035,8 +6339,8 @@
       }
     },
     {
-      "seq": 42,
-      "at": "2026-09-02T12:09:43.652Z",
+      "seq": 44,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0058",
@@ -6051,24 +6355,8 @@
       }
     },
     {
-      "seq": 43,
-      "at": "2026-09-02T12:09:43.652Z",
-      "leg": "A",
-      "subject": "ledger",
-      "subject_id": "INV-2026-0070",
-      "decision": "matched",
-      "rule": "A2_exact_amount_in_window",
-      "reason": null,
-      "confidence": 0.92,
-      "counterpart": "pay_R00007014",
-      "detail": {
-        "matched_on": "amount+date",
-        "date_gap_days": 1
-      }
-    },
-    {
-      "seq": 44,
-      "at": "2026-09-02T12:09:43.652Z",
+      "seq": 45,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0005",
@@ -6083,8 +6371,8 @@
       }
     },
     {
-      "seq": 45,
-      "at": "2026-09-02T12:09:43.653Z",
+      "seq": 46,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0003",
@@ -6099,24 +6387,24 @@
       }
     },
     {
-      "seq": 46,
-      "at": "2026-09-02T12:09:43.653Z",
+      "seq": 47,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
-      "subject_id": "INV-2026-0072",
+      "subject_id": "INV-2026-0063",
       "decision": "matched",
       "rule": "A2_exact_amount_in_window",
       "reason": null,
       "confidence": 0.92,
-      "counterpart": "pay_R00007023",
+      "counterpart": "pay_R00007024",
       "detail": {
         "matched_on": "amount+date",
         "date_gap_days": 0
       }
     },
     {
-      "seq": 47,
-      "at": "2026-09-02T12:09:43.653Z",
+      "seq": 48,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0002",
@@ -6131,8 +6419,24 @@
       }
     },
     {
-      "seq": 48,
-      "at": "2026-09-02T12:09:43.653Z",
+      "seq": 49,
+      "at": "2026-09-02T12:24:08.487Z",
+      "leg": "A",
+      "subject": "ledger",
+      "subject_id": "INV-2026-0029",
+      "decision": "matched",
+      "rule": "A2_exact_amount_in_window",
+      "reason": null,
+      "confidence": 0.92,
+      "counterpart": "pay_R00007026",
+      "detail": {
+        "matched_on": "amount+date",
+        "date_gap_days": 0
+      }
+    },
+    {
+      "seq": 50,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0050",
@@ -6147,40 +6451,56 @@
       }
     },
     {
-      "seq": 49,
-      "at": "2026-09-02T12:09:43.653Z",
-      "leg": "A",
-      "subject": "ledger",
-      "subject_id": "INV-2026-0071",
-      "decision": "matched",
-      "rule": "A2_exact_amount_in_window",
-      "reason": null,
-      "confidence": 0.92,
-      "counterpart": "pay_R00007036",
-      "detail": {
-        "matched_on": "amount+date",
-        "date_gap_days": 2
-      }
-    },
-    {
-      "seq": 50,
-      "at": "2026-09-02T12:09:43.653Z",
-      "leg": "A",
-      "subject": "ledger",
-      "subject_id": "INV-2026-0030",
-      "decision": "matched",
-      "rule": "A2_exact_amount_in_window",
-      "reason": null,
-      "confidence": 0.92,
-      "counterpart": "pay_R00007037",
-      "detail": {
-        "matched_on": "amount+date",
-        "date_gap_days": 1
-      }
-    },
-    {
       "seq": 51,
-      "at": "2026-09-02T12:09:43.653Z",
+      "at": "2026-09-02T12:24:08.487Z",
+      "leg": "A",
+      "subject": "ledger",
+      "subject_id": "INV-2026-0017",
+      "decision": "matched",
+      "rule": "A2_exact_amount_in_window",
+      "reason": null,
+      "confidence": 0.92,
+      "counterpart": "pay_R00007029",
+      "detail": {
+        "matched_on": "amount+date",
+        "date_gap_days": 0
+      }
+    },
+    {
+      "seq": 52,
+      "at": "2026-09-02T12:24:08.487Z",
+      "leg": "A",
+      "subject": "ledger",
+      "subject_id": "INV-2026-0033",
+      "decision": "matched",
+      "rule": "A2_exact_amount_in_window",
+      "reason": null,
+      "confidence": 0.92,
+      "counterpart": "pay_R00007033",
+      "detail": {
+        "matched_on": "amount+date",
+        "date_gap_days": 0
+      }
+    },
+    {
+      "seq": 53,
+      "at": "2026-09-02T12:24:08.487Z",
+      "leg": "A",
+      "subject": "ledger",
+      "subject_id": "INV-2026-0051",
+      "decision": "matched",
+      "rule": "A2_exact_amount_in_window",
+      "reason": null,
+      "confidence": 0.92,
+      "counterpart": "pay_R00007035",
+      "detail": {
+        "matched_on": "amount+date",
+        "date_gap_days": 0
+      }
+    },
+    {
+      "seq": 54,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0066",
@@ -6199,8 +6519,8 @@
       }
     },
     {
-      "seq": 52,
-      "at": "2026-09-02T12:09:43.653Z",
+      "seq": 55,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0015",
@@ -6219,8 +6539,8 @@
       }
     },
     {
-      "seq": 53,
-      "at": "2026-09-02T12:09:43.653Z",
+      "seq": 56,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0016",
@@ -6235,64 +6555,16 @@
       }
     },
     {
-      "seq": 54,
-      "at": "2026-09-02T12:09:43.653Z",
-      "leg": "A",
-      "subject": "ledger",
-      "subject_id": "INV-2026-0007",
-      "decision": "matched",
-      "rule": "A2_exact_amount_in_window",
-      "reason": null,
-      "confidence": 0.92,
-      "counterpart": "pay_R00007042",
-      "detail": {
-        "matched_on": "amount+date",
-        "date_gap_days": 0
-      }
-    },
-    {
-      "seq": 55,
-      "at": "2026-09-02T12:09:43.653Z",
-      "leg": "A",
-      "subject": "ledger",
-      "subject_id": "INV-2026-0046",
-      "decision": "matched",
-      "rule": "A2_exact_amount_in_window",
-      "reason": null,
-      "confidence": 0.92,
-      "counterpart": "pay_R00007043",
-      "detail": {
-        "matched_on": "amount+date",
-        "date_gap_days": 2
-      }
-    },
-    {
-      "seq": 56,
-      "at": "2026-09-02T12:09:43.653Z",
-      "leg": "A",
-      "subject": "ledger",
-      "subject_id": "INV-2026-0062",
-      "decision": "matched",
-      "rule": "A2_exact_amount_in_window",
-      "reason": null,
-      "confidence": 0.92,
-      "counterpart": "pay_R00007044",
-      "detail": {
-        "matched_on": "amount+date",
-        "date_gap_days": 0
-      }
-    },
-    {
       "seq": 57,
-      "at": "2026-09-02T12:09:43.653Z",
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
-      "subject_id": "INV-2026-0009",
+      "subject_id": "INV-2026-0012",
       "decision": "matched",
       "rule": "A2_exact_amount_in_window",
       "reason": null,
       "confidence": 0.92,
-      "counterpart": "pay_R00007052",
+      "counterpart": "pay_R00007046",
       "detail": {
         "matched_on": "amount+date",
         "date_gap_days": 0
@@ -6300,23 +6572,23 @@
     },
     {
       "seq": 58,
-      "at": "2026-09-02T12:09:43.653Z",
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
-      "subject_id": "INV-2026-0023",
+      "subject_id": "INV-2026-0006",
       "decision": "matched",
       "rule": "A2_exact_amount_in_window",
       "reason": null,
       "confidence": 0.92,
-      "counterpart": "pay_R00007053",
+      "counterpart": "pay_R00007051",
       "detail": {
         "matched_on": "amount+date",
-        "date_gap_days": 1
+        "date_gap_days": 0
       }
     },
     {
       "seq": 59,
-      "at": "2026-09-02T12:09:43.653Z",
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0021",
@@ -6332,39 +6604,71 @@
     },
     {
       "seq": 60,
-      "at": "2026-09-02T12:09:43.653Z",
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
-      "subject_id": "INV-2026-0047",
+      "subject_id": "INV-2026-0045",
       "decision": "matched",
       "rule": "A2_exact_amount_in_window",
       "reason": null,
       "confidence": 0.92,
-      "counterpart": "pay_R00007060",
+      "counterpart": "pay_R00007059",
       "detail": {
         "matched_on": "amount+date",
-        "date_gap_days": 0
+        "date_gap_days": 1
       }
     },
     {
       "seq": 61,
-      "at": "2026-09-02T12:09:43.653Z",
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
-      "subject_id": "INV-2026-0053",
+      "subject_id": "INV-2026-0061",
       "decision": "matched",
       "rule": "A2_exact_amount_in_window",
       "reason": null,
       "confidence": 0.92,
-      "counterpart": "pay_R00007064",
+      "counterpart": "pay_R00007062",
+      "detail": {
+        "matched_on": "amount+date",
+        "date_gap_days": 1
+      }
+    },
+    {
+      "seq": 62,
+      "at": "2026-09-02T12:24:08.487Z",
+      "leg": "A",
+      "subject": "ledger",
+      "subject_id": "INV-2026-0011",
+      "decision": "matched",
+      "rule": "A2_exact_amount_in_window",
+      "reason": null,
+      "confidence": 0.92,
+      "counterpart": "pay_R00007065",
       "detail": {
         "matched_on": "amount+date",
         "date_gap_days": 0
       }
     },
     {
-      "seq": 62,
-      "at": "2026-09-02T12:09:43.653Z",
+      "seq": 63,
+      "at": "2026-09-02T12:24:08.487Z",
+      "leg": "A",
+      "subject": "ledger",
+      "subject_id": "INV-2026-0036",
+      "decision": "matched",
+      "rule": "A2_exact_amount_in_window",
+      "reason": null,
+      "confidence": 0.92,
+      "counterpart": "pay_R00007067",
+      "detail": {
+        "matched_on": "amount+date",
+        "date_gap_days": 0
+      }
+    },
+    {
+      "seq": 64,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0048",
@@ -6379,24 +6683,8 @@
       }
     },
     {
-      "seq": 63,
-      "at": "2026-09-02T12:09:43.653Z",
-      "leg": "A",
-      "subject": "ledger",
-      "subject_id": "INV-2026-0024",
-      "decision": "matched",
-      "rule": "A2_exact_amount_in_window",
-      "reason": null,
-      "confidence": 0.92,
-      "counterpart": "pay_R00007071",
-      "detail": {
-        "matched_on": "amount+date",
-        "date_gap_days": 0
-      }
-    },
-    {
-      "seq": 64,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 65,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0042",
@@ -6411,8 +6699,8 @@
       }
     },
     {
-      "seq": 65,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 66,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0020",
@@ -6427,8 +6715,8 @@
       }
     },
     {
-      "seq": 66,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 67,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0039",
@@ -6443,8 +6731,8 @@
       }
     },
     {
-      "seq": 67,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 68,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0067",
@@ -6459,8 +6747,8 @@
       }
     },
     {
-      "seq": 68,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 69,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0041",
@@ -6475,8 +6763,8 @@
       }
     },
     {
-      "seq": 69,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 70,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0040",
@@ -6495,8 +6783,8 @@
       }
     },
     {
-      "seq": 70,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 71,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0004",
@@ -6515,8 +6803,8 @@
       }
     },
     {
-      "seq": 71,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 72,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0034",
@@ -6535,8 +6823,8 @@
       }
     },
     {
-      "seq": 72,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 73,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "ledger",
       "subject_id": "INV-2026-0035",
@@ -6555,8 +6843,8 @@
       }
     },
     {
-      "seq": 73,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 74,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "payment",
       "subject_id": "pay_R00007009",
@@ -6572,8 +6860,8 @@
       }
     },
     {
-      "seq": 74,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 75,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "payment",
       "subject_id": "pay_R00007008",
@@ -6589,8 +6877,8 @@
       }
     },
     {
-      "seq": 75,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 76,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "payment",
       "subject_id": "pay_U00007000",
@@ -6606,8 +6894,8 @@
       }
     },
     {
-      "seq": 76,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 77,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "payment",
       "subject_id": "pay_R00007039",
@@ -6623,8 +6911,8 @@
       }
     },
     {
-      "seq": 77,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 78,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "payment",
       "subject_id": "pay_R00007038",
@@ -6640,8 +6928,8 @@
       }
     },
     {
-      "seq": 78,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 79,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "payment",
       "subject_id": "pay_U00007002",
@@ -6657,8 +6945,8 @@
       }
     },
     {
-      "seq": 79,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 80,
+      "at": "2026-09-02T12:24:08.487Z",
       "leg": "A",
       "subject": "payment",
       "subject_id": "pay_U00007001",
@@ -6674,8 +6962,8 @@
       }
     },
     {
-      "seq": 80,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 81,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "bank",
       "subject_id": "TXN202608050001",
@@ -6694,8 +6982,8 @@
       }
     },
     {
-      "seq": 81,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 82,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "settlement",
       "subject_id": "CITIN2608055104",
@@ -6714,8 +7002,8 @@
       }
     },
     {
-      "seq": 82,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 83,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "bank",
       "subject_id": "TXN202608060002",
@@ -6734,8 +7022,8 @@
       }
     },
     {
-      "seq": 83,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 84,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "settlement",
       "subject_id": "CITIN2608061587",
@@ -6754,8 +7042,8 @@
       }
     },
     {
-      "seq": 84,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 85,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "bank",
       "subject_id": "TXN202608070003",
@@ -6774,8 +7062,8 @@
       }
     },
     {
-      "seq": 85,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 86,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "settlement",
       "subject_id": "AXISN2608071357",
@@ -6794,8 +7082,8 @@
       }
     },
     {
-      "seq": 86,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 87,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "bank",
       "subject_id": "TXN202608080004",
@@ -6814,8 +7102,8 @@
       }
     },
     {
-      "seq": 87,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 88,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "settlement",
       "subject_id": "CITIN2608085579",
@@ -6834,8 +7122,8 @@
       }
     },
     {
-      "seq": 88,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 89,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "bank",
       "subject_id": "TXN202608090005",
@@ -6854,8 +7142,8 @@
       }
     },
     {
-      "seq": 89,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 90,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "settlement",
       "subject_id": "AXISN2608094430",
@@ -6874,8 +7162,8 @@
       }
     },
     {
-      "seq": 90,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 91,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "bank",
       "subject_id": "TXN202608100006",
@@ -6894,8 +7182,8 @@
       }
     },
     {
-      "seq": 91,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 92,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "settlement",
       "subject_id": "AXISN2608109261",
@@ -6914,8 +7202,8 @@
       }
     },
     {
-      "seq": 92,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 93,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "bank",
       "subject_id": "TXN202608110007",
@@ -6934,8 +7222,8 @@
       }
     },
     {
-      "seq": 93,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 94,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "settlement",
       "subject_id": "HDFCN2608110044",
@@ -6954,8 +7242,8 @@
       }
     },
     {
-      "seq": 94,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 95,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "bank",
       "subject_id": "TXN202608120008",
@@ -6974,8 +7262,8 @@
       }
     },
     {
-      "seq": 95,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 96,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "settlement",
       "subject_id": "CITIN2608124629",
@@ -6994,8 +7282,8 @@
       }
     },
     {
-      "seq": 96,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 97,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "bank",
       "subject_id": "TXN202608130009",
@@ -7014,8 +7302,8 @@
       }
     },
     {
-      "seq": 97,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 98,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "settlement",
       "subject_id": "AXISN2608138659",
@@ -7034,8 +7322,8 @@
       }
     },
     {
-      "seq": 98,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 99,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "bank",
       "subject_id": "TXN202608140010",
@@ -7054,8 +7342,8 @@
       }
     },
     {
-      "seq": 99,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 100,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "settlement",
       "subject_id": "HDFCN2608145125",
@@ -7074,8 +7362,8 @@
       }
     },
     {
-      "seq": 100,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 101,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "bank",
       "subject_id": "TXN202608150011",
@@ -7094,8 +7382,8 @@
       }
     },
     {
-      "seq": 101,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 102,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "settlement",
       "subject_id": "ICICN2608157671",
@@ -7114,8 +7402,8 @@
       }
     },
     {
-      "seq": 102,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 103,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "bank",
       "subject_id": "TXN202608160012",
@@ -7134,8 +7422,8 @@
       }
     },
     {
-      "seq": 103,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 104,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "settlement",
       "subject_id": "HDFCN2608160717",
@@ -7154,8 +7442,8 @@
       }
     },
     {
-      "seq": 104,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 105,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "bank",
       "subject_id": "TXN202608170013",
@@ -7174,8 +7462,8 @@
       }
     },
     {
-      "seq": 105,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 106,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "settlement",
       "subject_id": "ICICN2608171628",
@@ -7194,8 +7482,8 @@
       }
     },
     {
-      "seq": 106,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 107,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "bank",
       "subject_id": "TXN202608190014",
@@ -7214,8 +7502,8 @@
       }
     },
     {
-      "seq": 107,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 108,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "settlement",
       "subject_id": "CITIN2608194900",
@@ -7234,8 +7522,8 @@
       }
     },
     {
-      "seq": 108,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 109,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "bank",
       "subject_id": "TXN202608200015",
@@ -7254,8 +7542,8 @@
       }
     },
     {
-      "seq": 109,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 110,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "settlement",
       "subject_id": "ICICN2608200061",
@@ -7274,8 +7562,8 @@
       }
     },
     {
-      "seq": 110,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 111,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "bank",
       "subject_id": "TXN202608210016",
@@ -7286,15 +7574,15 @@
       "counterpart": "HDFCN2608219874",
       "detail": {
         "expected_credit": 3274170,
-        "credited": 3217870,
-        "delta": -56300,
+        "credited": 3219670,
+        "delta": -54500,
         "tolerance": 1637,
         "txn_id": "TXN202608210016"
       }
     },
     {
-      "seq": 111,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 112,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "settlement",
       "subject_id": "HDFCN2608219874",
@@ -7305,15 +7593,15 @@
       "counterpart": "TXN202608210016",
       "detail": {
         "expected_credit": 3274170,
-        "credited": 3217870,
-        "delta": -56300,
+        "credited": 3219670,
+        "delta": -54500,
         "tolerance": 1637,
         "txn_id": "TXN202608210016"
       }
     },
     {
-      "seq": 112,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 113,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "bank",
       "subject_id": "TXN202608220017",
@@ -7332,8 +7620,8 @@
       }
     },
     {
-      "seq": 113,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 114,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "settlement",
       "subject_id": "ICICN2608227847",
@@ -7352,8 +7640,8 @@
       }
     },
     {
-      "seq": 114,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 115,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "bank",
       "subject_id": "TXN202608230018",
@@ -7372,12 +7660,14 @@
           348575,
           348575
         ],
-        "expected_credit": 348575
+        "total_credited": 697150,
+        "expected_credit": 348575,
+        "overstated_by": 348575
       }
     },
     {
-      "seq": 115,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 116,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "bank",
       "subject_id": "TXN202608230019",
@@ -7396,12 +7686,14 @@
           348575,
           348575
         ],
-        "expected_credit": 348575
+        "total_credited": 697150,
+        "expected_credit": 348575,
+        "overstated_by": 348575
       }
     },
     {
-      "seq": 116,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 117,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "settlement",
       "subject_id": "AXISN2608236750",
@@ -7420,12 +7712,14 @@
           348575,
           348575
         ],
-        "expected_credit": 348575
+        "total_credited": 697150,
+        "expected_credit": 348575,
+        "overstated_by": 348575
       }
     },
     {
-      "seq": 117,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 118,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "bank",
       "subject_id": "TXN202608240020",
@@ -7444,8 +7738,8 @@
       }
     },
     {
-      "seq": 118,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 119,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "settlement",
       "subject_id": "HDFCN2608248497",
@@ -7464,8 +7758,8 @@
       }
     },
     {
-      "seq": 119,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 120,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "bank",
       "subject_id": "TXN202608250021",
@@ -7484,8 +7778,8 @@
       }
     },
     {
-      "seq": 120,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 121,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "settlement",
       "subject_id": "HDFCN2608257681",
@@ -7504,11 +7798,11 @@
       }
     },
     {
-      "seq": 121,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 122,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "bank",
-      "subject_id": "TXN202609030022",
+      "subject_id": "TXN202609020022",
       "decision": "exception",
       "rule": null,
       "reason": "date_out_of_window",
@@ -7516,19 +7810,19 @@
       "counterpart": "HDFCN2608260864",
       "detail": {
         "settled_date": "2026-08-26",
-        "credited_date": "2026-09-03",
-        "gap_days": 8,
+        "credited_date": "2026-09-02",
+        "gap_days": 7,
         "window": {
           "min": -1,
           "max": 3
         },
-        "txn_id": "TXN202609030022",
+        "txn_id": "TXN202609020022",
         "delta": 0
       }
     },
     {
-      "seq": 122,
-      "at": "2026-09-02T12:09:43.654Z",
+      "seq": 123,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "settlement",
       "subject_id": "HDFCN2608260864",
@@ -7536,65 +7830,65 @@
       "rule": null,
       "reason": "date_out_of_window",
       "confidence": 0,
-      "counterpart": "TXN202609030022",
+      "counterpart": "TXN202609020022",
       "detail": {
         "settled_date": "2026-08-26",
-        "credited_date": "2026-09-03",
-        "gap_days": 8,
+        "credited_date": "2026-09-02",
+        "gap_days": 7,
         "window": {
           "min": -1,
           "max": 3
         },
-        "txn_id": "TXN202609030022",
+        "txn_id": "TXN202609020022",
         "delta": 0
       }
     },
     {
-      "seq": 123,
-      "at": "2026-09-02T12:09:43.654Z",
-      "leg": "B",
-      "subject": "bank",
-      "subject_id": "TXN202608080024",
-      "decision": "exception",
-      "rule": null,
-      "reason": "missing_counterpart",
-      "confidence": 0,
-      "counterpart": "IMPS2608083487",
-      "detail": {
-        "note": "bank credit with no matching Razorpay settlement",
-        "credit": 4142700,
-        "utr": "IMPS2608083487",
-        "description": "IMPS CR CUSTOMER TRANSFER"
-      }
-    },
-    {
       "seq": 124,
-      "at": "2026-09-02T12:09:43.654Z",
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "B",
       "subject": "bank",
-      "subject_id": "TXN202608120023",
+      "subject_id": "TXN202608170023",
       "decision": "exception",
       "rule": null,
       "reason": "missing_counterpart",
       "confidence": 0,
-      "counterpart": "IMPS2608120891",
+      "counterpart": "IMPS2608173907",
       "detail": {
         "note": "bank credit with no matching Razorpay settlement",
-        "credit": 3463300,
-        "utr": "IMPS2608120891",
+        "credit": 4525100,
+        "utr": "IMPS2608173907",
         "description": "IMPS CR CUSTOMER TRANSFER"
       }
     },
     {
       "seq": 125,
-      "at": "2026-09-02T12:09:43.655Z",
+      "at": "2026-09-02T12:24:08.488Z",
+      "leg": "B",
+      "subject": "bank",
+      "subject_id": "TXN202608190024",
+      "decision": "exception",
+      "rule": null,
+      "reason": "missing_counterpart",
+      "confidence": 0,
+      "counterpart": "IMPS2608191977",
+      "detail": {
+        "note": "bank credit with no matching Razorpay settlement",
+        "credit": 2806700,
+        "utr": "IMPS2608191977",
+        "description": "IMPS CR CUSTOMER TRANSFER"
+      }
+    },
+    {
+      "seq": 126,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0001",
       "decision": "matched",
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
+      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
       "reason": null,
-      "confidence": 1,
+      "confidence": 0.92,
       "counterpart": "pay_R00007000/CITIN2608055104",
       "detail": {
         "net": 238827,
@@ -7602,15 +7896,15 @@
       }
     },
     {
-      "seq": 126,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 127,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0008",
       "decision": "matched",
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
+      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
       "reason": null,
-      "confidence": 1,
+      "confidence": 0.92,
       "counterpart": "pay_R00007001/CITIN2608055104",
       "detail": {
         "net": 99601,
@@ -7618,15 +7912,15 @@
       }
     },
     {
-      "seq": 127,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 128,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0019",
       "decision": "matched",
-      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
+      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
       "reason": null,
-      "confidence": 0.92,
+      "confidence": 1,
       "counterpart": "pay_R00007003/CITIN2608055104",
       "detail": {
         "net": 1551011,
@@ -7634,8 +7928,8 @@
       }
     },
     {
-      "seq": 128,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 129,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0028",
@@ -7650,15 +7944,15 @@
       }
     },
     {
-      "seq": 129,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 130,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0055",
       "decision": "matched",
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
+      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
       "reason": null,
-      "confidence": 1,
+      "confidence": 0.92,
       "counterpart": "pay_R00007005/AXISN2608071357",
       "detail": {
         "net": 115288,
@@ -7666,8 +7960,8 @@
       }
     },
     {
-      "seq": 130,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 131,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0068",
@@ -7682,8 +7976,8 @@
       }
     },
     {
-      "seq": 131,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 132,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0054",
@@ -7698,8 +7992,8 @@
       }
     },
     {
-      "seq": 132,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 133,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0027",
@@ -7714,8 +8008,8 @@
       }
     },
     {
-      "seq": 133,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 134,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0044",
@@ -7730,8 +8024,8 @@
       }
     },
     {
-      "seq": 134,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 135,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0056",
@@ -7746,8 +8040,8 @@
       }
     },
     {
-      "seq": 135,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 136,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0058",
@@ -7762,15 +8056,15 @@
       }
     },
     {
-      "seq": 136,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 137,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0070",
       "decision": "matched",
-      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
+      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
       "reason": null,
-      "confidence": 0.92,
+      "confidence": 1,
       "counterpart": "pay_R00007014/AXISN2608094430",
       "detail": {
         "net": 177021,
@@ -7778,8 +8072,8 @@
       }
     },
     {
-      "seq": 137,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 138,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0005",
@@ -7794,8 +8088,8 @@
       }
     },
     {
-      "seq": 138,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 139,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0003",
@@ -7810,8 +8104,8 @@
       }
     },
     {
-      "seq": 139,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 140,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0042",
@@ -7826,8 +8120,8 @@
       }
     },
     {
-      "seq": 140,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 141,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0020",
@@ -7842,8 +8136,8 @@
       }
     },
     {
-      "seq": 141,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 142,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0052",
@@ -7858,8 +8152,8 @@
       }
     },
     {
-      "seq": 142,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 143,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0060",
@@ -7874,15 +8168,15 @@
       }
     },
     {
-      "seq": 143,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 144,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0072",
       "decision": "matched",
-      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
+      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
       "reason": null,
-      "confidence": 0.92,
+      "confidence": 1,
       "counterpart": "pay_R00007023/HDFCN2608110044",
       "detail": {
         "net": 175619,
@@ -7890,15 +8184,15 @@
       }
     },
     {
-      "seq": 144,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 145,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0063",
       "decision": "matched",
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
+      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
       "reason": null,
-      "confidence": 1,
+      "confidence": 0.92,
       "counterpart": "pay_R00007024/CITIN2608124629",
       "detail": {
         "net": 130935,
@@ -7906,8 +8200,8 @@
       }
     },
     {
-      "seq": 145,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 146,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0002",
@@ -7922,15 +8216,15 @@
       }
     },
     {
-      "seq": 146,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 147,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0029",
       "decision": "matched",
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
+      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
       "reason": null,
-      "confidence": 1,
+      "confidence": 0.92,
       "counterpart": "pay_R00007026/AXISN2608138659",
       "detail": {
         "net": 197233,
@@ -7938,8 +8232,8 @@
       }
     },
     {
-      "seq": 147,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 148,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0050",
@@ -7954,15 +8248,15 @@
       }
     },
     {
-      "seq": 148,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 149,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0017",
       "decision": "matched",
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
+      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
       "reason": null,
-      "confidence": 1,
+      "confidence": 0.92,
       "counterpart": "pay_R00007029/HDFCN2608145125",
       "detail": {
         "net": 1866607,
@@ -7970,8 +8264,8 @@
       }
     },
     {
-      "seq": 149,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 150,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0065",
@@ -7986,15 +8280,15 @@
       }
     },
     {
-      "seq": 150,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 151,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0033",
       "decision": "matched",
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
+      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
       "reason": null,
-      "confidence": 1,
+      "confidence": 0.92,
       "counterpart": "pay_R00007033/ICICN2608157671",
       "detail": {
         "net": 1131648,
@@ -8002,8 +8296,8 @@
       }
     },
     {
-      "seq": 151,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 152,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0043",
@@ -8018,15 +8312,15 @@
       }
     },
     {
-      "seq": 152,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 153,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0051",
       "decision": "matched",
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
+      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
       "reason": null,
-      "confidence": 1,
+      "confidence": 0.92,
       "counterpart": "pay_R00007035/ICICN2608157671",
       "detail": {
         "net": 141676,
@@ -8034,15 +8328,15 @@
       }
     },
     {
-      "seq": 153,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 154,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0071",
       "decision": "matched",
-      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
+      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
       "reason": null,
-      "confidence": 0.92,
+      "confidence": 1,
       "counterpart": "pay_R00007036/ICICN2608171628",
       "detail": {
         "net": 929435,
@@ -8050,15 +8344,15 @@
       }
     },
     {
-      "seq": 154,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 155,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0030",
       "decision": "matched",
-      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
+      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
       "reason": null,
-      "confidence": 0.92,
+      "confidence": 1,
       "counterpart": "pay_R00007037/ICICN2608171628",
       "detail": {
         "net": 1149567,
@@ -8066,8 +8360,8 @@
       }
     },
     {
-      "seq": 155,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 156,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0016",
@@ -8082,15 +8376,15 @@
       }
     },
     {
-      "seq": 156,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 157,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0007",
       "decision": "matched",
-      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
+      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
       "reason": null,
-      "confidence": 0.92,
+      "confidence": 1,
       "counterpart": "pay_R00007042/CITIN2608194900",
       "detail": {
         "net": 11890502,
@@ -8098,15 +8392,15 @@
       }
     },
     {
-      "seq": 157,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 158,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0062",
       "decision": "matched",
-      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
+      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
       "reason": null,
-      "confidence": 0.92,
+      "confidence": 1,
       "counterpart": "pay_R00007044/CITIN2608194900",
       "detail": {
         "net": 1755729,
@@ -8114,8 +8408,8 @@
       }
     },
     {
-      "seq": 158,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 159,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0010",
@@ -8130,15 +8424,15 @@
       }
     },
     {
-      "seq": 159,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 160,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0012",
       "decision": "matched",
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
+      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
       "reason": null,
-      "confidence": 1,
+      "confidence": 0.92,
       "counterpart": "pay_R00007046/ICICN2608200061",
       "detail": {
         "net": 10732589,
@@ -8146,8 +8440,8 @@
       }
     },
     {
-      "seq": 160,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 161,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0038",
@@ -8162,8 +8456,8 @@
       }
     },
     {
-      "seq": 161,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 162,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0039",
@@ -8178,8 +8472,8 @@
       }
     },
     {
-      "seq": 162,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 163,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0067",
@@ -8194,15 +8488,15 @@
       }
     },
     {
-      "seq": 163,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 164,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0023",
       "decision": "matched",
-      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
+      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
       "reason": null,
-      "confidence": 0.92,
+      "confidence": 1,
       "counterpart": "pay_R00007053/ICICN2608227847",
       "detail": {
         "net": 2419519,
@@ -8210,8 +8504,8 @@
       }
     },
     {
-      "seq": 164,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 165,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0031",
@@ -8226,8 +8520,8 @@
       }
     },
     {
-      "seq": 165,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 166,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0032",
@@ -8242,8 +8536,8 @@
       }
     },
     {
-      "seq": 166,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 167,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0021",
@@ -8258,15 +8552,15 @@
       }
     },
     {
-      "seq": 167,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 168,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0045",
       "decision": "matched",
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
+      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
       "reason": null,
-      "confidence": 1,
+      "confidence": 0.92,
       "counterpart": "pay_R00007059/HDFCN2608248497",
       "detail": {
         "net": 223490,
@@ -8274,15 +8568,15 @@
       }
     },
     {
-      "seq": 168,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 169,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0061",
       "decision": "matched",
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
+      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
       "reason": null,
-      "confidence": 1,
+      "confidence": 0.92,
       "counterpart": "pay_R00007062/HDFCN2608248497",
       "detail": {
         "net": 1943524,
@@ -8290,8 +8584,8 @@
       }
     },
     {
-      "seq": 169,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 170,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0069",
@@ -8306,15 +8600,15 @@
       }
     },
     {
-      "seq": 170,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 171,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0053",
       "decision": "matched",
-      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
+      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
       "reason": null,
-      "confidence": 0.92,
+      "confidence": 1,
       "counterpart": "pay_R00007064/HDFCN2608248497",
       "detail": {
         "net": 208080,
@@ -8322,15 +8616,15 @@
       }
     },
     {
-      "seq": 171,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 172,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0011",
       "decision": "matched",
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
+      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
       "reason": null,
-      "confidence": 1,
+      "confidence": 0.92,
       "counterpart": "pay_R00007065/HDFCN2608257681",
       "detail": {
         "net": 62201,
@@ -8338,8 +8632,8 @@
       }
     },
     {
-      "seq": 172,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 173,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0013",
@@ -8354,15 +8648,15 @@
       }
     },
     {
-      "seq": 173,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 174,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0036",
       "decision": "matched",
-      "rule": "A1_exact_order_ref+B1_batch_utr_exact",
+      "rule": "A2_exact_amount_in_window+B1_batch_utr_exact",
       "reason": null,
-      "confidence": 1,
+      "confidence": 0.92,
       "counterpart": "pay_R00007067/HDFCN2608257681",
       "detail": {
         "net": 167062,
@@ -8370,8 +8664,8 @@
       }
     },
     {
-      "seq": 174,
-      "at": "2026-09-02T12:09:43.655Z",
+      "seq": 175,
+      "at": "2026-09-02T12:24:08.488Z",
       "leg": "AB",
       "subject": "invoice",
       "subject_id": "INV-2026-0057",
@@ -8388,7 +8682,21 @@
   ],
   "throughput": {
     "records": 167,
-    "elapsed_ms": 5.9,
-    "records_per_second": 28506
+    "elapsed_ms": 10.9,
+    "records_per_second": 15331
+  },
+  "explanations": {
+    "generated_at": "2026-09-02T12:24:08.583Z",
+    "model": null,
+    "count": 24,
+    "from_model": 0,
+    "from_template": 24,
+    "elapsed_ms": 10.3,
+    "usage": {
+      "input": 0,
+      "output": 0,
+      "cache_read": 0,
+      "cache_write": 0
+    }
   }
 }
