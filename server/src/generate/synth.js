@@ -19,6 +19,7 @@ import { makeRng } from '../lib/rng.js';
 import { addDays, isoToUnix } from '../lib/dates.js';
 import { razorpayFees, RUPEE } from '../lib/money.js';
 import { REASON, STATUS } from '../match/codes.js';
+import { buildBankStatement, bankTruth } from './bank.js';
 
 const CUSTOMERS = [
   'Meera Textiles', 'Anand Traders', 'Kavya Organics', 'Rohit Electronics',
@@ -269,109 +270,10 @@ export function generateDataset({
     };
   });
 
-  // ------------------------------------------------- settlement-side faults
-  const settlementFaults = new Map(); // settlement.id -> fault tag
-  const pickSettlements = (n, predicate = () => true) =>
-    rng.shuffle(settlements.filter((s) => !settlementFaults.has(s.id) && predicate(s))).slice(0, n);
-
-  // Keep the disruptive faults on small batches so one injected fault does not
-  // blow up a third of the dataset and distort the headline match rate.
-  const isSmall = (s) => s.payment_ids.length <= 4;
-  for (const s of pickSettlements(f.lateSettlements, isSmall)) settlementFaults.set(s.id, 'late');
-  for (const s of pickSettlements(f.duplicateCredits, isSmall)) settlementFaults.set(s.id, 'duplicate');
-  for (const s of pickSettlements(f.shortCredits)) settlementFaults.set(s.id, 'short');
-  // A split payout is not an error — Razorpay really does pay one settlement out
-  // in parts. It is here because a matcher that keys on "one UTR, one credit"
-  // will call it a duplicate and flag a perfectly good batch.
-  for (const s of pickSettlements(f.splitCredits, isSmall)) settlementFaults.set(s.id, 'split');
-
   // ------------------------------------------------------------------- bank
-  const bank = [];
-  let balance = 4_25_000 * RUPEE;
-  let txnSeq = 0;
-  const nextTxnId = (d) => `TXN${d.replace(/-/g, '')}${idTag(++txnSeq, 4)}`;
-
-  for (const s of settlements) {
-    const fault = settlementFaults.get(s.id);
-    // A late credit is late in the bank, not in the gateway: Razorpay says it
-    // paid on T+2, the money shows up on T+9.
-    const creditDate = fault === 'late' ? addDays(s.settled_date, rng.int(6, 9)) : s.settled_date;
-    // Short credit models a bank-side deduction the gateway never reported.
-    const shortfall = fault === 'short' ? rng.int(150, 900) * RUPEE : 0;
-    const credit = s.amount - shortfall;
-
-    balance += credit;
-    bank.push({
-      txn_id: nextTxnId(creditDate),
-      value_date: creditDate,
-      description: `NEFT CR RAZORPAY SOFTWARE PVT LTD ${s.utr}`,
-      utr: s.utr,
-      credit,
-      debit: 0,
-      balance,
-      _settlement_id: s.id,
-      _fault: fault ?? null,
-    });
-
-    if (fault === 'split') {
-      // Rewrite the row just pushed as the first tranche, then post the rest a
-      // day later. The two credits sum to exactly the settlement amount.
-      const first = Math.round(credit * 0.6);
-      const row = bank[bank.length - 1];
-      row.credit = first;
-      row.balance = (balance -= credit - first);
-      const restDate = addDays(creditDate, 1);
-      balance += credit - first;
-      bank.push({
-        txn_id: nextTxnId(restDate),
-        value_date: restDate,
-        description: `NEFT CR RAZORPAY SOFTWARE PVT LTD ${s.utr}`,
-        utr: s.utr,
-        credit: credit - first,
-        debit: 0,
-        balance,
-        _settlement_id: s.id,
-        _fault: 'split',
-      });
-    }
-
-    if (fault === 'duplicate') {
-      // Same UTR posted twice. The cash position is now wrong by one settlement
-      // and no automated rule should be trusted to decide which row is real.
-      balance += credit;
-      bank.push({
-        txn_id: nextTxnId(creditDate),
-        value_date: creditDate,
-        description: `NEFT CR RAZORPAY SOFTWARE PVT LTD ${s.utr}`,
-        utr: s.utr,
-        credit,
-        debit: 0,
-        balance,
-        _settlement_id: s.id,
-        _fault: 'duplicate',
-      });
-    }
-  }
-
-  // Credits Razorpay never sent — another PSP, a manual transfer, a customer
-  // paying by direct bank transfer.
-  for (let i = 0; i < f.orphanCredits; i++) {
-    const date = addDays(monthStart, rng.int(2, days));
-    const credit = rng.int(2_000, 60_000) * RUPEE;
-    balance += credit;
-    bank.push({
-      txn_id: nextTxnId(date),
-      value_date: date,
-      description: `IMPS CR CUSTOMER TRANSFER`,
-      utr: `IMPS${date.replace(/-/g, '').slice(2)}${idTag(rng.int(1, 9999), 4)}`,
-      credit,
-      debit: 0,
-      balance,
-      _settlement_id: null,
-      _fault: 'orphan',
-    });
-  }
-  bank.sort((a, b) => a.value_date.localeCompare(b.value_date) || a.txn_id.localeCompare(b.txn_id));
+  // Built by the shared bank builder, so the fully synthetic path and the live
+  // Razorpay pull produce bank statements with identical semantics.
+  const { bank, settlementFaults, settlementReason } = buildBankStatement(settlements, { rng, faults: f });
 
   // ----------------------------------------------------------------- ledger
   // The merchant's own book. Deliberately the messiest of the three: nearly half
@@ -406,7 +308,7 @@ export function generateDataset({
   // ----------------------------------------------------------- ground truth
   const truth = buildTruth({
     ledger, invoices, payments, settlements, bank,
-    paymentByInvoice, settlementByPayment, settlementFaults,
+    paymentByInvoice, settlementByPayment, settlementFaults, settlementReason,
     offlineIds, typoLargeIds, driftSmallIds, collisionIds,
   });
 
@@ -440,25 +342,13 @@ export function generateDataset({
 function buildTruth(ctx) {
   const {
     ledger, payments, settlements, bank,
-    paymentByInvoice, settlementByPayment, settlementFaults,
+    paymentByInvoice, settlementByPayment, settlementFaults, settlementReason,
     offlineIds, typoLargeIds, collisionIds,
   } = ctx;
 
-  // A settlement whose bank leg is broken taints every invoice inside it: the
-  // invoice is genuinely unconfirmed until a human resolves the batch.
-  // A split payout is deliberately absent here: it is normal gateway behaviour,
-  // not a fault, so the correct answer for a split batch is "matched". It is in
-  // the dataset to catch a matcher that assumes one UTR means one credit.
-  const settlementReason = new Map();
-  for (const [sid, fault] of settlementFaults) {
-    if (fault === 'split') continue;
-    settlementReason.set(
-      sid,
-      fault === 'late' ? REASON.DATE_OUT_OF_WINDOW
-        : fault === 'duplicate' ? REASON.DUPLICATE_UTR
-        : REASON.AMOUNT_MISMATCH,
-    );
-  }
+  // settlementReason comes from the bank builder: a settlement whose bank leg is
+  // broken taints every invoice inside it, because the invoice is genuinely
+  // unconfirmed until a human resolves the batch.
 
   const ledgerTruth = ledger.map((row) => {
     const base = { invoice_id: row.invoice_id };
@@ -497,26 +387,17 @@ function buildTruth(ctx) {
       : { payment_id: p.id, status: STATUS.MATCHED, reason: null, utr: s.utr, fault: null };
   });
 
-  const bankTruth = bank.map((b) => {
-    if (b._fault === 'orphan') {
-      return { txn_id: b.txn_id, status: STATUS.EXCEPTION, reason: REASON.MISSING_COUNTERPART,
-        settlement_id: null, fault: 'orphan_credit' };
-    }
-    const reason = settlementReason.get(b._settlement_id);
-    return reason
-      ? { txn_id: b.txn_id, status: STATUS.EXCEPTION, reason, settlement_id: b._settlement_id, fault: `settlement_${b._fault}` }
-      : { txn_id: b.txn_id, status: STATUS.MATCHED, reason: null, settlement_id: b._settlement_id, fault: null };
-  });
+  const bankRows = bankTruth(bank, settlementReason);
 
   return {
     ledger: ledgerTruth,
     payments: paymentTruth,
-    bank: bankTruth,
+    bank: bankRows,
     summary: {
       ledger_matched: ledgerTruth.filter((t) => t.status === STATUS.MATCHED).length,
       ledger_exceptions: ledgerTruth.filter((t) => t.status === STATUS.EXCEPTION).length,
-      bank_matched: bankTruth.filter((t) => t.status === STATUS.MATCHED).length,
-      bank_exceptions: bankTruth.filter((t) => t.status === STATUS.EXCEPTION).length,
+      bank_matched: bankRows.filter((t) => t.status === STATUS.MATCHED).length,
+      bank_exceptions: bankRows.filter((t) => t.status === STATUS.EXCEPTION).length,
       settlements: settlements.length,
     },
   };
