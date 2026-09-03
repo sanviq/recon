@@ -40,6 +40,43 @@ How you write:
 - No rule names, confidence scores or internal jargon unless the user asks how a decision was made. "Matched on the gateway reference" beats "A1_exact_order_ref fired".`;
 
 /**
+ * Turns an SDK error into a sentence a person can act on.
+ *
+ * The explainer can absorb a failed call by falling back to a template. This
+ * layer cannot — there is no canned answer to an arbitrary question — so the
+ * failure reaches the user, and it should say what to do rather than print a
+ * stack trace over a dashboard.
+ */
+export function friendlyApiError(err) {
+  const status = err?.status ?? err?.statusCode;
+  const raw = String(err?.message ?? err);
+  const wrap = (message, code) => Object.assign(new Error(message), { status: code, cause: err });
+
+  if (status === 401 || /authentication_error|invalid x-api-key|API key is invalid/i.test(raw)) {
+    return wrap('Anthropic rejected the API key. Check ANTHROPIC_API_KEY in .env — it should start with sk-ant- and have no trailing spaces or quotes.', 401);
+  }
+  if (status === 403) return wrap('That API key is not permitted to use this model.', 403);
+  if (status === 429 || /rate_limit/i.test(raw)) {
+    return wrap('Rate limited by the Anthropic API. Wait a few seconds and ask again.', 429);
+  }
+  if (/credit balance|insufficient|billing/i.test(raw)) {
+    return wrap('The Anthropic account has no credit left. Add credit at console.anthropic.com, then try again.', 402);
+  }
+  if (status === 404 || /model.*not found/i.test(raw)) {
+    return wrap(`The model ${MODEL} is not available to this account.`, 404);
+  }
+  if (status >= 500 || /overloaded/i.test(raw)) {
+    return wrap('Anthropic is overloaded or unavailable right now. The reconciliation, exception notes and audit trail all still work — only this chat is affected.', 503);
+  }
+  // The SDK reports a dead socket as the bare string "Connection error.", which
+  // is not something anyone can act on without being told what it means.
+  if (/ENOTFOUND|ECONNREFUSED|ETIMEDOUT|fetch failed|network|connection error/i.test(raw)) {
+    return wrap('Could not reach the Anthropic API — check the network connection.', 503);
+  }
+  return wrap(`The chat request failed: ${raw}`, 502);
+}
+
+/**
  * Answers one question against a loaded result.
  *
  * `history` is prior [{role, content}] turns as plain strings, so the caller
@@ -65,18 +102,23 @@ export async function ask(question, { result, audit = [], history = [], client, 
 
   while (iterations < maxIterations) {
     iterations++;
-    const response = await api.messages.create({
-      model: MODEL,
-      max_tokens: 8192,
-      // Reading a settlement batch, noticing the invoice inside it matched fine,
-      // and concluding the batch is the real problem is a chain of steps. Adaptive
-      // thinking lets it spend where the question is genuinely multi-hop and skip
-      // it on "how much is flagged".
-      thinking: { type: 'adaptive' },
-      system: [{ type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
-      tools: toolbox.defs,
-      messages,
-    });
+    let response;
+    try {
+      response = await api.messages.create({
+        model: MODEL,
+        max_tokens: 8192,
+        // Reading a settlement batch, noticing the invoice inside it matched fine,
+        // and concluding the batch is the real problem is a chain of steps. Adaptive
+        // thinking lets it spend where the question is genuinely multi-hop and skip
+        // it on "how much is flagged".
+        thinking: { type: 'adaptive' },
+        system: [{ type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
+        tools: toolbox.defs,
+        messages,
+      });
+    } catch (err) {
+      throw friendlyApiError(err);
+    }
 
     for (const k of Object.keys(usage)) usage[k] += response.usage?.[k] ?? 0;
 

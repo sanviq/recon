@@ -53,7 +53,14 @@ async function run(question) {
 
 const inline = args._?.join(' ').trim();
 if (inline) {
-  await run(inline);
+  try {
+    await run(inline);
+  } catch (err) {
+    // A stack trace here would be the first thing anyone sees when their key has
+    // a typo. Say what went wrong and what to do instead.
+    console.error(`\n  ${err.message}\n`);
+    process.exit(1);
+  }
   process.exit(0);
 }
 

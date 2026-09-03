@@ -199,6 +199,40 @@ test('a refusal is handled without pretending an answer exists', async () => {
   assert.ok(out.answer.length > 0);
 });
 
+// A stack trace is the first thing anyone sees when their key has a typo, which
+// is the single most likely failure on demo day. Every one of these must reach
+// the user as a sentence naming the fix.
+test('API failures are reported as instructions, not stack traces', async () => {
+  const cases = [
+    [{ status: 401, message: '401 {"type":"error","error":{"type":"authentication_error","message":"API key is invalid."}}' },
+      401, /ANTHROPIC_API_KEY/],
+    [{ status: 429, message: 'rate_limit_error' }, 429, /Rate limited/i],
+    [{ status: 400, message: 'Your credit balance is too low' }, 402, /credit/i],
+    [{ status: 529, message: 'overloaded_error' }, 503, /overloaded|unavailable/i],
+    [{ message: 'Connection error.' }, 503, /network connection/i],
+    [{ status: 404, message: 'model not found' }, 404, /not available/i],
+  ];
+
+  for (const [thrown, status, pattern] of cases) {
+    const client = { messages: { create: async () => { throw Object.assign(new Error(thrown.message), { status: thrown.status }); } } };
+    await assert.rejects(() => ask('anything', { result, audit, client }), (err) => {
+      assert.equal(err.status, status, `wrong status for: ${thrown.message}`);
+      assert.match(err.message, pattern);
+      assert.doesNotMatch(err.message, /at .*\.mjs:|node_modules/, 'must not leak a stack trace');
+      return true;
+    });
+  }
+});
+
+test('an unrecognised failure still says something, rather than throwing raw', async () => {
+  const client = { messages: { create: async () => { throw new Error('something entirely new'); } } };
+  await assert.rejects(() => ask('anything', { result, audit, client }), (err) => {
+    assert.equal(err.status, 502);
+    assert.match(err.message, /something entirely new/);
+    return true;
+  });
+});
+
 test('without a key the agent refuses to start, and says the rest still works', async () => {
   const saved = process.env.ANTHROPIC_API_KEY;
   delete process.env.ANTHROPIC_API_KEY;
