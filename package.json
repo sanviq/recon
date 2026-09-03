@@ -7,7 +7,7 @@
   "license": "MIT",
   "repository": { "type": "git", "url": "https://github.com/sanviq/recon.git" },
   "keywords": ["reconciliation", "razorpay", "fintech", "settlements", "claude", "audit-trail"],
-  "engines": { "node": ">=20" },
+  "engines": { "node": ">=22" },
   "scripts": {
     "generate": "node server/src/cli/generate.js",
     "pull": "node server/src/cli/pull.js",

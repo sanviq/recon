@@ -241,7 +241,7 @@ being told what the lag was.
 
 ## Quick start
 
-No credentials needed for any of this.
+Node 22 or newer. No credentials needed for any of this.
 
 ```bash
 npm install
