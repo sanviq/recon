@@ -84,7 +84,7 @@ where the problem is genuinely open-ended, and none of them can move a rupee:
 | Layer | What the model does | What it cannot do |
 |---|---|---|
 | **Ingest** (`npm run ingest`) | Maps an arbitrary bank/ledger CSV onto the internal schema, and decides whether `05/08/2026` is day-first | Nothing is mapped that is not a real column in the file; the mapping is written to `ingest.json` with a confidence and a reason per field before a single row is read |
-| **Explain** (`npm run explain`) | Writes the note on each flagged row, plus a month-end brief over the whole run | The reason code, confidence and counterparts are already fixed. It rewrites; it does not decide |
+| **Explain** (`npm run explain`) | Writes the note on each flagged row, plus a month-end brief over the whole run | The reason code, confidence and counterparts are already fixed. It rewrites; it does not decide. Every note is checked back against the facts it was given — see below |
 | **Ask** (`npm run ask`, or the dashboard) | Answers questions by calling read-only tools over the finished run, and shows every call it made | Its entire tool surface is reads. There is no tool that matches, clears, re-runs or edits — asserted by a test, not by a prompt |
 
 Every one of the three degrades to a deterministic path with no API key: an alias
@@ -261,7 +261,7 @@ npm run reconcile -- --data data/demo                       # match; writes resu
 npm run explain   -- --data data/demo                       # note on every exception + month-end brief
 npm run serve                                               # dashboard at http://localhost:8787
 
-npm test                                                    # 98 tests
+npm test                                                    # 107 tests
 npm run verify   -- --data data/demo                        # check the run against its own claims
 npm run evaluate -- --data data/demo                        # score against ground truth
 npm run compare  -- --data data/demo                        # vs the two alternatives
@@ -370,6 +370,36 @@ tools (`reconciliation_summary`, `search_exceptions`, `get_invoice`,
 `search_audit`). It ships the trace of every tool call it made alongside the answer,
 because an answer a model wrote about money is only worth the records it is provably
 built from.
+
+### "How do you know it isn't making the numbers up?"
+
+Every note the model writes is parsed and checked back against the exact fact pack
+it was given, before it reaches the report. Two classes of claim, deliberately
+treated differently:
+
+**An invented record is rejected outright.** An invoice id, UTR, payment id or bank
+transaction id that does not appear in the facts is pure invention — there is no
+legitimate reason to write one — so the note is discarded and the deterministic
+template used instead. The audit trail records why:
+
+```
+fallback_reason: "note referenced records not in the facts: INV-2026-7777, ICICN0000000001"
+```
+
+**An unverifiable amount is flagged, not suppressed.** A rupee figure not present in
+the facts is usually the model deriving a shortfall it was asked not to compute. That
+is worth surfacing, but it is not necessarily wrong, and discarding a good note over
+it would trade a small risk for a certain loss of clarity. It is recorded on the note,
+in the audit trail, and in the run summary:
+
+```
+grounding: 24 model note(s) checked against their own facts, 0 rejected for naming
+records that were never supplied, 1 contains a figure not in the facts (545.00)
+```
+
+Tested both ways in `server/test/explainer.test.js`, including that a fabricated
+invoice id never survives to the output and that ordinary finance words like GST,
+NEFT and UTR are not mistaken for invented references.
 
 ### What a run costs
 

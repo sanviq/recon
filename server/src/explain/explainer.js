@@ -243,6 +243,51 @@ function templateBankExplanation(bankRow, facts) {
 const factsHash = (facts) => createHash('sha256').update(JSON.stringify(facts)).digest('hex').slice(0, 16);
 
 /**
+ * Checks a written note against the facts it was given.
+ *
+ * The model is told to use only the figures supplied. This is what makes that a
+ * property rather than a request. Two classes of claim are checked, and they are
+ * treated differently on purpose:
+ *
+ *   identifiers — an invoice id, UTR, payment id or bank transaction id that does
+ *     not appear in the facts is pure invention. There is no legitimate reason to
+ *     write one, so the note is discarded and the template used instead.
+ *
+ *   amounts — a rupee figure not present in the facts is usually the model doing
+ *     arithmetic it was asked not to do (a shortfall, a difference). That is worth
+ *     surfacing, but it is not necessarily wrong, and throwing away an otherwise
+ *     good note over it would trade a small risk for a certain loss of clarity.
+ *     So it is recorded on the note and in the audit trail, not suppressed.
+ */
+export function checkNoteAgainstFacts(note, facts) {
+  const haystack = JSON.stringify(facts);
+  const prose = `${note.explanation ?? ''} ${note.suggested_action ?? ''}`;
+
+  const found = (needle) => haystack.includes(needle);
+
+  // Identifier shapes this project actually mints. A bare uppercase word is not
+  // enough — it would flag ordinary words like "GST" and "UTR" itself.
+  const identifiers = [
+    ...prose.matchAll(/\b(INV-[A-Z0-9-]+)\b/g),
+    ...prose.matchAll(/\b(pay_[A-Za-z0-9]+)\b/g),
+    ...prose.matchAll(/\b(TXN[A-Z0-9]{4,})\b/g),
+    ...prose.matchAll(/\b((?:HDFC|ICIC|CITI|UTIB|SBIN|IMPS|NEFT|RTGS|DERIVED)[A-Z0-9]{6,})\b/g),
+  ].map((m) => m[1]);
+
+  const amounts = [...prose.matchAll(/Rs\s*([\d,]+\.\d{2})/g)].map((m) => m[1]);
+
+  const unsupportedIdentifiers = [...new Set(identifiers.filter((id) => !found(id)))];
+  const unsupportedAmounts = [...new Set(amounts.filter((a) => !found(a)))];
+
+  return {
+    ok: unsupportedIdentifiers.length === 0,
+    unsupported_identifiers: unsupportedIdentifiers,
+    unsupported_amounts: unsupportedAmounts,
+    checked: { identifiers: identifiers.length, amounts: amounts.length },
+  };
+}
+
+/**
  * Explains one exception. Returns the template version on any failure — a
  * missing key, a rate limit, a refusal — because a reconciliation report with a
  * blank reason column is worse than one written stiffly.
@@ -281,12 +326,25 @@ export async function explainOne(client, row, context = {}) {
 
     const text = response.content.find((b) => b.type === 'text')?.text ?? '';
     const parsed = JSON.parse(text);
+
+    // Nothing the model wrote reaches a finance report without being checked back
+    // against what it was given.
+    const grounding = checkNoteAgainstFacts(parsed, facts);
+    if (!grounding.ok) {
+      return {
+        ...template(), source: 'template',
+        fallback_reason: `note referenced records not in the facts: ${grounding.unsupported_identifiers.join(', ')}`,
+        grounding, facts_hash: factsHash(facts),
+      };
+    }
+
     return {
       explanation: parsed.explanation,
       suggested_action: parsed.suggested_action,
       severity: parsed.severity,
       source: 'llm',
       model: MODEL,
+      grounding,
       facts_hash: factsHash(facts),
       usage: {
         input_tokens: response.usage.input_tokens,

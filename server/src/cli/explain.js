@@ -68,6 +68,16 @@ const usage = notes.reduce((acc, n) => {
 const cost = live ? priceRun(usage, MODEL) : null;
 const economics = comparedToHuman(notes.length, elapsedMs, cost);
 
+// Every note the model wrote is checked back against the facts it was given.
+// Reporting the result of that check is the point — a grounding pass nobody sees
+// is indistinguishable from no grounding pass.
+const grounding = {
+  checked: notes.filter((n) => n.grounding).length,
+  rejected_for_invented_records: notes.filter((n) => n.grounding && !n.grounding.ok).length,
+  notes_with_unverifiable_amounts: notes.filter((n) => n.grounding?.unsupported_amounts?.length).length,
+  unsupported_amounts: [...new Set(notes.flatMap((n) => n.grounding?.unsupported_amounts ?? []))],
+};
+
 result.explanations = {
   generated_at: new Date().toISOString(),
   model: live ? MODEL : null,
@@ -78,6 +88,7 @@ result.explanations = {
   usage,
   cost,
   economics,
+  grounding,
 };
 
 // The brief is written after the notes, not before, so it can read the severities
@@ -103,7 +114,8 @@ const auditRows = targets.map((t, i) => ({
   model: notes[i].model ?? null,
   severity: notes[i].severity,
   detail: { explanation: notes[i].explanation, suggested_action: notes[i].suggested_action,
-            facts_hash: notes[i].facts_hash, fallback_reason: notes[i].fallback_reason ?? null },
+            facts_hash: notes[i].facts_hash, fallback_reason: notes[i].fallback_reason ?? null,
+            grounding: notes[i].grounding ?? null },
 }));
 if (result.brief) {
   auditRows.push({
@@ -123,6 +135,11 @@ if (usage.input) {
   console.log(`  tokens: ${usage.input} in / ${usage.output} out | cache ${usage.cache_read} read, ${usage.cache_write} written`);
 }
 if (notes.length) console.log(formatCostLine(economics, cost));
+if (grounding.checked) {
+  console.log(`  grounding: ${grounding.checked} model note(s) checked against their own facts` +
+    `, ${grounding.rejected_for_invented_records} rejected for naming records that were never supplied` +
+    (grounding.unsupported_amounts.length ? `, ${grounding.notes_with_unverifiable_amounts} contain a figure not in the facts (${grounding.unsupported_amounts.slice(0, 3).join(', ')})` : ''));
+}
 if (notes.length) {
   const bySeverity = notes.reduce((a, n) => ({ ...a, [n.severity]: (a[n.severity] ?? 0) + 1 }), {});
   console.log(`  severity: ${Object.entries(bySeverity).map(([k, v]) => `${k} ${v}`).join(', ')}`);

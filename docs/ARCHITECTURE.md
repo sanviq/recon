@@ -281,6 +281,23 @@ the rest fan out at bounded concurrency — a cache entry only becomes readable 
 first response starts streaming, so firing everything at once would mean every call pays
 full price.
 
+**Grounding.** A prompt saying "use only the figures given" is a request. The check
+that makes it a property runs on every note before it reaches the report:
+`checkNoteAgainstFacts()` extracts every identifier and rupee amount from the prose
+and looks for each in the serialised fact pack.
+
+An unsupported **identifier** — an invoice id, UTR, payment id or bank transaction id
+that was never supplied — is invention with no legitimate cause, so the note is
+discarded and the template used, with the offending ids named in `fallback_reason`.
+An unsupported **amount** is usually the model deriving a shortfall it was told not to
+compute; that is recorded on the note and reported in the run summary rather than
+suppressed, because discarding an otherwise correct note over it trades a small risk
+for a certain loss of clarity.
+
+The identifier patterns are deliberately shape-specific (`INV-…`, `pay_…`, `TXN…`,
+and bank prefixes like `HDFC`/`ICIC`/`NEFT`). A bare "any uppercase token" rule would
+flag GST, UTR and NEFT themselves and make the check useless through false positives.
+
 ### 5.3 Ask — an agent that cannot write
 
 The agent answers questions by calling seven tools over a finished run. Every one is a
