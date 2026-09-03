@@ -142,6 +142,50 @@ The engine degrades by *declining to match*, not by guessing. Declining costs a
 human five minutes; a false match is money silently booked to the wrong invoice
 that nobody ever looks at again.
 
+### Compared to what? — the two alternatives, scored on the same data
+
+A precision number alone means nothing. Every design decision here — two legs,
+global passes, refusing ambiguity, verifying the payout against the bank — costs
+match rate, so the cost has to be measured against the things a merchant would
+plausibly have instead. All three run in the same process, on the same datasets,
+against the same ground truth.
+
+```
+npm run compare -- --seeds 40 --profile hard
+```
+
+**40 unseen seeds, hard profile (~2,900 invoices):**
+
+| System | Match rate | Precision | Bank rows | Misrouted | **₹ wrongly declared reconciled** |
+|---|---|---|---|---|---|
+| **Recon** | 55.6% | **100.0%** | **100.0%** | **0** | **₹0.00** |
+| Spreadsheet VLOOKUP | 0.0% | 100.0% † | 36.4% | 0 | ₹0.00 |
+| One leg, nearest candidate | **74.6%** | 64.3% | 36.4% | 6 | **₹1,06,40,436.54** |
+
+† Precision over an empty set. It matched nothing, so it got nothing wrong — which is
+the clearest possible demonstration that precision without a match rate beside it is
+not a result.
+
+Two findings, and the second is the one that matters.
+
+**The spreadsheet scores zero.** Not "poorly" — *zero*. Matching an invoice amount
+against a bank statement never works, because Razorpay deducts a fee plus GST and
+batches a day of payments into one credit. The invoice amount is not a number that
+appears in the bank. That is the whole reason this problem is done by hand.
+
+**The naive build scores better than Recon on the headline metric, and silently
+books over a crore to the wrong place.** 74.6% versus 55.6% looks like a win. It is
+produced by picking the nearest of several indistinguishable payments instead of
+escalating, and by declaring an invoice reconciled without ever checking the payout
+reached the bank. **A match rate, on its own, rewards exactly the wrong behaviour** —
+which is why the metric this project optimises is precision, and why the exception
+list is the product rather than an apology for it.
+
+![Baseline comparison](docs/img/baseline-comparison.png)
+
+The same table renders on the dashboard from `compare.json`, so nothing in the video
+is a claim the repo cannot reproduce.
+
 ### Why you should distrust the 100% on the standard profile
 
 The generator and the matcher were written by the same hand, to the same spec. On
@@ -201,16 +245,57 @@ No credentials needed for any of this.
 
 ```bash
 npm install
+npm run demo          # the whole story in one command — generate, reconcile,
+                      # explain, verify, score, compare
+npm run serve         # then the dashboard at http://localhost:8787
+```
+
+![Dashboard](docs/img/dashboard-brief.jpg)
+
+Or step by step:
+
+```bash
 
 npm run generate -- --seed 7   --out data/demo              # synthetic merchant-month + ground truth
 npm run reconcile -- --data data/demo                       # match; writes result.json + audit.jsonl
 npm run explain   -- --data data/demo                       # note on every exception + month-end brief
 npm run serve                                               # dashboard at http://localhost:8787
 
-npm test                                                    # 83 tests
+npm test                                                    # 98 tests
+npm run verify   -- --data data/demo                        # check the run against its own claims
 npm run evaluate -- --data data/demo                        # score against ground truth
+npm run compare  -- --data data/demo                        # vs the two alternatives
 npm run sweep    -- --seeds 40 --profile hard               # 40 unseen seeds
 ```
+
+### Verifying a run, rather than trusting it
+
+```
+$ npm run verify -- --data data/holdout
+
+  PASS  determinism                                    two independent runs hash to 845e93903146869f
+  PASS  every invoice reaches the audit trail          179 entries for 72 invoices
+  PASS  every audit line is valid JSON                 179/179 lines parsed
+  PASS  audit sequences are dense (no line removed)    1 run(s), all sequential
+  PASS  every rupee is in exactly one bucket           matched 8,90,775.93 + flagged 1,21,221.37 = invoiced 10,11,997.30
+  PASS  matched + flagged equals the invoice count     54 + 18 = 72
+  PASS  no record is in an undefined state             72 invoices, 2 possible states
+  PASS  every flagged record carries a known reason code   18 flagged, all coded
+  PASS  no payment is claimed by two invoices          54 payments, each claimed once
+  PASS  nothing auto-matched contradicts ground truth  54 auto-matched, all correct
+
+  10/10 checks passed
+```
+
+"Append-only audit trail" is only a claim until removing a line is detectable.
+Delete one from the middle and the verifier fails the run and names the position:
+
+```
+  FAIL  audit sequences are dense (no line removed)    run_1788471324022 jumps to 42 at position 41
+```
+
+Both behaviours are tested by spawning the real CLI over real files
+(`server/test/verify.test.js`), so the check cannot quietly stop working.
 
 With `ANTHROPIC_API_KEY` set, `explain` and the dashboard's chat panel come alive, and:
 
@@ -286,6 +371,30 @@ tools (`reconciliation_summary`, `search_exceptions`, `get_invoice`,
 because an answer a model wrote about money is only worth the records it is provably
 built from.
 
+### What a run costs
+
+A finance tool that costs more than the person it replaces is a demo, not a product,
+so `npm run explain` prices itself and prints the comparison:
+
+```
+  cost: $<measured> for 24 exception(s) — $<measured> each
+  the same review by hand: ~36 minutes, about $3.60 of analyst time
+  <N>x faster, and it never gets bored on row 40
+  prompt caching saved $<measured> on this batch alone
+```
+
+**The machine figures are computed from the token counts the API actually reported
+for that run — nothing is estimated, and no number is printed until a real call has
+been made.** A run that went through the deterministic templates prints `$0.00` and
+says why. Rates are the published list prices, kept in one place in
+`server/src/explain/cost.js` alongside the assumption behind the human column: 90
+seconds per exception at $6/hour, which is generous to the human — it assumes they
+already have all three systems open and know what they are looking at.
+
+The right-hand side is the fixed one: **24 exceptions is about 36 minutes of analyst
+time, every month, forever.** Whether the left-hand side reads $0.10 or $0.30 does not
+change the argument.
+
 ---
 
 ## What's in the box
@@ -296,10 +405,11 @@ server/src/
   ingest/      AI column mapping for foreign CSVs + alias table + date inference
   sources/     Razorpay client, CSV/JSON loaders, normalisation
   match/       the engine — two legs, three passes, six reason codes
-  explain/     Claude exception notes + month-end brief + deterministic fallbacks
+  explain/     Claude exception notes + month-end brief + cost accounting
   agent/       read-only tools and the ask loop
-  eval/        scoring against ground truth
-  cli/         generate · pull · ingest · reconcile · explain · ask · evaluate · sweep
+  eval/        scoring against ground truth, and the two baselines
+  cli/         demo · generate · pull · ingest · reconcile · explain · ask
+               verify · evaluate · compare · sweep
 web/           single-file dashboard, no build step
 metrics/       committed evidence for every number in this README
 docs/          architecture, thresholds, limitations
@@ -339,6 +449,11 @@ same set, so a write tool cannot be added quietly.
 **A file already in our own vocabulary never reaches the mapper.** The committed
 datasets take a native path with no model call, so the pipeline that produced the
 published metrics stays deterministic end to end.
+
+**The baselines are scored, not described.** It would have been easy to assert that a
+naive matcher is worse. Running it on the same data instead turned an opinion into a
+₹1.06 crore number — and revealed the more useful finding, that the naive build wins
+on the metric most people would report.
 
 ### Departures from the original brief
 

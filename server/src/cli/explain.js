@@ -11,6 +11,7 @@ import { readFileSync, writeFileSync, appendFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { explainAll, hasApiKey, MODEL } from '../explain/explainer.js';
 import { writeBrief } from '../explain/brief.js';
+import { priceRun, comparedToHuman, formatCostLine } from '../explain/cost.js';
 import { STATUS } from '../match/codes.js';
 import { parseArgs } from './args.js';
 
@@ -64,6 +65,9 @@ const usage = notes.reduce((acc, n) => {
   return acc;
 }, { input: 0, output: 0, cache_read: 0, cache_write: 0 });
 
+const cost = live ? priceRun(usage, MODEL) : null;
+const economics = comparedToHuman(notes.length, elapsedMs, cost);
+
 result.explanations = {
   generated_at: new Date().toISOString(),
   model: live ? MODEL : null,
@@ -72,6 +76,8 @@ result.explanations = {
   from_template: notes.filter((n) => n.source === 'template').length,
   elapsed_ms: Number(elapsedMs.toFixed(1)),
   usage,
+  cost,
+  economics,
 };
 
 // The brief is written after the notes, not before, so it can read the severities
@@ -116,6 +122,7 @@ console.log(`\n  ${result.explanations.from_model} by model, ${result.explanatio
 if (usage.input) {
   console.log(`  tokens: ${usage.input} in / ${usage.output} out | cache ${usage.cache_read} read, ${usage.cache_write} written`);
 }
+if (notes.length) console.log(formatCostLine(economics, cost));
 if (notes.length) {
   const bySeverity = notes.reduce((a, n) => ({ ...a, [n.severity]: (a[n.severity] ?? 0) + 1 }), {});
   console.log(`  severity: ${Object.entries(bySeverity).map(([k, v]) => `${k} ${v}`).join(', ')}`);

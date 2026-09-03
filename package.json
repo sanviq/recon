@@ -12,6 +12,9 @@
     "explain": "node server/src/cli/explain.js",
     "ask": "node server/src/cli/ask.js",
     "evaluate": "node server/src/cli/evaluate.js",
+    "verify": "node server/src/cli/verify.js",
+    "compare": "node server/src/cli/compare.js",
+    "demo": "node server/src/cli/demo.js",
     "serve": "node server/src/index.js",
     "sweep": "node server/src/cli/sweep.js",
     "test": "node --test \"server/test/*.test.js\""

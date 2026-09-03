@@ -1,0 +1,40 @@
+{
+  "generated_at": "2026-09-03T21:48:45.914Z",
+  "datasets": 40,
+  "profile": "standard",
+  "systems": {
+    "recon": {
+      "label": "Recon (two legs, ambiguity refused)",
+      "match_rate": 0.7566,
+      "precision_auto_matched": 0.9996,
+      "recall": 0.9996,
+      "bank_row_accuracy": 1,
+      "total_false_positives": 1,
+      "total_misrouted_matches": 0,
+      "value_wrongly_declared_reconciled_paise": 35600,
+      "value_auto_reconciled_paise": 3271726560
+    },
+    "spreadsheet": {
+      "label": "Spreadsheet VLOOKUP (what finance does today)",
+      "match_rate": 0,
+      "precision_auto_matched": 1,
+      "recall": 0,
+      "bank_row_accuracy": 0.2392,
+      "total_false_positives": 0,
+      "total_misrouted_matches": 0,
+      "value_wrongly_declared_reconciled_paise": 0,
+      "value_auto_reconciled_paise": 0
+    },
+    "single_leg": {
+      "label": "One leg, nearest candidate (the obvious build)",
+      "match_rate": 0.9031,
+      "precision_auto_matched": 0.8374,
+      "recall": 0.9996,
+      "bank_row_accuracy": 0.2392,
+      "total_false_positives": 423,
+      "total_misrouted_matches": 0,
+      "value_wrongly_declared_reconciled_paise": 685821601,
+      "value_auto_reconciled_paise": 3957512561
+    }
+  }
+}

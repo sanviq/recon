@@ -63,6 +63,7 @@ app.get('/api/summary', send(() => {
     config: r.config,
     finished_at: r.finished_at,
     metrics: existsSync(at('metrics.json')) ? readJSON(at('metrics.json')) : null,
+    compare: existsSync(at('compare.json')) ? readJSON(at('compare.json')) : null,
     ingest: existsSync(at('ingest.json')) ? readJSON(at('ingest.json')) : null,
     agent: { available: Boolean(process.env.ANTHROPIC_API_KEY), tools: TOOL_DEFS.map((t) => t.name) },
   };

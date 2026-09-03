@@ -299,6 +299,8 @@ function render() {
       </section>
     </div>
 
+    ${comparePanel(s.compare)}
+
     <section class="card" style="margin-top:14px">
       <h2>Exception list — every unmatched record, nothing hidden</h2>
       <div class="toolbar">
@@ -504,6 +506,51 @@ function accuracyPanel(s) {
       .map(([rule, n]) => `${n} by <code>${esc(rule)}</code>`).join(' · ')}</p>`);
   }
   return parts.join('');
+}
+
+/**
+ * Recon against the two things a merchant would plausibly have instead, on this
+ * same data. The row that matters is the naive one: a higher match rate and real
+ * money booked to the wrong place. Rendered as a table, not a chart — three rows
+ * of five measures is a table, and drawing it would only make it slower to read.
+ */
+function comparePanel(compare) {
+  if (!compare?.systems) return '';
+  const rows = Object.entries(compare.systems).map(([key, sys]) => {
+    const wrong = sys.value_wrongly_declared_reconciled_paise;
+    return `<tr>
+      <td><b>${esc(key)}</b><br><span class="src">${esc(sys.label)}</span></td>
+      <td class="num">${pct(sys.match_rate)}</td>
+      <td class="num">${pct(sys.precision_auto_matched)}</td>
+      <td class="num">${pct(sys.bank_row_accuracy)}</td>
+      <td class="num">${sys.total_misrouted_matches}</td>
+      <td class="num">${wrong > 0
+        ? `<span class="sev sev-high"><i></i>${fmtRs(wrong)}</span>`
+        : `<span class="sev sev-low"><i></i>${fmtRs(0)}</span>`}</td>
+    </tr>`;
+  }).join('');
+
+  const naive = compare.systems.single_leg;
+  const recon = compare.systems.recon;
+  const punchline = naive && recon && naive.match_rate > recon.match_rate
+    ? `<p class="risk" style="margin-top:14px"><b>Read the first two columns together.</b>
+       The naive build reports a <b>higher</b> match rate than Recon
+       (${pct(naive.match_rate)} vs ${pct(recon.match_rate)}) and declares
+       <b>${fmtRs(naive.value_wrongly_declared_reconciled_paise)}</b> reconciled that ground truth says was not.
+       A headline match rate, on its own, rewards exactly the wrong behaviour.</p>`
+    : '';
+
+  return `<section class="card" style="margin-top:14px">
+    <h2>What the alternatives score on this same data · <span class="src">${compare.datasets} dataset(s)</span></h2>
+    <div class="scroll-x"><table>
+      <thead><tr>
+        <th>System</th><th class="num">Match rate</th><th class="num">Precision</th>
+        <th class="num">Bank rows</th><th class="num">Misrouted</th><th class="num">Wrongly reconciled</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>
+    ${punchline}
+  </section>`;
 }
 
 function exceptionTable() {

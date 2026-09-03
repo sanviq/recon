@@ -314,6 +314,61 @@ stiffly.
 
 ---
 
+## 5b. Baselines — what "good" is measured against
+
+`eval/baselines.js` implements the two systems a merchant would plausibly have
+instead. Both are scored by the same `evaluate()`, on the same datasets, against the
+same ground truth, in the same process — so the comparison is not a story about two
+different experiments.
+
+**`spreadsheet`** — VLOOKUP the invoice amount against the bank statement within a
+week. This is the honest floor and what finance teams actually do. It scores a **0.0%
+match rate**, because Razorpay deducts a fee plus GST and batches a day of payments
+into one credit, so the invoice amount is not a number that appears in the bank at all.
+
+**`single_leg`** — match the invoice to a payment on amount and date, take the nearest
+candidate when several fit, call it reconciled. No batch verification, no ambiguity
+refusal, no check that the money reached the bank. This is not a straw man; it is what
+a careful engineer builds on day one, before discovering how settlements work.
+
+It is also the interesting one, because it **beats Recon on match rate** — 74.6% vs
+55.6% on the hard profile — while booking ₹1.06 crore to the wrong place across ~2,900
+invoices. Its two failure modes are exactly the two the engine is built to avoid:
+
+1. picking one of several indistinguishable payments instead of escalating, and
+2. declaring an invoice reconciled when the payout carrying it never reached the bank.
+
+The design consequence: **a headline match rate rewards the wrong behaviour**, so the
+metric this project optimises is precision, and the exception list is the product
+rather than an apology for it. `metrics/compare_*.json` holds the raw output; the
+dashboard renders it from `compare.json` next to the run it describes.
+
+---
+
+## 5c. Verification — the claims, checked
+
+`npm run verify` exists because "deterministic" and "append-only" are assertions until
+something tests them on the artefacts themselves:
+
+| Check | What would be wrong if it failed |
+|---|---|
+| determinism | two runs of one input hash differently — nothing downstream is reproducible |
+| audit completeness | a decision was made that never reached the trail |
+| sequence density | a line was removed from the log |
+| line validity | the log is corrupt and partially unreadable |
+| value conservation | `matched + flagged ≠ invoiced` — a rupee was double-counted or lost |
+| bucket exclusivity | a record is in neither state, or flagged with no reason code |
+| single claim | one payment was booked against two invoices |
+| ground truth | something auto-matched contradicts the answer key |
+
+It exits non-zero on any failure, so it works in CI and in a demo. Deleting one line
+from the middle of a 179-line audit log produces
+`audit sequences are dense (no line removed) — run_… jumps to 42 at position 41`.
+Both the passing and the tampered paths are tested by spawning the real CLI over real
+files, so the check cannot quietly stop working.
+
+---
+
 ## 6. Synthetic data and ground truth
 
 The generator produces a merchant-month plus a `truth.json` stating the correct answer
