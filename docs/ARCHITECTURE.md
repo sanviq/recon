@@ -18,6 +18,9 @@ threshold has the value it has.
   Bank           │  bank_statement.csv       ──▶ txn, value_date, UTR, credit        │
                  └──────────────────────────────────┬───────────────────────────────┘
                                                     │
+                              ingest/ — foreign CSVs only (AI, optional)
+                       alias table → model review → ingest.json → canonical CSVs
+                                                    │
                                       sources/load.js — normalisation
                              (one internal shape, integer paise, UTR extraction)
                                                     │
@@ -33,10 +36,13 @@ threshold has the value it has.
                     result.json                audit.jsonl               eval/score.js
                 (per-record decisions)      (append-only trail)      (vs. truth.json → metrics)
                           │                                                    │
-                explain/explainer.js                                    metrics.json
+           explain/ — notes + month-end brief                          metrics.json
              (Claude, or deterministic templates)                              │
                           │                                                    │
-                          └────────────────▶ web/index.html ◀──────────────────┘
+                          ├──── agent/ — ask, over read-only tools ────┐       │
+                          │        (Claude; disabled without a key)    │       │
+                          │                                           │       │
+                          └────────────────▶ web/index.html ◀─────────┴───────┘
                                     (read-only dashboard over the artefacts)
 ```
 
@@ -214,33 +220,97 @@ from the trail whether the engine or the writer was at fault.
 ## 5. Where the language model sits, and where it does not
 
 ```
-records ─▶ [deterministic engine] ─▶ decision + reason code ─▶ [Claude] ─▶ prose
-                    ▲                                              │
-              money decisions                              explanation only
-              happen HERE                                  never revisits the decision
+  messy CSV ─▶ [Claude: ingest] ─▶ canonical rows ─▶ [deterministic engine] ─▶ decisions
+                      │                                       ▲                    │
+              renames columns,                        money decisions              │
+              parses dates                            happen HERE                  │
+              never touches a value                                                ▼
+                                                                          [Claude: explain]
+                                                                          [Claude: ask]
+                                                                        prose over settled facts
 ```
+
+Three model-facing layers, one rule: **the model is allowed to interpret the input and
+narrate the output. It is never allowed to decide where money went.**
+
+### 5.1 Ingest — the only layer that runs *before* the engine
+
+Column mapping is unbounded and fuzzy: every bank exports a different file and no
+standard exists. That is a model problem. So the risk is managed structurally rather
+than by trusting the answer:
+
+1. A deterministic alias table proposes a mapping first, and resolves most real files
+   alone. The model reviews that proposal instead of starting cold.
+2. Its answer is filtered before use — a column not present in the file is discarded
+   with a warning, and one source column can never feed two schema fields. A
+   hallucinated column name would otherwise map every row to `undefined`.
+3. A required field it cannot resolve **aborts the ingest**. Nothing is written.
+4. The whole mapping is recorded in `ingest.json` and appended to `audit.jsonl` with a
+   confidence and a plain-English reason per field, before a single row is read.
+5. A file already using our own field names takes a native path and never reaches the
+   model — the committed datasets stay deterministic end to end.
+
+The alias lists are ordered most-specific first, and position costs a little score.
+That single detail is what decides HDFC, which ships both `Date` and `Value Dt`: both
+are exact alias hits, and without the ordering the tie breaks on column order and picks
+the print date. Every settlement-lag calculation downstream depends on winning that tie.
+
+Dates are inferred from the whole column, not one cell. A value with a first component
+above 12 proves day-first; one with a second component above 12 proves month-first;
+when nothing proves either, the run reports `INFERRED, not proven`. A date read the
+wrong way round does not throw — it shifts every credit by up to eleven days.
+
+### 5.2 Explain — notes and the month-end brief
 
 By the time an exception reaches the explainer, the reason code, the confidence and
 the counterpart records are all fixed. The model receives a narrow set of facts —
 already converted to rupees, so it never does arithmetic — and writes three fields
 under a JSON schema: `explanation`, `suggested_action`, `severity`.
 
-**Why the matching is not routed through a model.** A model that is 97% right about a
-settlement is 3% wrong about a bank balance, and there is no way to audit which 3%.
-Every decision here is reproducible from the inputs and the config, and a test asserts
-that the same input always produces the same decisions.
+The **brief** is one call over the aggregate rather than one per record, because nobody
+opens a reconciliation wanting forty rows explained; they want to know whether the month
+is fine and what to do first. Invoices flagged by a single broken payout are grouped
+before the model sees them, so five rows sharing one cause are presented as one problem.
 
-**Request shape.** `claude-opus-5`, `effort: low` (this is formatting over settled
-facts, not reasoning), structured output, `max_tokens: 2048`. The system prompt is
-constant and carries the `cache_control` breakpoint; the per-exception facts go in the
-user turn *after* it, so the whole batch shares one cached prefix. One request is sent
-alone to warm the cache before the rest fan out at a bounded concurrency — a cache
-entry only becomes readable once the first response starts streaming, so firing
-everything at once would mean every call pays full price.
+**Request shape.** `claude-opus-5`, structured output. `effort: low` for the notes
+(formatting over settled facts) and `medium` for the brief (deciding what to lead with is
+a judgement over the whole month). The system prompt is constant and carries the
+`cache_control` breakpoint; the per-exception facts go in the user turn *after* it, so the
+whole batch shares one cached prefix. One request is sent alone to warm the cache before
+the rest fan out at bounded concurrency — a cache entry only becomes readable once the
+first response starts streaming, so firing everything at once would mean every call pays
+full price.
 
-**Every failure path falls back to deterministic templates** carrying the same facts:
-no API key, a refusal, a rate limit, a parse failure. A reconciliation report with a
-blank reason column is worse than one written stiffly.
+### 5.3 Ask — an agent that cannot write
+
+The agent answers questions by calling seven tools over a finished run. Every one is a
+read. There is no tool that matches, clears, re-runs or edits anything — so *"the model
+must not clear an exception"* is not an instruction it could disobey, it is the absence
+of a capability. Two tests hold that shut: one calls every tool and asserts the result is
+byte-identical afterwards, another asserts the declared tool list and the implemented one
+are the same set, so a write tool cannot be added quietly.
+
+The loop is hand-written rather than delegated to the SDK's tool runner, because the
+**trace is half the product**: every tool call and argument is captured and returned with
+the answer, and rendered under it in the dashboard. An answer a model wrote about money is
+worth exactly the records it is provably built from.
+
+`thinking: {type: 'adaptive'}`, `max_tokens: 8192`, capped at 8 iterations. Hitting the
+cap returns "narrow the question" rather than whatever half-answer exists. Amounts reach
+the model as formatted rupee strings, never paise integers, so it reads numbers instead of
+doing arithmetic on them; where a total is genuinely needed, a tool computes it.
+
+### 5.4 Why the matching is not routed through a model
+
+A model that is 97% right about a settlement is 3% wrong about a bank balance, and there
+is no way to audit which 3%. Every decision in the engine is reproducible from the inputs
+and the config, and a test asserts that the same input always produces the same decisions.
+
+**Every failure path falls back to something deterministic** — no API key, a refusal, a
+rate limit, a parse failure. Ingest falls back to the alias table, the notes and brief to
+sentence templates, and the ask panel disables itself with a line saying the rest still
+works. A reconciliation report with a blank reason column is worse than one written
+stiffly.
 
 ---
 
@@ -277,8 +347,10 @@ clean numbers on friendly data prove nothing.
 
 ## 7. Known limitations
 
-1. **The live Claude path is unexercised** — no credentials on the build machine. Only
-   the template path has run end to end.
+1. **The live Claude paths are unexercised** — no credentials on the build machine. All
+   three model layers have only run through their deterministic fallbacks, or against
+   stubbed clients in the test suite. The plumbing around each request is tested; no real
+   call has been made.
 2. **Standard-profile accuracy grades its own homework.** Generator and matcher share a
    spec; the hard-profile numbers are the honest ones.
 3. **Refunds, chargebacks and partial captures are not modelled.** Bank debits are
@@ -292,3 +364,10 @@ clean numbers on friendly data prove nothing.
    Amount tolerance and the bank window stay static.
 7. **The live pull injects no amount/date collisions**, since real payment amounts
    cannot be forced to collide.
+8. **Ingest maps columns; it does not clean rows.** Merged header rows, mid-file
+   subtotals and repeated page footers will map correctly and then feed junk downstream.
+   There is no row-level sanity pass.
+9. **The ask agent has no answer-quality benchmark.** Its tools and loop are tested and
+   it is structurally incapable of writing, but nothing scores whether its prose is
+   *right*, the way `eval/score.js` scores the matcher. It is a faster way to read the
+   exception list, not an independent check on it.

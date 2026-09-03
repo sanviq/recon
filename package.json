@@ -7,8 +7,10 @@
   "scripts": {
     "generate": "node server/src/cli/generate.js",
     "pull": "node server/src/cli/pull.js",
+    "ingest": "node server/src/cli/ingest.js",
     "reconcile": "node server/src/cli/reconcile.js",
     "explain": "node server/src/cli/explain.js",
+    "ask": "node server/src/cli/ask.js",
     "evaluate": "node server/src/cli/evaluate.js",
     "serve": "node server/src/index.js",
     "sweep": "node server/src/cli/sweep.js",

@@ -14,6 +14,8 @@ import { readFileSync, existsSync, statSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { STATUS } from './match/codes.js';
+import { ask } from './agent/ask.js';
+import { TOOL_DEFS } from './agent/tools.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, '../..');
@@ -22,6 +24,7 @@ const DATA_DIR = resolve(repoRoot, process.env.RECON_DATA ?? 'data/demo');
 
 const app = express();
 app.use(cors());
+app.use(express.json({ limit: '64kb' }));
 app.use(express.static(resolve(repoRoot, 'web')));
 
 const readJSON = (p) => JSON.parse(readFileSync(p, 'utf8'));
@@ -55,10 +58,13 @@ app.get('/api/summary', send(() => {
     summary: r.summary,
     throughput: r.throughput ?? null,
     explanations: r.explanations ?? null,
+    brief: r.brief ?? null,
     calibrated_ledger_window: r.calibrated_ledger_window ?? null,
     config: r.config,
     finished_at: r.finished_at,
     metrics: existsSync(at('metrics.json')) ? readJSON(at('metrics.json')) : null,
+    ingest: existsSync(at('ingest.json')) ? readJSON(at('ingest.json')) : null,
+    agent: { available: Boolean(process.env.ANTHROPIC_API_KEY), tools: TOOL_DEFS.map((t) => t.name) },
   };
 }));
 
@@ -90,19 +96,51 @@ app.get('/api/exceptions', send(() => {
 
 app.get('/api/settlements', send(() => loadResult().groups));
 
+function readAudit(limit = Infinity) {
+  const path = at('audit.jsonl');
+  if (!existsSync(path)) return [];
+  const lines = readFileSync(path, 'utf8').split('\n').filter(Boolean);
+  return (Number.isFinite(limit) ? lines.slice(-limit) : lines).flatMap((l) => {
+    try { return [JSON.parse(l)]; } catch { return []; }
+  });
+}
+
 app.get('/api/audit', send((req) => {
   const path = at('audit.jsonl');
   if (!existsSync(path)) return { entries: [], total: 0 };
-  const lines = readFileSync(path, 'utf8').split('\n').filter(Boolean);
-  const limit = Math.min(Number(req.query.limit ?? 200), 2000);
+  const total = readFileSync(path, 'utf8').split('\n').filter(Boolean).length;
   // Newest last in the file, so the tail is the most recent run.
-  const slice = lines.slice(-limit).map((l) => JSON.parse(l));
-  return { entries: slice, total: lines.length, bytes: statSync(path).size };
+  const entries = readAudit(Math.min(Number(req.query.limit ?? 200), 2000));
+  return { entries, total, bytes: statSync(path).size };
 }));
+
+// The controller agent. POST because a question is not a resource, and because a
+// question about a merchant's own books has no business sitting in a URL, a
+// server log, or a browser history.
+app.post('/api/ask', async (req, res) => {
+  try {
+    const question = String(req.body?.question ?? '').trim();
+    if (!question) return res.status(400).json({ error: 'ask what?' });
+    if (question.length > 2000) return res.status(400).json({ error: 'question too long' });
+
+    const history = Array.isArray(req.body?.history)
+      ? req.body.history
+          .filter((h) => (h.role === 'user' || h.role === 'assistant') && typeof h.content === 'string')
+          .slice(-8)
+      : [];
+
+    const t0 = performance.now();
+    const out = await ask(question, { result: loadResult(), audit: readAudit(4000), history });
+    res.json({ ...out, elapsed_ms: Number((performance.now() - t0).toFixed(0)) });
+  } catch (err) {
+    res.status(err.status ?? 500).json({ error: err.message });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`\nRecon dashboard  http://localhost:${PORT}`);
   console.log(`  serving ${DATA_DIR}`);
+  console.log(`  ask agent: ${process.env.ANTHROPIC_API_KEY ? 'on' : 'off (set ANTHROPIC_API_KEY to enable)'}`);
   if (!existsSync(at('result.json'))) {
     console.log(`  (no result.json yet — run: npm run reconcile -- --data ${DATA_DIR})`);
   }

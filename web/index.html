@@ -146,6 +146,50 @@
   .empty { color: var(--ink-muted); padding: 24px 0; }
   .err { color: var(--sev-high); }
   .scroll-x { overflow-x: auto; }
+
+  /* --- month-end brief ---------------------------------------------------- */
+  .brief { margin-bottom: 14px; }
+  .brief .headline { font-size: 19px; font-weight: 600; line-height: 1.35; letter-spacing: -0.01em; margin: 0 0 8px; }
+  .brief .state { color: var(--ink-2); margin: 0 0 16px; max-width: 76ch; }
+  .attention { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }
+  .attention li { display: grid; grid-template-columns: 96px minmax(0,1fr); gap: 12px; align-items: start; }
+  @media (max-width: 620px) { .attention li { grid-template-columns: 1fr; gap: 3px; } }
+  .attention .t { font-weight: 600; }
+  .attention .d { color: var(--ink-2); }
+  .risk {
+    margin-top: 16px; padding: 11px 13px; border-radius: 8px;
+    background: var(--plane); border: 1px solid var(--border);
+    color: var(--ink-2); font-size: 13px;
+  }
+  .risk b { color: var(--ink); font-weight: 600; }
+
+  /* --- ask panel ---------------------------------------------------------- */
+  .ask-form { display: flex; gap: 8px; margin-bottom: 12px; }
+  .ask-form input {
+    flex: 1; min-width: 0; font: inherit; font-size: 14px; padding: 9px 12px;
+    border-radius: 8px; border: 1px solid var(--border);
+    background: var(--plane); color: var(--ink);
+  }
+  .ask-form input:focus { outline: 2px solid var(--meter-fill); outline-offset: -1px; border-color: transparent; }
+  .ask-form button { padding: 9px 16px; color: var(--ink); font-weight: 600; }
+  .chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
+  .chips button { font-size: 12px; padding: 4px 10px; border-radius: 20px; }
+  .thread { display: flex; flex-direction: column; gap: 16px; }
+  .msg-q { font-weight: 600; }
+  .msg-q::before { content: "› "; color: var(--ink-muted); }
+  .msg-a { color: var(--ink); margin-top: 7px; }
+  .msg-a p { margin: 0 0 9px; }
+  .msg-a ul { margin: 0 0 9px; padding-left: 20px; }
+  .msg-a li { margin-bottom: 3px; }
+  .msg-a code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; background: var(--plane); padding: 1px 5px; border-radius: 4px; }
+  .msg-a > :last-child { margin-bottom: 0; }
+  details.trace { margin-top: 9px; font-size: 12px; }
+  details.trace summary { color: var(--ink-muted); cursor: pointer; }
+  details.trace ol { margin: 8px 0 0; padding-left: 22px; color: var(--ink-2); }
+  details.trace li { margin-bottom: 3px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .thinking { color: var(--ink-muted); }
+  .thinking::after { content: "…"; animation: dots 1.2s steps(4, end) infinite; }
+  @keyframes dots { 0% { content: ""; } 25% { content: "."; } 50% { content: ".."; } 75% { content: "..."; } }
 </style>
 </head>
 <body>
@@ -188,7 +232,7 @@ const get = async (path) => {
   return body;
 };
 
-let state = { summary: null, exceptions: [], audit: null, filter: 'all' };
+let state = { summary: null, exceptions: [], audit: null, filter: 'all', thread: [], draft: '', asking: false };
 
 async function load() {
   const app = document.getElementById('app');
@@ -213,6 +257,7 @@ function render() {
     `<code>${esc(s.dataset?.dir?.split('/').slice(-2).join('/') ?? '')}</code> · run ${esc(new Date(s.finished_at).toLocaleString())}`;
 
   document.getElementById('app').innerHTML = `
+    ${briefCard(s.brief)}
     <section class="card">
       <div class="hero-row">
         <div>
@@ -240,6 +285,8 @@ function render() {
                s.throughput ? `${s.throughput.records} records in ${s.throughput.elapsed_ms}ms` : '')}
       </div>
     </section>
+
+    ${askCard(s.agent)}
 
     <div class="grid cols-2">
       <section class="card">
@@ -270,9 +317,153 @@ function render() {
   for (const btn of document.querySelectorAll('[data-filter]')) {
     btn.addEventListener('click', () => { state.filter = btn.dataset.filter; render(); });
   }
+  wireAsk();
 }
 
 const tile = (k, v, n) => `<div class="card tile"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div><div class="n">${esc(n)}</div></div>`;
+
+const writtenBy = (source, model) =>
+  source === 'llm' ? `written by ${esc(model ?? 'model')}` : 'deterministic template';
+
+/** The brief the merchant reads before anything else. */
+function briefCard(brief) {
+  if (!brief) return '';
+  const items = (brief.needs_attention ?? []).map((i) => {
+    const sev = ['high', 'medium', 'low'].includes(i.severity) ? i.severity : 'low';
+    return `<li>
+      <span class="sev sev-${sev}"><i></i>${sev[0].toUpperCase() + sev.slice(1)}</span>
+      <span><span class="t">${esc(i.title)}</span><br><span class="d">${esc(i.detail)}</span></span>
+    </li>`;
+  }).join('');
+
+  return `<section class="card brief">
+    <h2>Month-end brief · <span class="src">${writtenBy(brief.source, brief.model)}</span></h2>
+    <p class="headline">${esc(brief.headline)}</p>
+    <p class="state">${esc(brief.state_of_the_month)}</p>
+    ${items ? `<ul class="attention">${items}</ul>` : ''}
+    ${brief.biggest_single_risk ? `<p class="risk"><b>Biggest single risk</b> — ${esc(brief.biggest_single_risk)}</p>` : ''}
+  </section>`;
+}
+
+const SUGGESTED = [
+  'How much money is stuck, and who do I chase first?',
+  'Why is the largest flagged invoice flagged?',
+  'Which payouts did the bank not confirm?',
+  'Show me every duplicate credit.',
+  'How much unexplained money arrived in the bank?',
+];
+
+/**
+ * The ask panel. The tool trace ships with every answer rather than behind a
+ * debug flag: an answer a model wrote about money is only worth as much as the
+ * records it is provably built from.
+ */
+function askCard(agent) {
+  const thread = state.thread.map((m) => `
+    <div>
+      <div class="msg-q">${esc(m.q)}</div>
+      ${m.pending
+        ? '<div class="msg-a thinking"><span class="thinking">reading the reconciliation</span></div>'
+        : m.error
+          ? `<div class="msg-a err">${esc(m.error)}</div>`
+          : `<div class="msg-a">${markdownLite(m.a)}</div>${traceBlock(m)}`}
+    </div>`).join('');
+
+  const off = agent && agent.available === false;
+  return `<section class="card" style="margin-top:14px">
+    <h2>Ask the reconciliation</h2>
+    ${off
+      ? `<p class="sub" style="margin:0">Set <code>ANTHROPIC_API_KEY</code> and restart the server to enable this.
+           Matching, the exception list and the audit trail all work without it.</p>`
+      : `<form class="ask-form" id="askForm">
+           <input id="askInput" name="q" autocomplete="off" placeholder="Ask about any invoice, payout or reason code…"
+                  value="${esc(state.draft)}" ${state.asking ? 'disabled' : ''}>
+           <button type="submit" ${state.asking ? 'disabled' : ''}>${state.asking ? 'Asking…' : 'Ask'}</button>
+         </form>
+         <div class="chips">${SUGGESTED.map((q) => `<button type="button" data-ask="${esc(q)}" ${state.asking ? 'disabled' : ''}>${esc(q)}</button>`).join('')}</div>
+         ${thread ? `<div class="thread">${thread}</div>` : `<p class="sub" style="margin:0">
+            Answers are built by calling read-only tools over this run — ${esc((agent?.tools ?? []).length)} of them.
+            The agent can read every decision the engine made. It cannot make one.</p>`}`}
+  </section>`;
+}
+
+function traceBlock(m) {
+  if (!m.trace?.length) return '';
+  const calls = m.trace.map((t) => {
+    const args = Object.entries(t.input ?? {}).map(([k, v]) => `${k}=${JSON.stringify(v)}`).join(', ');
+    return `<li>${esc(t.tool)}(${esc(args)})${t.rows !== null && t.rows !== undefined ? ` → ${t.rows} rows` : ''}</li>`;
+  }).join('');
+  return `<details class="trace">
+    <summary>${m.trace.length} tool call${m.trace.length === 1 ? '' : 's'} · ${m.elapsed_ms}ms · ${m.usage?.cache_read_input_tokens ?? 0} cached tokens</summary>
+    <ol>${calls}</ol>
+  </details>`;
+}
+
+/**
+ * Just enough markdown for what the agent is told to write: paragraphs, bullets,
+ * bold and inline code. Escaping happens first and the replacements only ever
+ * introduce tags from this fixed set, so the model's text can never become markup.
+ */
+function markdownLite(text) {
+  const inline = (s) => esc(s)
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>');
+
+  return String(text ?? '').split(/\n{2,}/).map((block) => {
+    const lines = block.split('\n').filter((l) => l.trim());
+    if (lines.length && lines.every((l) => /^\s*[-*]\s+/.test(l))) {
+      return `<ul>${lines.map((l) => `<li>${inline(l.replace(/^\s*[-*]\s+/, ''))}</li>`).join('')}</ul>`;
+    }
+    return `<p>${lines.map(inline).join('<br>')}</p>`;
+  }).join('');
+}
+
+function wireAsk() {
+  const form = document.getElementById('askForm');
+  if (!form) return;
+  const input = document.getElementById('askInput');
+
+  input.addEventListener('input', () => { state.draft = input.value; });
+  form.addEventListener('submit', (e) => { e.preventDefault(); submitQuestion(input.value); });
+  for (const btn of document.querySelectorAll('[data-ask]')) {
+    btn.addEventListener('click', () => submitQuestion(btn.dataset.ask));
+  }
+  if (state.focusAsk) { input.focus(); state.focusAsk = false; }
+}
+
+async function submitQuestion(question) {
+  const q = String(question ?? '').trim();
+  if (!q || state.asking) return;
+
+  const entry = { q, pending: true };
+  state.thread.push(entry);
+  state.asking = true;
+  state.draft = '';
+  render();
+
+  try {
+    const res = await fetch('/api/ask', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      // Prior turns go back so follow-ups like "and the one before it" resolve.
+      body: JSON.stringify({
+        question: q,
+        history: state.thread.filter((m) => m.a).flatMap((m) => [
+          { role: 'user', content: m.q }, { role: 'assistant', content: m.a },
+        ]),
+      }),
+    });
+    const body = await res.json();
+    if (!res.ok) throw new Error(body.error ?? res.statusText);
+    Object.assign(entry, { pending: false, a: body.answer, trace: body.trace, usage: body.usage, elapsed_ms: body.elapsed_ms });
+  } catch (err) {
+    Object.assign(entry, { pending: false, error: err.message });
+  } finally {
+    state.asking = false;
+    state.focusAsk = true;
+    render();
+  }
+}
 
 /** Horizontal bars: one hue, magnitude by length, counts direct-labelled. */
 function reasonBars(byReason) {
