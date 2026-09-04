@@ -15,7 +15,7 @@ const ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models';
 
 // Overridable, because a free-tier model name is a moving target and a wrong one
 // should be a one-line .env fix rather than a code change.
-export const DEFAULT_GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+export const DEFAULT_GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.6-flash';
 
 // Gemini validates against an OpenAPI subset, not JSON Schema. `additionalProperties`
 // — which every strict Anthropic schema in this repo sets — is a hard 400 here, so
@@ -157,7 +157,12 @@ export function fromGeminiResponse(body, model) {
  * useless to someone who just wants their demo to run. On an unknown model the
  * account's actual model list is fetched and named in the error.
  */
-async function describeUnknownModel(apiKey, model, fetchImpl) {
+async function describeUnknownModel(apiKey, model, fetchImpl, detail = '') {
+  // Google often names the successor in its own 404 ("use models/gemini-3.6-flash"),
+  // which is more useful than any list. Keep it when it is there.
+  const hint = String(detail).match(/use models\/([\w.-]+)/i);
+  if (hint) return `Gemini has no model "${model}" — it points at "${hint[1]}" instead. Set GEMINI_MODEL=${hint[1]} in .env`;
+
   try {
     const res = await fetchImpl(`${ENDPOINT}?key=${apiKey}`);
     const body = await res.json();
@@ -211,7 +216,7 @@ export function geminiClient({ apiKey, model = DEFAULT_GEMINI_MODEL, fetchImpl =
     if (!res.ok) {
       const detail = await res.text().catch(() => '');
       const message = res.status === 404
-        ? await describeUnknownModel(apiKey, model, fetchImpl)
+        ? await describeUnknownModel(apiKey, model, fetchImpl, detail)
         : `Gemini returned ${res.status}: ${detail.slice(0, 400)}`;
       // Honour the wait the provider asked for rather than guessing at one.
       const retryAfter = Number(res.headers?.get?.('retry-after'));

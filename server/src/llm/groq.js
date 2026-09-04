@@ -11,7 +11,7 @@
 
 const ENDPOINT = 'https://api.groq.com/openai/v1';
 
-export const DEFAULT_GROQ_MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
+export const DEFAULT_GROQ_MODEL = process.env.GROQ_MODEL || 'openai/gpt-oss-120b';
 
 function systemText(system) {
   if (!system) return null;
@@ -99,7 +99,13 @@ async function describeUnknownModel(apiKey, model, fetchImpl) {
   try {
     const res = await fetchImpl(`${ENDPOINT}/models`, { headers: { authorization: `Bearer ${apiKey}` } });
     const body = await res.json();
-    const usable = (body.data ?? []).map((m) => m.id).slice(0, 8);
+    // Groq's catalogue mixes chat models with speech and safety ones. Offering
+    // someone a Whisper model as a replacement for a chat model is worse than
+    // offering nothing, so the non-chat families are filtered out.
+    const usable = (body.data ?? [])
+      .map((m) => m.id)
+      .filter((id) => !/whisper|tts|guard|orpheus/i.test(id))
+      .slice(0, 8);
     if (usable.length) return `Groq has no model "${model}". Set GROQ_MODEL in .env to one of: ${usable.join(', ')}`;
   } catch {
     // The original failure is the useful part; the listing is a courtesy.
