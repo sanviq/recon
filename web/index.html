@@ -150,13 +150,22 @@
   }
   .page-head h1 { font-size: 27px; font-weight: 700; letter-spacing: -0.02em; }
   .page-head .sub { margin-top: 5px; max-width: 68ch; }
-  .head-figs { display: flex; gap: 10px; flex-wrap: wrap; }
+  /* The figures wrap onto their own row under the title, so sizing them to their
+     own text left a dead gap out to the card edge. They take the full width and
+     divide it instead. */
+  .head-figs {
+    flex: 1 1 100%;
+    display: grid; gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
   .head-fig {
     border: 1px solid var(--border); border-radius: 9px; background: var(--surface);
-    padding: 7px 13px; box-shadow: var(--elev);
+    padding: 11px 15px; box-shadow: var(--elev);
   }
   .head-fig .k { font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-muted); }
-  .head-fig .v { font-size: 17px; font-weight: 700; margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .head-fig .v { font-size: 21px; font-weight: 700; margin-top: 3px; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+  /* The first figure is the claim; the rest are context for it. */
+  .head-fig:first-child { border-left: 3px solid var(--series-matched); }
 
   .badge {
     display: inline-flex; align-items: center; gap: 6px;
