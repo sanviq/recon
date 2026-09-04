@@ -91,7 +91,15 @@ export function friendlyApiError(err) {
  * owns conversation state and this function stays a pure function of its inputs.
  */
 export async function ask(question, { result, audit = [], history = [], client, maxIterations = MAX_ITERATIONS } = {}) {
-  const api = client ?? getClient();
+  // One retry, not the free tier's patient seven.
+  //
+  // The batch paths can afford to sit out a per-minute quota: nobody is watching
+  // `npm run explain` and a note that arrives 40s late is still a note. A person
+  // waiting at a chat box is a different problem entirely — a rate-limited Gemini
+  // was costing a full minute of backoff before the chain even tried Groq, and a
+  // minute of silence reads as broken. Failing over fast is worth more here than
+  // holding out for the preferred provider.
+  const api = client ?? getClient({ maxRetries: 1 });
   if (!api) {
     const err = new Error('No model provider is configured — the controller agent needs a key. Set any one of ANTHROPIC_API_KEY, GEMINI_API_KEY (free, aistudio.google.com) or GROQ_API_KEY (free, console.groq.com) in .env. The dashboard, matching and exception notes all work without one.');
     err.status = 503;

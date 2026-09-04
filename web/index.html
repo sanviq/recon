@@ -518,6 +518,7 @@ function render() {
       <section class="card">
         <h2>Exceptions by reason</h2>
         ${reasonBars(sum.exceptions_by_reason)}
+        ${valueAtRisk(exceptions)}
       </section>
       <section class="card">
         <h2>How the matches were made</h2>
@@ -653,7 +654,8 @@ function heroFigure(s, sum) {
       <b>${wrong === 0 ? 'none' : wrong}</b> booked to the wrong invoice.<br>
       Ground truth says <b>${matchable} of ${sum.ledger_rows}</b> were reconcilable at all; it found
       ${m.false_negative === 0 ? '<b>every one</b>' : `${m.true_positive}`}
-      and flagged the other ${sum.ledger_rows - matchable}, which carry real faults.
+      and flagged the other ${sum.ledger_rows - matchable}, which carry real faults.<br>
+      <span class="src">Match rate across the whole book, for comparison: ${pct(sum.match_rate)}.</span>
     </div>
   </div>`;
 }
@@ -862,6 +864,48 @@ function reasonBars(byReason) {
         title="${esc(REASON_LABEL[reason] ?? reason)}: ${count}"></i></span>
       <span class="n">${count}</span>
     </div>`).join('')}</div>`;
+}
+
+/**
+ * How much money sits behind each severity.
+ *
+ * A count of exceptions does not tell a merchant what to do first: twelve
+ * medium-severity rows worth Rs 4,000 matter less than one high-severity row
+ * worth Rs 1,55,000. The counts answer "how much is broken"; this answers "how
+ * much is at stake", and it is the second question every time.
+ *
+ * Drawn as separated rows rather than one stacked bar on purpose. Stacked, the
+ * medium and low segments would sit adjacent, and that pair separates by only
+ * ~8 dE under protanopia — legal with direct labels, but rows are simply better:
+ * each has its own label, its own baseline, and no shared edge to resolve.
+ */
+function valueAtRisk(exceptions) {
+  const order = ['high', 'medium', 'low'];
+  const totals = new Map(order.map((k) => [k, 0]));
+  // Invoice exceptions only. The list also carries unexplained bank credits, and
+  // adding those in would mix two different pots of money — an invoice that was
+  // never confirmed and a credit that arrived unattributed are not the same
+  // rupees — and would leave these rows failing to sum to the flagged value
+  // stated at the top of the page. The bank side has its own figure in the KPI row.
+  for (const e of exceptions.filter((x) => x.kind === 'invoice')) {
+    const sev = order.includes(e.note?.severity) ? e.note.severity : 'low';
+    totals.set(sev, totals.get(sev) + (e.amount_paise ?? 0));
+  }
+
+  const rows = order.filter((k) => totals.get(k) > 0);
+  if (!rows.length) return '';
+  const max = Math.max(...rows.map((k) => totals.get(k)));
+
+  const total = order.reduce((s, k) => s + totals.get(k), 0);
+  return `<h2 style="margin:22px 0 14px">Invoice value at risk, by severity
+      · <span class="src">${fmtRs(total)} in total</span></h2>
+    <div class="bars">${rows.map((k) => `
+      <div class="bar-row" style="grid-template-columns:96px minmax(0,1fr) 108px">
+        <span class="sev sev-${k}"><i></i>${k[0].toUpperCase() + k.slice(1)}</span>
+        <span class="bar-track"><i style="width:${(totals.get(k) / max * 100).toFixed(1)}%;background:var(--sev-${k})"
+          title="${k}: ${fmtRs(totals.get(k))}"></i></span>
+        <span class="n">${fmtRs(totals.get(k))}</span>
+      </div>`).join('')}</div>`;
 }
 
 function accuracyPanel(s) {

@@ -272,7 +272,9 @@ opens a reconciliation wanting forty rows explained; they want to know whether t
 is fine and what to do first. Invoices flagged by a single broken payout are grouped
 before the model sees them, so five rows sharing one cause are presented as one problem.
 
-**Request shape.** `claude-opus-5`, structured output. `effort: low` for the notes
+**Request shape.** Whichever provider the chain resolves to — `claude-opus-5` on a
+paid Anthropic key, otherwise `gemini-3.6-flash` or `openai/gpt-oss-120b` on a free
+tier — with structured output. `effort: low` for the notes
 (formatting over settled facts) and `medium` for the brief (deciding what to lead with is
 a judgement over the whole month). The system prompt is constant and carries the
 `cache_control` breakpoint; the per-exception facts go in the user turn *after* it, so the

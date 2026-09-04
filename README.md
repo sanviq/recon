@@ -270,7 +270,7 @@ npm run reconcile -- --data data/demo                       # match; writes resu
 npm run explain   -- --data data/demo                       # note on every exception + month-end brief
 npm run serve                                               # dashboard at http://localhost:8787
 
-npm test                                                    # 127 tests
+npm test                                                    # 129 tests
 npm run verify   -- --data data/demo                        # check the run against its own claims
 npm run evaluate -- --data data/demo                        # score against ground truth
 npm run compare  -- --data data/demo                        # vs the two alternatives
@@ -431,7 +431,7 @@ On a free Gemini or Groq key the same run prints its token counts against a pric
 zero and says which free tier it used:
 
 ```
-  cost: $0.00 — gemini-2.5-flash on the google-ai-studio free tier
+  cost: $0.00 — openai/gpt-oss-120b on the groq free tier
   <N> tokens across 24 exception(s), billed at nothing
   the same review by hand: ~36 minutes, about $3.60 of analyst time
 ```
@@ -538,10 +538,16 @@ that doesn't exist.
    through the Gemini adapter over a real reconciliation with only `fetch` replaced.
    But no request has crossed a network. Run `npm run explain` and `npm run ask` once
    with a key before demoing either.
-2. **The free-tier model names will go stale.** `gemini-2.5-flash` and
-   `llama-3.3-70b-versatile` are the defaults; free-tier catalogues move. On an
-   unknown model the error lists the models the key can actually use, and
-   `GEMINI_MODEL` / `GROQ_MODEL` override without a code change.
+2. **The free-tier model names go stale, and already did once.** The original
+   defaults — `gemini-2.5-flash` and `llama-3.3-70b-versatile` — were both
+   retired by their providers during this project, and every model call started
+   returning 404 while the keys stayed valid. The defaults are now
+   `gemini-3.6-flash` and `openai/gpt-oss-120b`, and they will go the same way.
+   Nothing breaks quietly: an unknown model is answered with the successor the
+   provider names in its own 404, or with the list of models the key can actually
+   use, and `GEMINI_MODEL` / `GROQ_MODEL` override either without a code change.
+   The reconciliation itself never calls a model, so a stale name costs the notes
+   and the chat, never a number.
 3. **The standard-profile accuracy numbers grade their own homework** (see above).
    Trust the hard-profile row.
 4. **Refunds, chargebacks and partial captures are not modelled.** Only inbound
