@@ -317,7 +317,47 @@ cap returns "narrow the question" rather than whatever half-answer exists. Amoun
 the model as formatted rupee strings, never paise integers, so it reads numbers instead of
 doing arithmetic on them; where a total is genuinely needed, a tool computes it.
 
-### 5.4 Why the matching is not routed through a model
+### 5.4 Provider independence, and why it was cheap
+
+All four model call sites are written as `client ?? getClient()`. That parameter
+exists because the tests needed to hand them fakes, and it turned out to be the
+same seam a second provider plugs into: `server/src/llm/` translates the Anthropic
+Messages shape to Google Gemini and to Groq's OpenAI-compatible dialect, and
+nothing above that directory knows which company answered.
+
+The translation is not cosmetic, and each difference is a real failure if missed:
+
+| Anthropic | Gemini | Groq (OpenAI) |
+|---|---|---|
+| `system` as blocks carrying `cache_control` | one `systemInstruction` string | a `system` message |
+| `additionalProperties: false` **required** by strict schemas | **rejected with a 400** — schema rebuilt from a whitelist | ignored |
+| `type: ['string','null']` | single type + `nullable` | ignored |
+| tool call carries an `id` | no id — one is minted so results can be paired | `tool_calls[].id` |
+| tool result keyed by `tool_use_id` | keyed by tool **name**, recovered by indexing the transcript | `tool_call_id` |
+| several results in one user turn | several `functionResponse` parts | one `tool` message each |
+| `stop_reason: 'refusal'` | `finishReason: 'SAFETY'` | `finish_reason: 'content_filter'` |
+| JSON schema enforced | `responseSchema` enforced | JSON mode only — schema restated in the prompt |
+
+Providers are tried in order and the first that answers wins. One that fails in a
+way a retry cannot fix — a bad key, an unfunded account, an unknown model — is
+dropped for the rest of the process, so a 24-exception batch pays that failure once
+rather than 24 times; the reason it was dropped is carried forward, because 23
+notes reporting "no provider configured" would send someone hunting a missing key
+when the first note had already named the real cause. A 429 is explicitly **not**
+permanent: a free tier that has run out for the minute falls through now and is
+offered the work again later.
+
+Two consequences worth stating. First, notes record the model that **actually**
+wrote them rather than the one that was requested, because an audit trail that
+files a Llama sentence under Opus is lying about provenance. Second, model JSON is
+parsed tolerantly — open-weights models in JSON mode still wrap their answer in a
+code fence often enough that a strict `JSON.parse` would throw away good notes.
+
+Below every provider sits the template path, which needs no key and cannot fail.
+The practical result is that this project runs, end to end, with model-written
+prose, for no money.
+
+### 5.5 Why the matching is not routed through a model
 
 A model that is 97% right about a settlement is 3% wrong about a bank balance, and there
 is no way to audit which 3%. Every decision in the engine is reproducible from the inputs

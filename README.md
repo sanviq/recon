@@ -91,6 +91,14 @@ Every one of the three degrades to a deterministic path with no API key: an alia
 table, sentence templates, and a disabled chat box. The reconciliation, the metrics
 and the audit trail never need a model at all.
 
+**And no key is a paid key.** The model layer talks to Anthropic, Google Gemini or
+Groq behind one adapter (`server/src/llm/`), and the last two are free tiers that
+need no card. Providers are tried in order; one that fails in a way a retry cannot
+fix is dropped for the rest of the run and the next takes over, while a rate limit
+— the characteristic free-tier failure — is treated as temporary and retried later.
+Nothing above `server/src/llm/` knows which company answered, because all four call
+sites already took an injected client so the tests could hand them fakes.
+
 ---
 
 ## Measured accuracy
@@ -241,7 +249,8 @@ being told what the lag was.
 
 ## Quick start
 
-Node 22 or newer. No credentials needed for any of this.
+Node 22 or newer. No credentials needed for any of this, and nothing here costs
+money — the optional model layer runs on a free Gemini or Groq key.
 
 ```bash
 npm install
@@ -261,7 +270,7 @@ npm run reconcile -- --data data/demo                       # match; writes resu
 npm run explain   -- --data data/demo                       # note on every exception + month-end brief
 npm run serve                                               # dashboard at http://localhost:8787
 
-npm test                                                    # 107 tests
+npm test                                                    # 127 tests
 npm run verify   -- --data data/demo                        # check the run against its own claims
 npm run evaluate -- --data data/demo                        # score against ground truth
 npm run compare  -- --data data/demo                        # vs the two alternatives
@@ -297,7 +306,10 @@ Delete one from the middle and the verifier fails the run and names the position
 Both behaviours are tested by spawning the real CLI over real files
 (`server/test/verify.test.js`), so the check cannot quietly stop working.
 
-With `ANTHROPIC_API_KEY` set, `explain` and the dashboard's chat panel come alive, and:
+With any one model key set — `ANTHROPIC_API_KEY`, or a free `GEMINI_API_KEY`
+([aistudio.google.com](https://aistudio.google.com/apikey)) or `GROQ_API_KEY`
+([console.groq.com](https://console.groq.com/keys)) — `explain` and the dashboard's
+chat panel come alive, and:
 
 ```bash
 npm run ask -- --data data/demo "how much money is stuck, and who do I chase first?"
@@ -358,11 +370,13 @@ Axis's single-amount-column format, reconciles to a byte-identical summary
 ### Exception notes, the brief, and the ask agent
 
 `npm run explain` writes one note per exception plus a month-end brief over the whole
-run. With `ANTHROPIC_API_KEY` set it uses Claude (`claude-opus-5`, structured output,
-shared system prompt cached ahead of the per-exception facts). Without a key — or on a
-refusal, a rate limit, or any other failure — it falls back to deterministic templates
-carrying the same facts. The report is never blank, and the audit trail records which
-path wrote each note.
+run. With a key set it uses whichever provider is configured — Claude
+(`claude-opus-5`, structured output, shared system prompt cached ahead of the
+per-exception facts), or Gemini, or Groq. Without a key — or on a refusal, a rate
+limit, an unfunded account, or any other failure — it falls back to deterministic
+templates carrying the same facts. The report is never blank, and the audit trail
+records **which model actually wrote each note**, not which one was asked for: a
+note that fell through to a free provider must not be filed under Opus.
 
 The **ask agent** answers questions against a finished run through seven read-only
 tools (`reconciliation_summary`, `search_exceptions`, `get_invoice`,
@@ -413,10 +427,22 @@ so `npm run explain` prices itself and prints the comparison:
   prompt caching saved $<measured> on this batch alone
 ```
 
+On a free Gemini or Groq key the same run prints its token counts against a price of
+zero and says which free tier it used:
+
+```
+  cost: $0.00 — gemini-2.5-flash on the google-ai-studio free tier
+  <N> tokens across 24 exception(s), billed at nothing
+  the same review by hand: ~36 minutes, about $3.60 of analyst time
+```
+
 **The machine figures are computed from the token counts the API actually reported
 for that run — nothing is estimated, and no number is printed until a real call has
-been made.** A run that went through the deterministic templates prints `$0.00` and
-says why. Rates are the published list prices, kept in one place in
+been made.** Free and templated are deliberately different claims even though both
+cost $0.00: a run where a model wrote every note for free must not report itself as
+a run where no model was called. A model this project has no basis to price returns
+`null` rather than a confident zero. Rates are the published list prices, kept in one
+place in
 `server/src/explain/cost.js` alongside the assumption behind the human column: 90
 seconds per exception at $6/hour, which is generous to the human — it assumes they
 already have all three systems open and know what they are looking at.
@@ -432,10 +458,11 @@ change the argument.
 ```
 server/src/
   generate/    synthetic merchant-month + injected faults + ground truth
+  llm/         one Anthropic/Gemini/Groq adapter + the fallback chain
   ingest/      AI column mapping for foreign CSVs + alias table + date inference
   sources/     Razorpay client, CSV/JSON loaders, normalisation
   match/       the engine — two legs, three passes, six reason codes
-  explain/     Claude exception notes + month-end brief + cost accounting
+  explain/     exception notes + month-end brief + cost accounting
   agent/       read-only tools and the ask loop
   eval/        scoring against ground truth, and the two baselines
   cli/         demo · generate · pull · ingest · reconcile · explain · ask
@@ -503,26 +530,31 @@ on the metric most people would report.
 Stated plainly, because a reconciliation tool that oversells itself is worse than one
 that doesn't exist.
 
-1. **The live Claude paths are unexercised.** No Anthropic credentials were available
-   on the machine this was built on, so all three model layers — ingest mapping,
+1. **The live model paths are unexercised.** No funded credentials were available on
+   the machine this was built on, so all three model layers — ingest mapping,
    exception notes and brief, and the ask agent — have only ever run through their
-   deterministic fallbacks or against stubbed clients in the test suite. The request
-   shapes are written against the current SDK and the plumbing around them is tested,
-   but no real call has been made. Run `npm run explain` and `npm run ask` once with a
-   key before demoing either.
-2. **The standard-profile accuracy numbers grade their own homework** (see above).
+   deterministic fallbacks or against stubbed clients. The stubs go further than
+   shape-checking: `server/test/llm.test.js` drives the ask agent's real tool loop
+   through the Gemini adapter over a real reconciliation with only `fetch` replaced.
+   But no request has crossed a network. Run `npm run explain` and `npm run ask` once
+   with a key before demoing either.
+2. **The free-tier model names will go stale.** `gemini-2.5-flash` and
+   `llama-3.3-70b-versatile` are the defaults; free-tier catalogues move. On an
+   unknown model the error lists the models the key can actually use, and
+   `GEMINI_MODEL` / `GROQ_MODEL` override without a code change.
+3. **The standard-profile accuracy numbers grade their own homework** (see above).
    Trust the hard-profile row.
-3. **Refunds, chargebacks and partial captures are not modelled.** Only inbound
+4. **Refunds, chargebacks and partial captures are not modelled.** Only inbound
    settlement credits are reconciled; bank debits are filtered out.
-4. **Multi-currency is out of scope.** Everything assumes INR.
-5. **The live path injects no amount/date collisions**, because real payment amounts
+5. **Multi-currency is out of scope.** Everything assumes INR.
+6. **The live path injects no amount/date collisions**, because real payment amounts
    can't be forced to collide. The synthetic profiles cover that case.
-6. **Calibration needs ≥ 8 reference matches** to fire; below that it falls back to the
+7. **Calibration needs ≥ 8 reference matches** to fire; below that it falls back to the
    configured default window. A merchant who never passes `order_id` gets the default.
-7. **The ingest layer maps columns and parses dates. It does not clean rows.** A
+8. **The ingest layer maps columns and parses dates. It does not clean rows.** A
    statement with merged header rows, mid-file subtotals, or a page footer repeated
    every 40 lines will map correctly and then feed junk rows through. Strip those first.
-8. **The ask agent is not evaluated for answer quality.** Its tools are tested, its
+9. **The ask agent is not evaluated for answer quality.** Its tools are tested, its
    loop is tested, and it is structurally incapable of writing — but there is no scored
    benchmark of whether its prose is right, the way there is for the matcher. Treat its
    answers as a faster way to read the exception list, not as a second opinion on it.
