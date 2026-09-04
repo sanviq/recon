@@ -140,7 +140,12 @@ export function getClient({ env = process.env, clients = null } = {}) {
 
   if (!legs.length) return null;
 
-  const disabled = new Set();
+  // Why each dropped provider was dropped, not merely that it was. Twenty-four
+  // exceptions in a row reporting "no provider configured" would send someone
+  // looking for a missing key when the real answer was an unfunded account, and
+  // only the first of the twenty-four would have said so.
+  const disabled = new Map();
+
   const chain = {
     provider: legs[0].name,
     model: legs[0].model,
@@ -149,8 +154,13 @@ export function getClient({ env = process.env, clients = null } = {}) {
     messages: {
       create: async (req) => {
         const failures = [];
+        let last = null;
+
         for (const leg of legs) {
-          if (disabled.has(leg.name)) continue;
+          if (disabled.has(leg.name)) {
+            failures.push(`${leg.name}: ${disabled.get(leg.name)} (dropped earlier in this run)`);
+            continue;
+          }
           try {
             const response = await leg.client.messages.create(req);
             chain.provider = leg.name;
@@ -158,20 +168,18 @@ export function getClient({ env = process.env, clients = null } = {}) {
             if (!chain.used.includes(leg.name)) chain.used.push(leg.name);
             return response;
           } catch (err) {
-            if (isPermanentFailure(err)) disabled.add(leg.name);
-            failures.push(`${leg.name}: ${err?.message ?? err}`);
-            // Carried so the last error still reaches friendlyApiError with its status.
             err.provider ??= leg.name;
-            if (leg === legs[legs.length - 1] || legs.every((l) => disabled.has(l.name) || failures.some((f) => f.startsWith(`${l.name}:`)))) {
-              throw Object.assign(new Error(failures.join(' | ')), {
-                status: err?.status ?? err?.statusCode,
-                provider: err.provider,
-                failures,
-              });
-            }
+            if (isPermanentFailure(err)) disabled.set(leg.name, err.message ?? String(err));
+            failures.push(`${leg.name}: ${err?.message ?? err}`);
+            last = err;
           }
         }
-        throw Object.assign(new Error(failures.join(' | ') || 'no model provider is configured'), { status: 503, failures });
+
+        throw Object.assign(new Error(failures.join(' | ') || 'no model provider is configured'), {
+          status: last?.status ?? last?.statusCode ?? 503,
+          provider: last?.provider,
+          failures,
+        });
       },
     },
   };

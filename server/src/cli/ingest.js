@@ -14,6 +14,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync, appendFileSync } fr
 import { resolve } from 'node:path';
 import { parseCSV, toCSV } from '../lib/csv.js';
 import { mapTable, describeMapping, hasApiKey, MODEL } from '../ingest/mapper.js';
+import { describeProviders } from '../llm/client.js';
 import { applyMapping } from '../ingest/values.js';
 import { parseArgs } from './args.js';
 
@@ -35,9 +36,9 @@ if (!jobs.length) {
 
 mkdirSync(outDir, { recursive: true });
 console.log(`\ningest -> ${outDir}`);
-console.log(`  ${useModel && hasApiKey() ? `${MODEL} column mapping + deterministic alias fallback` : 'deterministic alias table (no model)'}\n`);
+console.log(`  ${useModel ? `column mapping: ${describeProviders()}` : 'deterministic alias table (--no-model)'}\n`);
 
-const record = { generated_at: new Date().toISOString(), model: useModel && hasApiKey() ? MODEL : null, tables: {} };
+const record = { generated_at: new Date().toISOString(), model: useModel && hasApiKey() ? MODEL : null, providers: describeProviders(), tables: {} };
 let blocked = false;
 
 for (const job of jobs) {

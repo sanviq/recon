@@ -9,7 +9,7 @@
 import 'dotenv/config';
 import { readFileSync, writeFileSync, appendFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { explainAll, hasApiKey, MODEL } from '../explain/explainer.js';
+import { explainAll, hasApiKey, describeProviders, MODEL } from '../explain/explainer.js';
 import { writeBrief } from '../explain/brief.js';
 import { priceRun, comparedToHuman, formatCostLine } from '../explain/cost.js';
 import { STATUS } from '../match/codes.js';
@@ -39,7 +39,7 @@ const targets = [
 ];
 
 const live = hasApiKey();
-console.log(`explaining ${targets.length} exception(s) — ${live ? `${MODEL} + deterministic fallback` : 'deterministic templates (no ANTHROPIC_API_KEY set)'}`);
+console.log(`explaining ${targets.length} exception(s) — ${describeProviders()}`);
 
 const t0 = performance.now();
 const notes = targets.length
@@ -65,7 +65,10 @@ const usage = notes.reduce((acc, n) => {
   return acc;
 }, { input: 0, output: 0, cache_read: 0, cache_write: 0 });
 
-const cost = live ? priceRun(usage, MODEL) : null;
+// Priced against the model that actually answered, not the one that was asked
+// for: the chain may have fallen through to a free provider mid-batch.
+const usedModel = notes.find((n) => n.model)?.model ?? MODEL;
+const cost = live ? priceRun(usage, usedModel) : null;
 const economics = comparedToHuman(notes.length, elapsedMs, cost);
 
 // Every note the model wrote is checked back against the facts it was given.
@@ -80,7 +83,8 @@ const grounding = {
 
 result.explanations = {
   generated_at: new Date().toISOString(),
-  model: live ? MODEL : null,
+  model: notes.some((n) => n.source === 'llm') ? usedModel : null,
+  providers: describeProviders(),
   count: notes.length,
   from_model: notes.filter((n) => n.source === 'llm').length,
   from_template: notes.filter((n) => n.source === 'template').length,

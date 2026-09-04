@@ -16,6 +16,7 @@ import { fileURLToPath } from 'node:url';
 import { STATUS } from './match/codes.js';
 import { ask } from './agent/ask.js';
 import { TOOL_DEFS } from './agent/tools.js';
+import { hasProvider, describeProviders } from './llm/client.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, '../..');
@@ -65,7 +66,7 @@ app.get('/api/summary', send(() => {
     metrics: existsSync(at('metrics.json')) ? readJSON(at('metrics.json')) : null,
     compare: existsSync(at('compare.json')) ? readJSON(at('compare.json')) : null,
     ingest: existsSync(at('ingest.json')) ? readJSON(at('ingest.json')) : null,
-    agent: { available: Boolean(process.env.ANTHROPIC_API_KEY), tools: TOOL_DEFS.map((t) => t.name) },
+    agent: { available: hasProvider(), providers: describeProviders(), tools: TOOL_DEFS.map((t) => t.name) },
   };
 }));
 
@@ -141,7 +142,7 @@ app.post('/api/ask', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`\nRecon dashboard  http://localhost:${PORT}`);
   console.log(`  serving ${DATA_DIR}`);
-  console.log(`  ask agent: ${process.env.ANTHROPIC_API_KEY ? 'on' : 'off (set ANTHROPIC_API_KEY to enable)'}`);
+  console.log(`  ask agent: ${hasProvider() ? `on — ${describeProviders()}` : 'off (set ANTHROPIC_API_KEY, or a free GEMINI_API_KEY / GROQ_API_KEY, to enable)'}`);
   if (!existsSync(at('result.json'))) {
     console.log(`  (no result.json yet — run: npm run reconcile -- --data ${DATA_DIR})`);
   }

@@ -286,6 +286,24 @@ test('a rate limit falls through without retiring the provider', async () => {
   assert.equal(firstCalls, 2, 'a quota resets, so the preferred provider keeps being offered the work');
 });
 
+// Twenty-four exceptions in a row must not report "no provider configured" when
+// the real cause was stated once, on the first one, and then forgotten.
+test('a dropped provider keeps reporting why it was dropped', async () => {
+  const legs = [
+    { name: 'anthropic', model: 'claude-opus-5', client: { messages: { create: async () => {
+      throw Object.assign(new Error('Your credit balance is too low'), { status: 400 });
+    } } } },
+  ];
+  const chain = getClient({ clients: legs });
+  const messages = [];
+  for (let i = 0; i < 3; i++) {
+    await chain.messages.create({ messages: [] }).catch((err) => messages.push(err.message));
+  }
+  assert.equal(messages.length, 3);
+  for (const m of messages) assert.match(m, /credit balance/, 'every call must still name the real cause');
+  assert.match(messages[2], /dropped earlier in this run/);
+});
+
 test('when everything fails the error names every provider that was tried', async () => {
   const legs = [
     { name: 'gemini', model: 'g', client: { messages: { create: async () => { throw Object.assign(new Error('key invalid'), { status: 401 }); } } } },

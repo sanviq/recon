@@ -19,6 +19,25 @@ export const PRICING = {
 };
 
 /**
+ * Providers whose free tier this project is built to run on. Zero is the real
+ * price, not a missing number — but the distinction between "free" and "unknown"
+ * has to survive, because reporting an unpriced model as $0.00 would be a lie
+ * dressed as a result.
+ */
+const FREE_TIERS = [
+  { match: /^gemini-/, provider: 'google-ai-studio' },
+  { match: /^(llama|mixtral|gemma|qwen|deepseek|moonshot|kimi|openai\/gpt-oss)/i, provider: 'groq' },
+];
+
+/** The rate card for a model, or null if this project has no basis to price it. */
+export function rateFor(model) {
+  if (PRICING[model]) return { ...PRICING[model], free: false };
+  const free = FREE_TIERS.find((f) => f.match.test(model ?? ''));
+  if (free) return { input: 0, output: 0, cache_read: 0, cache_write: 0, free: true, provider: free.provider };
+  return null;
+}
+
+/**
  * A finance associate reconciling by hand. Deliberately conservative: 90 seconds
  * per exception assumes they already have all three systems open and know what
  * they are looking at, which is not usually true on the first pass.
@@ -26,7 +45,7 @@ export const PRICING = {
 export const HUMAN = { secondsPerException: 90, hourlyUSD: 6 };
 
 export function priceRun(usage, model = 'claude-opus-5') {
-  const rate = PRICING[model];
+  const rate = rateFor(model);
   if (!rate || !usage) return null;
   const per = (tokens, usdPerMillion) => (tokens ?? 0) * usdPerMillion / 1_000_000;
   const usd =
@@ -38,6 +57,8 @@ export function priceRun(usage, model = 'claude-opus-5') {
   return {
     model,
     usd: Number(usd.toFixed(6)),
+    free_tier: rate.free === true,
+    provider: rate.provider ?? null,
     tokens: {
       input: usage.input ?? 0, output: usage.output ?? 0,
       cache_read: usage.cache_read ?? 0, cache_write: usage.cache_write ?? 0,
@@ -63,12 +84,26 @@ export function comparedToHuman(exceptionCount, elapsedMs, cost) {
 }
 
 export function formatCostLine(economics, cost) {
+  const byHand = `  the same review by hand: ~${(economics.human_seconds / 60).toFixed(0)} minutes, about $${economics.human_usd.toFixed(2)} of analyst time`;
+
+  // Free and templated are both $0.00 and are not the same claim. A run where a
+  // model wrote every note on a free tier must not report itself as a run where
+  // no model was called — that would understate what was demonstrated.
+  if (cost?.free_tier) {
+    return [
+      `  cost: $0.00 — ${cost.model} on the ${cost.provider} free tier`,
+      `  ${cost.tokens.input + cost.tokens.output} tokens across ${economics.exceptions} exception(s), billed at nothing`,
+      byHand,
+      economics.speedup ? `  ${economics.speedup}x faster, and it never gets bored on row 40` : null,
+    ].filter(Boolean).join('\n');
+  }
+
   if (!cost || !cost.usd) {
     return `  cost: $0.00 — every note came from the deterministic templates, which need no API call`;
   }
   const lines = [
     `  cost: $${cost.usd.toFixed(4)} for ${economics.exceptions} exception(s) — $${economics.usd_per_exception.toFixed(5)} each`,
-    `  the same review by hand: ~${(economics.human_seconds / 60).toFixed(0)} minutes, about $${economics.human_usd.toFixed(2)} of analyst time`,
+    byHand,
   ];
   if (economics.speedup) lines.push(`  ${economics.speedup}x faster, and it never gets bored on row 40`);
   if (cost.cache_saved_usd > 0) lines.push(`  prompt caching saved $${cost.cache_saved_usd.toFixed(4)} on this batch alone`);
