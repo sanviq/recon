@@ -19,7 +19,7 @@ const SYSTEM_PROMPT = `You write the opening brief on a payment reconciliation, 
 Context: the merchant collects through Razorpay. Razorpay takes a fee plus 18% GST on that fee and batches a day of payments into one payout under one UTR, so a bank credit settles many invoices at once and never equals a single invoice amount. A deterministic engine has already matched everything it could prove and flagged the rest with a reason code. Those decisions are final.
 
 Write:
-- headline: one sentence, under 20 words. The state of the month as a person would say it out loud. Lead with the number that matters.
+- headline: one sentence, under 20 words. The state of the month as a person would say it out loud. Lead with the money that is unconfirmed and what is holding it up. Do NOT open with a percentage-reconciled or match-rate figure: the share of a month's invoices that happen to be clean is a property of the month, not a finding, and it is the least actionable number on the page.
 - state_of_the_month: two or three sentences. What reconciled cleanly, what did not, and whether the flagged value is concentrated in a few records or spread thin. Name real figures.
 - needs_attention: three to five items, ordered by what to do first. Each has a title of at most eight words that names the action, a detail of one or two sentences with the specific records and amounts, and a severity. Group records that share a cause into one item rather than listing them separately — five invoices flagged because one payout was short-credited is ONE problem, not five.
 - biggest_single_risk: one sentence naming the single record or batch that would cost the most if ignored, with its identifier.

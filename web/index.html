@@ -454,13 +454,30 @@ function render() {
   badge.className = `badge${on ? ' on' : ''}`;
   badge.innerHTML = `<i></i>${on ? esc((s.agent?.providers ?? 'model').split(' -> ')[0]) : 'no model key — templates only'}`;
 
-  // The three figures a merchant would want before reading anything else, kept
-  // beside the title rather than buried in the card grid.
-  document.getElementById('headFigs').innerHTML = [
-    ['Reconciled', pct(sum.match_rate)],
-    ['Needs review', String(sum.exceptions)],
-    ['Value flagged', fmtRs(sum.value_flagged_paise)],
-  ].map(([k, v]) => `<div class="head-fig"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join('');
+  // The first figures on the page, and the ones that set how everything after
+  // them is read.
+  //
+  // "Reconciled 69.4%" used to lead here, and it is the most misread number in
+  // the project. It is not a success rate. Ground truth for this month says 50
+  // of the 72 invoices were reconcilable at all — the other 22 carry planted
+  // faults and are supposed to be flagged. The engine found all 50 and flagged
+  // all 22. So the honest headline is 50 of 50, not 50 of 72; the second number
+  // measures how broken the month was, not how well the engine did.
+  const acc = s.metrics?.accuracy;
+  const figs = acc
+    ? [
+        ['Matched of matchable', `${acc.true_positive}/${acc.true_positive + acc.false_negative}`],
+        ['Booked to the wrong invoice', String(acc.false_positive + acc.misrouted_matches)],
+        ['Needs review', String(sum.exceptions)],
+        ['Value flagged', fmtRs(sum.value_flagged_paise)],
+      ]
+    : [
+        ['Reconciled', pct(sum.match_rate)],
+        ['Needs review', String(sum.exceptions)],
+        ['Value flagged', fmtRs(sum.value_flagged_paise)],
+      ];
+  document.getElementById('headFigs').innerHTML = figs
+    .map(([k, v]) => `<div class="head-fig"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join('');
 
   document.getElementById('app').innerHTML = `
     ${briefCard(s.brief)}
@@ -628,12 +645,15 @@ function heroFigure(s, sum) {
     </div>`;
   }
   const wrong = m.false_positive + m.misrouted_matches;
+  const matchable = m.true_positive + m.false_negative;
   return `<div>
     <div class="hero-figure">${pct(m.precision_auto_matched)}</div>
     <div class="hero-label">
       of the ${sum.matched} invoices it settled on its own were correct —
       <b>${wrong === 0 ? 'none' : wrong}</b> booked to the wrong invoice.<br>
-      ${pct(sum.match_rate)} auto-reconciled; the rest is on the exception list with a reason.
+      Ground truth says <b>${matchable} of ${sum.ledger_rows}</b> were reconcilable at all; it found
+      ${m.false_negative === 0 ? '<b>every one</b>' : `${m.true_positive}`}
+      and flagged the other ${sum.ledger_rows - matchable}, which carry real faults.
     </div>
   </div>`;
 }
@@ -857,6 +877,13 @@ function accuracyPanel(s) {
       ${tile('Misrouted', String(m.misrouted_matches), 'booked to the wrong invoice')}
       ${tile('Reason accuracy', pct(m.reason_code_accuracy), 'correct code on flagged rows')}
     </div>`);
+    // Said plainly here because this is where anyone checking the rigour will
+    // look, and because the match rate is the one number on this page that
+    // invites the wrong conclusion.
+    parts.push(`<p class="sub" style="margin:12px 0 0">Recall is measured against what was
+      <b>reconcilable</b>, not against every invoice. ${m.true_positive + m.false_negative} of
+      ${s.summary.ledger_rows} could be matched from the records; the rest carry planted faults and
+      are supposed to be flagged. A match rate below 100% here is a fact about the month, not a miss.</p>`);
   } else {
     parts.push(`<p class="sub" style="margin:0 0 10px">No labelled ground truth for this dataset — accuracy is only measurable on a generated set.</p>`);
   }
