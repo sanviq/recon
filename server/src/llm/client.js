@@ -71,6 +71,21 @@ export function suggestedConcurrency(env = process.env) {
   return FREE_TIER.has(list[0].name) ? 2 : 4;
 }
 
+/**
+ * How many times to wait out a rate limit before giving up on a provider.
+ *
+ * A free tier meters per minute, so the wait that clears it is measured in tens
+ * of seconds. Three attempts buys about seven seconds of backoff — not enough to
+ * outlast the window, which is why a batch of two dozen exceptions was sending
+ * most of its notes to the template even though the key was working. Six
+ * attempts covers the minute. On a paid tier a 429 means something else and
+ * waiting a minute for it is not worth the latency.
+ */
+export function suggestedRetries(env = process.env) {
+  const list = availableProviders(env);
+  return list.length && FREE_TIER.has(list[0].name) ? 7 : 3;
+}
+
 /** A one-line description for the CLIs, so a run says who wrote its prose. */
 export function describeProviders(env = process.env) {
   const list = availableProviders(env);
@@ -143,14 +158,17 @@ const defaultSleep = (ms) => new Promise((r) => setTimeout(r, ms));
 export function backoffMs(err, attempt) {
   const asked = err?.retryAfterMs;
   if (Number.isFinite(asked) && asked > 0) return Math.min(asked, 30_000);
-  return Math.min(1000 * 2 ** attempt, 8000);
+  // Capped at 15s rather than 8s: a per-minute quota that has just been exhausted
+  // is not going to clear in eight seconds, and the backoff should be able to sit
+  // out most of a window without needing an unreasonable number of attempts.
+  return Math.min(1000 * 2 ** attempt, 15_000);
 }
 
 /**
  * Builds the chain. Returns null when nothing is configured, which every caller
  * already reads as "use the template".
  */
-export function getClient({ env = process.env, clients = null, maxRetries = 3, sleep = defaultSleep } = {}) {
+export function getClient({ env = process.env, clients = null, maxRetries = suggestedRetries(env), sleep = defaultSleep } = {}) {
   const legs = clients ?? availableProviders(env).map((entry) => {
     let built = null;
     return {

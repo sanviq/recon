@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { geminiClient, toGeminiSchema, toGeminiContents, fromGeminiResponse } from '../src/llm/gemini.js';
 import { groqClient, toOpenAIMessages, fromOpenAIResponse } from '../src/llm/groq.js';
-import { getClient, parseModelJson, isPermanentFailure, availableProviders, describeProviders, backoffMs } from '../src/llm/client.js';
+import { getClient, parseModelJson, isPermanentFailure, availableProviders, describeProviders, backoffMs, suggestedRetries } from '../src/llm/client.js';
 import { generateDataset } from '../src/generate/synth.js';
 import { materialize } from '../src/generate/serialize.js';
 import { reconcile } from '../src/match/engine.js';
@@ -302,7 +302,22 @@ test('backoff honours a stated delay, caps it, and otherwise grows', () => {
   assert.equal(backoffMs({ retryAfterMs: 999_000 }, 0), 30_000, 'a provider asking for a 16-minute wait is capped');
   assert.equal(backoffMs({}, 0), 1000);
   assert.equal(backoffMs({}, 2), 4000);
-  assert.equal(backoffMs({}, 9), 8000, 'and never grows without bound');
+  assert.equal(backoffMs({}, 9), 15_000, 'and never grows without bound');
+});
+
+// The regression this encodes: on a free tier the retry budget has to outlast a
+// per-minute quota window, or a batch run quietly serves most of its notes from
+// the template while reporting a working key.
+test('a free tier gets a retry budget that can outlast a per-minute quota', () => {
+  const free = { GEMINI_API_KEY: 'k' };
+  const paid = { ANTHROPIC_API_KEY: 'k' };
+
+  assert.equal(suggestedRetries(free), 7);
+  assert.equal(suggestedRetries(paid), 3);
+
+  const budget = (n) => Array.from({ length: n }, (_, i) => backoffMs({}, i)).reduce((a, b) => a + b, 0);
+  assert.ok(budget(suggestedRetries(free)) >= 60_000, 'the free-tier budget covers a full minute');
+  assert.ok(budget(suggestedRetries(paid)) < 15_000, 'the paid one does not sit out a minute for a 429');
 });
 
 // Twenty-four exceptions in a row must not report "no provider configured" when
