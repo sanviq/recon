@@ -45,8 +45,6 @@ const REGISTRY = [
   },
 ];
 
-const keyFor = (entry) => process.env[entry.env] || (entry.altEnv ? process.env[entry.altEnv] : null);
-
 /** The providers this machine is actually configured for, in preference order. */
 export function availableProviders(env = process.env) {
   const pinned = env.LLM_PROVIDER?.trim().toLowerCase();
@@ -60,6 +58,17 @@ export function availableProviders(env = process.env) {
 
 export function hasProvider(env = process.env) {
   return availableProviders(env).length > 0;
+}
+
+// Free tiers meter by requests per minute, so firing a whole batch at once buys
+// nothing but 429s and the waiting that follows them. The paid path has no such
+// cap and keeps the wider pool.
+const FREE_TIER = new Set(['gemini', 'groq']);
+
+export function suggestedConcurrency(env = process.env) {
+  const list = availableProviders(env);
+  if (!list.length) return 4;
+  return FREE_TIER.has(list[0].name) ? 2 : 4;
 }
 
 /** A one-line description for the CLIs, so a run says who wrote its prose. */
@@ -120,11 +129,28 @@ export function isPermanentFailure(err) {
   return /credit balance|insufficient|billing|expired|invalid api key|api key not valid/i.test(String(err?.message ?? ''));
 }
 
+const defaultSleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * How long to wait before offering a rate-limited provider the same request again.
+ *
+ * Free tiers are measured in requests per minute, and a batch of two dozen
+ * exceptions will exceed one. Falling straight through to the next provider on a
+ * 429 would work, but it spends the second provider's quota on the first one's
+ * traffic and leaves nothing in reserve — so the same provider is given a few
+ * chances first, honouring whatever delay it asked for.
+ */
+export function backoffMs(err, attempt) {
+  const asked = err?.retryAfterMs;
+  if (Number.isFinite(asked) && asked > 0) return Math.min(asked, 30_000);
+  return Math.min(1000 * 2 ** attempt, 8000);
+}
+
 /**
  * Builds the chain. Returns null when nothing is configured, which every caller
  * already reads as "use the template".
  */
-export function getClient({ env = process.env, clients = null } = {}) {
+export function getClient({ env = process.env, clients = null, maxRetries = 3, sleep = defaultSleep } = {}) {
   const legs = clients ?? availableProviders(env).map((entry) => {
     let built = null;
     return {
@@ -151,6 +177,9 @@ export function getClient({ env = process.env, clients = null } = {}) {
     model: legs[0].model,
     providers: legs.map((l) => `${l.name}:${l.model}`),
     used: [],
+    // How often a free tier made us wait. Worth surfacing: it is the difference
+    // between "the run was slow" and "the run was slow for a reason".
+    throttled: 0,
     messages: {
       create: async (req) => {
         const failures = [];
@@ -161,17 +190,26 @@ export function getClient({ env = process.env, clients = null } = {}) {
             failures.push(`${leg.name}: ${disabled.get(leg.name)} (dropped earlier in this run)`);
             continue;
           }
-          try {
-            const response = await leg.client.messages.create(req);
-            chain.provider = leg.name;
-            chain.model = response.model ?? leg.model;
-            if (!chain.used.includes(leg.name)) chain.used.push(leg.name);
-            return response;
-          } catch (err) {
-            err.provider ??= leg.name;
-            if (isPermanentFailure(err)) disabled.set(leg.name, err.message ?? String(err));
-            failures.push(`${leg.name}: ${err?.message ?? err}`);
-            last = err;
+          for (let attempt = 0; ; attempt++) {
+            try {
+              const response = await leg.client.messages.create(req);
+              chain.provider = leg.name;
+              chain.model = response.model ?? leg.model;
+              if (!chain.used.includes(leg.name)) chain.used.push(leg.name);
+              return response;
+            } catch (err) {
+              err.provider ??= leg.name;
+              const rateLimited = (err?.status ?? err?.statusCode) === 429 || /rate.?limit|RESOURCE_EXHAUSTED|quota/i.test(String(err?.message ?? ''));
+              if (rateLimited && attempt < maxRetries) {
+                chain.throttled++;
+                await sleep(backoffMs(err, attempt));
+                continue;
+              }
+              if (isPermanentFailure(err)) disabled.set(leg.name, err.message ?? String(err));
+              failures.push(`${leg.name}: ${err?.message ?? err}`);
+              last = err;
+              break;
+            }
           }
         }
 

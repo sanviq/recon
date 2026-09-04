@@ -10,6 +10,7 @@ import 'dotenv/config';
 import { readFileSync, writeFileSync, appendFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { explainAll, hasApiKey, describeProviders, MODEL } from '../explain/explainer.js';
+import { getClient, suggestedConcurrency } from '../llm/client.js';
 import { writeBrief } from '../explain/brief.js';
 import { priceRun, comparedToHuman, formatCostLine } from '../explain/cost.js';
 import { STATUS } from '../match/codes.js';
@@ -41,10 +42,15 @@ const targets = [
 const live = hasApiKey();
 console.log(`explaining ${targets.length} exception(s) — ${describeProviders()}`);
 
+// The chain is built here rather than inside explainAll so the run can report
+// how much of its time was spent being rate limited.
+const chain = getClient();
+
 const t0 = performance.now();
 const notes = targets.length
   ? await explainAll(targets, {
-      concurrency: Number(args.concurrency ?? 4),
+      client: chain,
+      concurrency: Number(args.concurrency ?? suggestedConcurrency()),
       onProgress: (done, total) => process.stdout.write(`\r  ${done}/${total}`),
     })
   : [];
@@ -139,6 +145,9 @@ if (usage.input) {
   console.log(`  tokens: ${usage.input} in / ${usage.output} out | cache ${usage.cache_read} read, ${usage.cache_write} written`);
 }
 if (notes.length) console.log(formatCostLine(economics, cost));
+if (chain?.throttled) {
+  console.log(`  rate limited ${chain.throttled} time(s) and waited it out — free tiers cap requests per minute, so a first run is slow rather than incomplete`);
+}
 if (grounding.checked) {
   console.log(`  grounding: ${grounding.checked} model note(s) checked against their own facts` +
     `, ${grounding.rejected_for_invented_records} rejected for naming records that were never supplied` +

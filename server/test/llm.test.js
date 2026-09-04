@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { geminiClient, toGeminiSchema, toGeminiContents, fromGeminiResponse } from '../src/llm/gemini.js';
 import { groqClient, toOpenAIMessages, fromOpenAIResponse } from '../src/llm/groq.js';
-import { getClient, parseModelJson, isPermanentFailure, availableProviders, describeProviders } from '../src/llm/client.js';
+import { getClient, parseModelJson, isPermanentFailure, availableProviders, describeProviders, backoffMs } from '../src/llm/client.js';
 import { generateDataset } from '../src/generate/synth.js';
 import { materialize } from '../src/generate/serialize.js';
 import { reconcile } from '../src/match/engine.js';
@@ -271,19 +271,38 @@ test('an unfunded provider hands over to the free one, and is not asked again', 
   assert.deepEqual(chain.used, ['gemini']);
 });
 
-test('a rate limit falls through without retiring the provider', async () => {
+// A free tier is a per-minute cap, and two dozen exceptions will hit it. Falling
+// straight through would spend the second provider's quota on the first one's
+// traffic, so the rate-limited provider is waited on before it is given up.
+test('a rate limit is waited out before the chain moves on', async () => {
   let firstCalls = 0;
+  const slept = [];
   const legs = [
     { name: 'gemini', model: 'g', client: { messages: { create: async () => {
       firstCalls++;
-      throw Object.assign(new Error('RESOURCE_EXHAUSTED'), { status: 429 });
+      throw Object.assign(new Error('RESOURCE_EXHAUSTED'), { status: 429, retryAfterMs: 1500 });
     } } } },
     { name: 'groq', model: 'l', client: { messages: { create: async () => ({ model: 'l', content: [], stop_reason: 'end_turn', usage: {} }) } } },
   ];
-  const chain = getClient({ clients: legs });
+  const chain = getClient({ clients: legs, maxRetries: 2, sleep: async (ms) => { slept.push(ms); } });
+
+  const first = await chain.messages.create({ messages: [] });
+  assert.equal(first.model, 'l', 'it still gets an answer, from the next provider');
+  assert.equal(firstCalls, 3, 'one attempt plus two retries before giving up on this call');
+  assert.deepEqual(slept, [1500, 1500], 'the delay the provider asked for is honoured, not guessed');
+  assert.equal(chain.throttled, 2);
+
+  // And the provider is not retired — a quota resets, unlike a bad key.
   await chain.messages.create({ messages: [] });
-  await chain.messages.create({ messages: [] });
-  assert.equal(firstCalls, 2, 'a quota resets, so the preferred provider keeps being offered the work');
+  assert.equal(firstCalls, 6, 'the preferred provider keeps being offered the work');
+});
+
+test('backoff honours a stated delay, caps it, and otherwise grows', () => {
+  assert.equal(backoffMs({ retryAfterMs: 1500 }, 0), 1500);
+  assert.equal(backoffMs({ retryAfterMs: 999_000 }, 0), 30_000, 'a provider asking for a 16-minute wait is capped');
+  assert.equal(backoffMs({}, 0), 1000);
+  assert.equal(backoffMs({}, 2), 4000);
+  assert.equal(backoffMs({}, 9), 8000, 'and never grows without bound');
 });
 
 // Twenty-four exceptions in a row must not report "no provider configured" when

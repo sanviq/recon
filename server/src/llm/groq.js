@@ -148,7 +148,13 @@ export function groqClient({ apiKey, model = DEFAULT_GROQ_MODEL, fetchImpl = fet
       const message = res.status === 404
         ? await describeUnknownModel(apiKey, model, fetchImpl)
         : `Groq returned ${res.status}: ${detail.slice(0, 400)}`;
-      throw Object.assign(new Error(message), { status: res.status, provider: 'groq' });
+      // Honour the wait the provider asked for rather than guessing at one.
+      const retryAfter = Number(res.headers?.get?.('retry-after'));
+      throw Object.assign(new Error(message), {
+        status: res.status,
+        provider: 'groq',
+        retryAfterMs: Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : undefined,
+      });
     }
 
     return fromOpenAIResponse(await res.json(), model);
