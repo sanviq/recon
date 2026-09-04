@@ -23,30 +23,49 @@
     --meter-track:    #86b6ef;
     --bar:            #2a78d6;
 
+    /* The one two-way split this report is about: confirmed against the bank, or
+       not. Blue/orange, checked with scripts/validate_palette.js against this
+       surface — lightness band, chroma, contrast, and CVD separation all pass
+       (worst adjacent ΔE 26.1 protan). It is a polarity, not a category list,
+       which is why it gets its own pair and not a slot from a categorical ramp. */
+    --series-matched: #2a78d6;
+    --series-flagged: #c2551f;
+
     /* Status palette — fixed, never themed, never reused as a series color. */
     --sev-high:       #d03b3b;
     --sev-medium:     #ec835a;
     --sev-low:        #898781;
     --good:           #006300;
+
+    --elev:           0 1px 2px rgba(11,11,11,0.05), 0 6px 16px -10px rgba(11,11,11,0.14);
+    --topbar:         rgba(252,252,251,0.86);
   }
   @media (prefers-color-scheme: dark) {
     :root {
       color-scheme: dark;
-      --surface:      #1a1a19;
-      --plane:        #0d0d0d;
+      /* The card has to read as a card. The previous pair sat two points apart
+         and the whole page collapsed into one flat black field. */
+      --surface:      #1c1c1b;
+      --plane:        #0a0a09;
       --ink:          #ffffff;
       --ink-2:        #c3c2b7;
-      --ink-muted:    #898781;
-      --grid:         #2c2c2a;
-      --axis:         #383835;
-      --border:       rgba(255,255,255,0.10);
+      --ink-muted:    #8f8d86;
+      --grid:         #2e2e2b;
+      --axis:         #3d3d39;
+      --border:       rgba(255,255,255,0.13);
       --meter-fill:   #3987e5;
       --meter-track:  #184f95;
       --bar:          #3987e5;
+      /* Re-stepped for the dark surface, not flipped: the light-mode orange sits
+         at L 0.72 here, outside the band, and washes out against #1c1c1b. */
+      --series-matched: #3987e5;
+      --series-flagged: #d9663a;
       --sev-high:     #d03b3b;
       --sev-medium:   #ec835a;
       --sev-low:      #898781;
       --good:         #0ca30c;
+      --elev:         0 1px 2px rgba(0,0,0,0.5), 0 8px 22px -14px rgba(0,0,0,0.9);
+      --topbar:       rgba(10,10,9,0.82);
     }
   }
 
@@ -57,9 +76,37 @@
     color: var(--ink);
     font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
   }
-  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 20px 64px; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 22px 20px 64px; }
 
-  header { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 6px; }
+  /* Sticky identity bar. In a demo the page is scrolled constantly, and the one
+     thing that must never scroll away is which dataset and which run is on screen. */
+  .topbar {
+    position: sticky; top: 0; z-index: 20;
+    background: var(--topbar); backdrop-filter: saturate(150%) blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .topbar-in {
+    max-width: 1180px; margin: 0 auto; padding: 11px 20px;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+  .mark {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-size: 15px; font-weight: 650; letter-spacing: -0.01em; margin-right: 2px;
+  }
+  .mark .dot {
+    width: 9px; height: 9px; border-radius: 50%; background: var(--series-matched);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--series-matched) 22%, transparent);
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11.5px; padding: 3px 9px; border-radius: 20px;
+    border: 1px solid var(--border); background: var(--surface); color: var(--ink-2);
+    white-space: nowrap;
+  }
+  .badge i { width: 6px; height: 6px; border-radius: 50%; background: var(--sev-low); flex: none; }
+  .badge.on i { background: var(--good); }
+  .topbar .spacer { flex: 1 1 auto; }
+
   h1 { font-size: 20px; margin: 0; letter-spacing: -0.01em; }
   .sub { color: var(--ink-muted); font-size: 13px; }
   .sub code { font-size: 12px; }
@@ -67,20 +114,53 @@
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 18px 20px;
+    box-shadow: var(--elev);
   }
   h2 { font-size: 13px; font-weight: 600; margin: 0 0 14px; color: var(--ink-2); letter-spacing: 0.01em; }
+
+  /* Numbered eyebrows. The page is also the running order of the demo, and the
+     numbers are what let someone say "section three" out loud while presenting. */
+  .eyebrow {
+    display: flex; align-items: center; gap: 9px;
+    margin: 26px 0 10px; color: var(--ink-muted);
+    font-size: 11.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .eyebrow .num {
+    display: grid; place-items: center; width: 19px; height: 19px; border-radius: 5px;
+    background: var(--plane); border: 1px solid var(--border);
+    color: var(--ink-2); font-size: 11px; letter-spacing: 0; flex: none;
+  }
+  .eyebrow .rule { flex: 1; height: 1px; background: var(--border); }
 
   .grid { display: grid; gap: 14px; margin-top: 20px; }
   .cols-2 { grid-template-columns: minmax(0,1fr) minmax(0,1fr); align-items: start; }
   @media (max-width: 860px) { .cols-2 { grid-template-columns: 1fr; } }
 
-  /* --- hero + meter ------------------------------------------------------ */
-  .hero-row { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 32px; align-items: center; }
-  @media (max-width: 700px) { .hero-row { grid-template-columns: 1fr; gap: 20px; } }
-  .hero-figure { font-size: 52px; font-weight: 600; line-height: 1; letter-spacing: -0.02em; }
-  .hero-label { color: var(--ink-2); font-size: 13px; margin-top: 6px; }
+  /* --- hero + donut + meter ---------------------------------------------- */
+  .hero-row { display: grid; grid-template-columns: auto auto minmax(0,1fr); gap: 30px; align-items: center; }
+  @media (max-width: 900px) { .hero-row { grid-template-columns: auto minmax(0,1fr); } }
+  @media (max-width: 700px) { .hero-row { grid-template-columns: 1fr; gap: 22px; } }
+  .hero-figure { font-size: 54px; font-weight: 650; line-height: 1; letter-spacing: -0.025em; font-variant-numeric: tabular-nums; }
+  .hero-label { color: var(--ink-2); font-size: 13px; margin-top: 7px; }
+  .hero-rule { align-self: stretch; width: 1px; background: var(--border); }
+
+  /* Donut: two segments of one whole, separated by a surface-coloured gap so the
+     boundary is a gap and not a colour change. Centre carries the count, the
+     legend carries the words — identity is never on colour alone. */
+  .donut { display: flex; align-items: center; gap: 16px; }
+  .donut svg { display: block; flex: none; }
+  .donut .seg { transition: opacity .12s ease; }
+  .donut svg:hover .seg { opacity: 0.45; }
+  .donut svg .seg:hover { opacity: 1; }
+  .donut-mid { font-size: 15px; font-weight: 650; fill: var(--ink); }
+  .donut-sub { font-size: 8.5px; fill: var(--ink-muted); letter-spacing: 0.04em; }
+  .legend { display: flex; flex-direction: column; gap: 9px; }
+  .legend-row { display: flex; align-items: baseline; gap: 8px; font-size: 13px; white-space: nowrap; }
+  .legend-row .sw { width: 9px; height: 9px; border-radius: 3px; flex: none; transform: translateY(1px); }
+  .legend-row .lv { font-weight: 650; font-variant-numeric: tabular-nums; }
+  .legend-row .ll { color: var(--ink-2); }
 
   /* Meter: a single ratio against its whole, on a same-hue track. */
   .meter { width: 100%; height: 14px; border-radius: 7px; background: var(--meter-track); overflow: hidden; }
@@ -90,9 +170,12 @@
   .meter-legend .muted { color: var(--ink-2); }
 
   /* --- KPI row ----------------------------------------------------------- */
-  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin-top: 14px; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-top: 18px; }
+  /* Tiles sit inside a card, so they drop the card's shadow and take a flat
+     inset plane instead — two stacked elevations would fight each other. */
+  .tile { background: var(--plane); box-shadow: none; padding: 13px 15px; border-radius: 9px; }
   .tile .k { color: var(--ink-2); font-size: 12px; }
-  .tile .v { font-size: 24px; font-weight: 600; margin-top: 4px; letter-spacing: -0.01em; }
+  .tile .v { font-size: 25px; font-weight: 650; margin-top: 5px; letter-spacing: -0.015em; font-variant-numeric: tabular-nums; }
   .tile .n { color: var(--ink-muted); font-size: 12px; margin-top: 3px; }
 
   /* --- reason bars ------------------------------------------------------- */
@@ -112,6 +195,8 @@
   }
   td { padding: 11px 10px; border-bottom: 1px solid var(--grid); vertical-align: top; }
   tbody tr:last-child td { border-bottom: 0; }
+  tbody tr { transition: background .1s ease; }
+  tbody tr:hover td { background: var(--plane); }
   .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
   .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
 
@@ -164,14 +249,23 @@
   .risk b { color: var(--ink); font-weight: 600; }
 
   /* --- ask panel ---------------------------------------------------------- */
+  /* The ask panel is the part of this page a person actually talks to, so it is
+     the one card that carries an accent edge. */
+  .ask-card { border-left: 3px solid var(--series-matched); }
   .ask-form { display: flex; gap: 8px; margin-bottom: 12px; }
   .ask-form input {
-    flex: 1; min-width: 0; font: inherit; font-size: 14px; padding: 9px 12px;
-    border-radius: 8px; border: 1px solid var(--border);
+    flex: 1; min-width: 0; font: inherit; font-size: 14.5px; padding: 11px 14px;
+    border-radius: 9px; border: 1px solid var(--border);
     background: var(--plane); color: var(--ink);
   }
+  .ask-form input::placeholder { color: var(--ink-muted); }
   .ask-form input:focus { outline: 2px solid var(--meter-fill); outline-offset: -1px; border-color: transparent; }
-  .ask-form button { padding: 9px 16px; color: var(--ink); font-weight: 600; }
+  .ask-form button {
+    padding: 11px 20px; font-weight: 650; border-radius: 9px;
+    background: var(--series-matched); border-color: transparent; color: #fff;
+  }
+  .ask-form button:hover:not(:disabled) { filter: brightness(1.08); border-color: transparent; }
+  .ask-form button:disabled { opacity: 0.55; cursor: default; }
   .chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
   .chips button { font-size: 12px; padding: 4px 10px; border-radius: 20px; }
   .thread { display: flex; flex-direction: column; gap: 16px; }
@@ -193,12 +287,16 @@
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <h1>Recon</h1>
+<div class="topbar">
+  <div class="topbar-in">
+    <span class="mark"><span class="dot"></span>Recon</span>
     <span class="sub" id="datasetLine">loading…</span>
-  </header>
-  <p class="sub" style="margin:0 0 18px">
+    <span class="spacer"></span>
+    <span class="badge" id="agentBadge"><i></i>checking…</span>
+  </div>
+</div>
+<div class="wrap">
+  <p class="sub" style="margin:2px 0 18px">
     Three-way reconciliation across a merchant ledger, Razorpay payments and settlements, and a bank statement.
   </p>
 
@@ -256,24 +354,35 @@ function render() {
   document.getElementById('datasetLine').innerHTML =
     `<code>${esc(s.dataset?.dir?.split('/').slice(-2).join('/') ?? '')}</code> · run ${esc(new Date(s.finished_at).toLocaleString())}`;
 
+  // Which model is answering, in the one place that never scrolls away. During a
+  // demo this is the difference between "it is thinking" and "it is off".
+  const badge = document.getElementById('agentBadge');
+  const on = s.agent?.available !== false;
+  badge.className = `badge${on ? ' on' : ''}`;
+  badge.innerHTML = `<i></i>${on ? esc((s.agent?.providers ?? 'model').split(' -> ')[0]) : 'no model key — templates only'}`;
+
   document.getElementById('app').innerHTML = `
     ${briefCard(s.brief)}
+    ${eyebrow(1, 'What the run found')}
     <section class="card">
       <div class="hero-row">
         <div>
           <div class="hero-figure">${pct(sum.match_rate)}</div>
           <div class="hero-label">${sum.matched} of ${sum.ledger_rows} invoices<br>auto-reconciled end to end</div>
         </div>
-        <div>
-          <h2>Value confirmed in the bank</h2>
-          <div class="meter" role="img"
-               aria-label="${pct(valueShare)} of invoiced value auto-reconciled">
-            <i style="width:${(valueShare * 100).toFixed(2)}%"></i>
-          </div>
-          <div class="meter-legend">
-            <span><b>${fmtRs(sum.value_matched_paise)}</b> reconciled</span>
-            <span class="muted"><b>${fmtRs(sum.value_flagged_paise)}</b> flagged for review</span>
-          </div>
+        <div class="hero-rule" aria-hidden="true"></div>
+        ${donut(sum.matched, sum.ledger_rows - sum.matched)}
+      </div>
+
+      <div style="margin-top:22px">
+        <h2>Value confirmed in the bank</h2>
+        <div class="meter" role="img"
+             aria-label="${pct(valueShare)} of invoiced value auto-reconciled">
+          <i style="width:${(valueShare * 100).toFixed(2)}%"></i>
+        </div>
+        <div class="meter-legend">
+          <span><b>${fmtRs(sum.value_matched_paise)}</b> reconciled</span>
+          <span class="muted"><b>${fmtRs(sum.value_flagged_paise)}</b> flagged for review</span>
         </div>
       </div>
 
@@ -286,9 +395,11 @@ function render() {
       </div>
     </section>
 
+    ${eyebrow(2, 'Ask it anything about this run')}
     ${askCard(s.agent)}
 
-    <div class="grid cols-2">
+    ${eyebrow(3, 'Why those records were flagged')}
+    <div class="grid cols-2" style="margin-top:0">
       <section class="card">
         <h2>Exceptions by reason</h2>
         ${reasonBars(sum.exceptions_by_reason)}
@@ -299,9 +410,11 @@ function render() {
       </section>
     </div>
 
+    ${s.compare?.systems ? eyebrow(4, 'Measured against the alternatives') : ''}
     ${comparePanel(s.compare)}
 
-    <section class="card" style="margin-top:14px">
+    ${eyebrow(5, 'Every record, and every decision behind it')}
+    <section class="card">
       <h2>Exception list — every unmatched record, nothing hidden</h2>
       <div class="toolbar">
         ${['all', 'high', 'medium', 'low'].map((f) =>
@@ -323,6 +436,57 @@ function render() {
 }
 
 const tile = (k, v, n) => `<div class="card tile"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div><div class="n">${esc(n)}</div></div>`;
+
+const eyebrow = (n, label) =>
+  `<div class="eyebrow"><span class="num">${n}</span>${esc(label)}<span class="rule"></span></div>`;
+
+/**
+ * Matched against flagged, as one whole.
+ *
+ * A donut is only defensible for a part-to-whole with very few parts, which is
+ * exactly what this is: an invoice either cleared all three legs or it did not.
+ * The two arcs are separated by a surface-coloured gap rather than by colour
+ * alone, the counts are written directly beside their swatches, and the centre
+ * carries the total — so the figure survives being printed, read by someone with
+ * a colour vision deficiency, or squinted at from the back of a room.
+ */
+function donut(matched, flagged) {
+  const total = matched + flagged;
+  if (!total) return '<div></div>';
+
+  const R = 42, STROKE = 15, C = 2 * Math.PI * R, GAP = 5;
+  const share = matched / total;
+  // Each arc is shortened by the gap so the two ends never touch.
+  const matchedLen = Math.max(0, share * C - GAP);
+  const flaggedLen = Math.max(0, (1 - share) * C - GAP);
+
+  const arc = (len, offset, color, label, n) => `
+    <circle class="seg" cx="55" cy="55" r="${R}" fill="none"
+            stroke="${color}" stroke-width="${STROKE}" stroke-linecap="butt"
+            stroke-dasharray="${len.toFixed(2)} ${(C - len).toFixed(2)}"
+            stroke-dashoffset="${offset.toFixed(2)}"
+            transform="rotate(-90 55 55)"><title>${label}: ${n} of ${total}</title></circle>`;
+
+  return `<div class="donut">
+    <svg width="110" height="110" viewBox="0 0 110 110" role="img"
+         aria-label="${matched} of ${total} invoices reconciled, ${flagged} flagged">
+      ${arc(matchedLen, -GAP / 2, 'var(--series-matched)', 'Reconciled', matched)}
+      ${arc(flaggedLen, -(share * C + GAP / 2), 'var(--series-flagged)', 'Flagged', flagged)}
+      <text class="donut-mid" x="55" y="53" text-anchor="middle">${total}</text>
+      <text class="donut-sub" x="55" y="66" text-anchor="middle">INVOICES</text>
+    </svg>
+    <div class="legend">
+      <div class="legend-row">
+        <span class="sw" style="background:var(--series-matched)"></span>
+        <span class="lv">${matched}</span><span class="ll">reconciled</span>
+      </div>
+      <div class="legend-row">
+        <span class="sw" style="background:var(--series-flagged)"></span>
+        <span class="lv">${flagged}</span><span class="ll">flagged for review</span>
+      </div>
+    </div>
+  </div>`;
+}
 
 const writtenBy = (source, model) =>
   source === 'llm' ? `written by ${esc(model ?? 'model')}` : 'deterministic template';
@@ -372,10 +536,11 @@ function askCard(agent) {
     </div>`).join('');
 
   const off = agent && agent.available === false;
-  return `<section class="card" style="margin-top:14px">
+  return `<section class="card ask-card">
     <h2>Ask the reconciliation</h2>
     ${off
-      ? `<p class="sub" style="margin:0">Set <code>ANTHROPIC_API_KEY</code> and restart the server to enable this.
+      ? `<p class="sub" style="margin:0">Put a free <code>GEMINI_API_KEY</code> or <code>GROQ_API_KEY</code> in <code>.env</code>
+           (or a paid <code>ANTHROPIC_API_KEY</code>) and restart the server to enable this.
            Matching, the exception list and the audit trail all work without it.</p>`
       : `<form class="ask-form" id="askForm">
            <input id="askInput" name="q" autocomplete="off" placeholder="Ask about any invoice, payout or reason code…"
