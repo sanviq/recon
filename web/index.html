@@ -542,34 +542,65 @@ const tile = (k, v, n) => `<div class="card tile"><div class="k">${esc(k)}</div>
 /**
  * Keeps the rail pointing at whatever is on screen.
  *
- * Rebuilt on every render rather than wired once, because render() replaces the
- * section nodes wholesale and an observer left watching the old ones would go
- * quietly dead — the nav would keep highlighting, just always the same item.
+ * This was first written with an IntersectionObserver watching the section
+ * headings inside a narrow band, which is the usual recipe and is wrong here.
+ * The headings are a few pixels tall and the sections between them are hundreds,
+ * so scrolling through the middle of the exception table left the band empty,
+ * nothing was intersecting, and the rail snapped back to the first item. The
+ * position of the last heading you scrolled past is the actual question being
+ * asked, so it is now asked directly.
+ *
+ * Rebuilt on every render, because render() replaces the section nodes wholesale
+ * and listeners left pointing at the old ones would keep working against
+ * detached elements.
  */
-let navObserver = null;
+let navCleanup = null;
 function wireNav() {
-  navObserver?.disconnect();
-  const links = [...document.querySelectorAll('#nav a')];
-  const targets = links
+  navCleanup?.();
+  const targets = [...document.querySelectorAll('#nav a')]
     .map((a) => ({ a, el: document.getElementById(a.getAttribute('href').slice(1)) }))
     .filter((t) => t.el);
   if (!targets.length) return;
 
-  const seen = new Set();
+  let frame = 0;
   const mark = () => {
-    // The last section past the reading line wins, so the rail reflects what is
-    // being read rather than whichever section happens to be tallest.
-    const current = targets.filter((t) => seen.has(t.el)).pop() ?? targets[0];
+    frame = 0;
+    const line = window.innerHeight * 0.22;
+    const doc = document.documentElement;
+    // At the foot of the document the last section is what is on screen, even
+    // though its heading crossed the line a long way back.
+    const atEnd = window.innerHeight + window.scrollY >= doc.scrollHeight - 2;
+
+    // Walk forward and keep the last heading that has passed the line. Positions
+    // are read fresh rather than cached: the exception table changes height when
+    // a severity filter is applied, and cached offsets would then be wrong with
+    // no scroll event to correct them.
+    let current = targets[0];
+    if (atEnd) current = targets[targets.length - 1];
+    else for (const t of targets) if (t.el.getBoundingClientRect().top <= line) current = t;
+
     for (const { a } of targets) a.removeAttribute('aria-current');
     current.a.setAttribute('aria-current', 'true');
   };
 
-  navObserver = new IntersectionObserver((entries) => {
-    for (const e of entries) e.isIntersecting ? seen.add(e.target) : seen.delete(e.target);
-    mark();
-  }, { rootMargin: '-12% 0px -70% 0px' });
+  const onScroll = () => { frame ||= requestAnimationFrame(mark); };
+  // A hidden tab stops serving animation frames, so a scroll that lands while the
+  // page is in the background leaves the throttle latched on a frame that will
+  // never arrive, and every later scroll is dropped. Coming back into view clears
+  // it and re-reads the position.
+  const onShow = () => { if (frame) cancelAnimationFrame(frame); frame = 0; mark(); };
 
-  for (const { el } of targets) navObserver.observe(el);
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll, { passive: true });
+  document.addEventListener('visibilitychange', onShow);
+
+  navCleanup = () => {
+    removeEventListener('scroll', onScroll);
+    removeEventListener('resize', onScroll);
+    document.removeEventListener('visibilitychange', onShow);
+    if (frame) cancelAnimationFrame(frame);
+    frame = 0;
+  };
   mark();
 }
 
