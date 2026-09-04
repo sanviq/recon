@@ -14,7 +14,7 @@
 // below produces a slightly stiffer version of the same content, so the demo
 // degrades in quality rather than breaking.
 
-import Anthropic from '@anthropic-ai/sdk';
+import { getClient, hasProvider, describeProviders, parseModelJson } from '../llm/client.js';
 import { createHash } from 'node:crypto';
 import { formatPaise } from '../lib/money.js';
 import { REASON, REASON_LABEL, STATUS } from '../match/codes.js';
@@ -71,8 +71,10 @@ const OUTPUT_SCHEMA = {
   additionalProperties: false,
 };
 
+// Any configured provider will do — Anthropic if it is funded, otherwise a free
+// tier, otherwise the templates. The name survives because the CLIs read it.
 export function hasApiKey() {
-  return Boolean(process.env.ANTHROPIC_API_KEY);
+  return hasProvider();
 }
 
 /**
@@ -325,7 +327,7 @@ export async function explainOne(client, row, context = {}) {
     }
 
     const text = response.content.find((b) => b.type === 'text')?.text ?? '';
-    const parsed = JSON.parse(text);
+    const parsed = parseModelJson(text);
 
     // Nothing the model wrote reaches a finance report without being checked back
     // against what it was given.
@@ -343,7 +345,7 @@ export async function explainOne(client, row, context = {}) {
       suggested_action: parsed.suggested_action,
       severity: parsed.severity,
       source: 'llm',
-      model: MODEL,
+      model: response.model ?? MODEL,
       grounding,
       facts_hash: factsHash(facts),
       usage: {
@@ -372,7 +374,7 @@ export async function explainOne(client, row, context = {}) {
  * request first, then the rest in a bounded pool.
  */
 export async function explainAll(rows, { concurrency = 4, client = null, onProgress = () => {} } = {}) {
-  const api = client ?? (hasApiKey() ? new Anthropic() : null);
+  const api = client ?? getClient();
   const results = new Array(rows.length);
   if (rows.length === 0) return results;
 
@@ -394,4 +396,4 @@ export async function explainAll(rows, { concurrency = 4, client = null, onProgr
   return results;
 }
 
-export { MODEL, SYSTEM_PROMPT };
+export { MODEL, SYSTEM_PROMPT, describeProviders };

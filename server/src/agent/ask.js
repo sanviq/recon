@@ -12,7 +12,7 @@
 // captured and returned alongside the answer, so a reader can see which records
 // the answer was actually built from instead of taking the prose on faith.
 
-import Anthropic from '@anthropic-ai/sdk';
+import { getClient } from '../llm/client.js';
 import { buildToolbox } from './tools.js';
 
 const MODEL = 'claude-opus-5';
@@ -50,28 +50,36 @@ How you write:
 export function friendlyApiError(err) {
   const status = err?.status ?? err?.statusCode;
   const raw = String(err?.message ?? err);
-  const wrap = (message, code) => Object.assign(new Error(message), { status: code, cause: err });
+  const provider = err?.provider ?? 'the model provider';
+  const keyName = { anthropic: 'ANTHROPIC_API_KEY', gemini: 'GEMINI_API_KEY', groq: 'GROQ_API_KEY' }[err?.provider] ?? 'the API key';
+  const wrap = (message, code) => Object.assign(new Error(message), { status: code, cause: err, provider: err?.provider });
 
-  if (status === 401 || /authentication_error|invalid x-api-key|API key is invalid/i.test(raw)) {
-    return wrap('Anthropic rejected the API key. Check ANTHROPIC_API_KEY in .env — it should start with sk-ant- and have no trailing spaces or quotes.', 401);
+  // Every provider is tried before the error surfaces, so a message naming all of
+  // them means the chain is exhausted rather than one key being wrong.
+  if (err?.failures?.length > 1) {
+    return wrap(`Every configured model provider failed. ${err.failures.join(' | ')}. The dashboard, matching, exception notes and audit trail all still work — only this chat is affected.`, status ?? 503);
   }
-  if (status === 403) return wrap('That API key is not permitted to use this model.', 403);
-  if (status === 429 || /rate_limit/i.test(raw)) {
-    return wrap('Rate limited by the Anthropic API. Wait a few seconds and ask again.', 429);
+
+  if (status === 401 || /authentication_error|invalid x-api-key|API key is invalid|api key not valid/i.test(raw)) {
+    return wrap(`${provider} rejected the API key. Check ${keyName} in .env — no quotes, no trailing spaces.`, 401);
+  }
+  if (status === 403) return wrap(`That ${provider} key is not permitted to use this model.`, 403);
+  if (status === 429 || /rate_limit|quota|RESOURCE_EXHAUSTED/i.test(raw)) {
+    return wrap(`Rate limited by ${provider} — free tiers cap requests per minute. Wait about a minute and ask again, or set a second provider key in .env so the next question falls through to it.`, 429);
   }
   if (/credit balance|insufficient|billing/i.test(raw)) {
-    return wrap('The Anthropic account has no credit left. Add credit at console.anthropic.com, then try again.', 402);
+    return wrap(`The ${provider} account has no credit left. Either add credit, or put a free GEMINI_API_KEY or GROQ_API_KEY in .env — this project falls through to whichever provider works.`, 402);
   }
-  if (status === 404 || /model.*not found/i.test(raw)) {
-    return wrap(`The model ${MODEL} is not available to this account.`, 404);
+  if (status === 404 || /model.*not found|no model/i.test(raw)) {
+    return wrap(raw.includes('Set ') ? raw : `That model is not available to this ${provider} account.`, 404);
   }
   if (status >= 500 || /overloaded/i.test(raw)) {
-    return wrap('Anthropic is overloaded or unavailable right now. The reconciliation, exception notes and audit trail all still work — only this chat is affected.', 503);
+    return wrap(`${provider} is overloaded or unavailable right now. The reconciliation, exception notes and audit trail all still work — only this chat is affected.`, 503);
   }
   // The SDK reports a dead socket as the bare string "Connection error.", which
   // is not something anyone can act on without being told what it means.
   if (/ENOTFOUND|ECONNREFUSED|ETIMEDOUT|fetch failed|network|connection error/i.test(raw)) {
-    return wrap('Could not reach the Anthropic API — check the network connection.', 503);
+    return wrap('Could not reach the model provider — check the network connection.', 503);
   }
   return wrap(`The chat request failed: ${raw}`, 502);
 }
@@ -83,9 +91,9 @@ export function friendlyApiError(err) {
  * owns conversation state and this function stays a pure function of its inputs.
  */
 export async function ask(question, { result, audit = [], history = [], client, maxIterations = MAX_ITERATIONS } = {}) {
-  const api = client ?? (process.env.ANTHROPIC_API_KEY ? new Anthropic() : null);
+  const api = client ?? getClient();
   if (!api) {
-    const err = new Error('ANTHROPIC_API_KEY is not set — the controller agent needs a key. The dashboard, matching and exception notes all work without one.');
+    const err = new Error('No model provider is configured — the controller agent needs a key. Set any one of ANTHROPIC_API_KEY, GEMINI_API_KEY (free, aistudio.google.com) or GROQ_API_KEY (free, console.groq.com) in .env. The dashboard, matching and exception notes all work without one.');
     err.status = 503;
     throw err;
   }

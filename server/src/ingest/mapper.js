@@ -18,7 +18,7 @@
 //      amount comparison, a match, or a reason code — by the time the engine
 //      runs, the AI has been out of the building for a step.
 
-import Anthropic from '@anthropic-ai/sdk';
+import { getClient, hasProvider, parseModelJson } from '../llm/client.js';
 import { SCHEMAS, heuristicMapping, missingRequired, isNative, normaliseHeader } from './schema.js';
 import { inferDateFormat, DATE_FORMATS, applyMapping } from './values.js';
 
@@ -65,7 +65,7 @@ const OUTPUT_SCHEMA = {
 };
 
 export function hasApiKey() {
-  return Boolean(process.env.ANTHROPIC_API_KEY);
+  return hasProvider();
 }
 
 /** The first few rows, as the model (and the user) would see them in a preview. */
@@ -136,7 +136,7 @@ export async function mapTable({ headers, rows, kind, client, useModel = true })
   const dateColumn = proposal[dateField]?.source_column;
   const dateGuess = inferDateFormat(dateColumn ? rows.map((r) => r[dateColumn]) : []);
 
-  const api = client ?? (useModel && hasApiKey() ? new Anthropic() : null);
+  const api = client ?? (useModel ? getClient() : null);
   let mapping = proposal;
   let source = 'heuristic';
   let dateFormat = { ...dateGuess, source: 'heuristic' };
@@ -153,7 +153,7 @@ export async function mapTable({ headers, rows, kind, client, useModel = true })
       });
 
       if (response.stop_reason === 'refusal') throw new Error('refusal');
-      const parsed = JSON.parse(response.content.find((b) => b.type === 'text')?.text ?? '');
+      const parsed = parseModelJson(response.content.find((b) => b.type === 'text')?.text ?? '');
 
       const resolved = {};
       const taken = new Set();

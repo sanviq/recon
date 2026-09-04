@@ -204,17 +204,24 @@ test('a refusal is handled without pretending an answer exists', async () => {
 // the user as a sentence naming the fix.
 test('API failures are reported as instructions, not stack traces', async () => {
   const cases = [
-    [{ status: 401, message: '401 {"type":"error","error":{"type":"authentication_error","message":"API key is invalid."}}' },
+    // A bad key must name the env var for the provider that rejected it — telling
+    // someone on a free Gemini key to check ANTHROPIC_API_KEY sends them nowhere.
+    [{ status: 401, provider: 'anthropic', message: '401 {"type":"error","error":{"type":"authentication_error","message":"API key is invalid."}}' },
       401, /ANTHROPIC_API_KEY/],
+    [{ status: 400, provider: 'gemini', message: 'Gemini returned 400: API key not valid' }, 401, /GEMINI_API_KEY/],
+    [{ status: 401, provider: 'groq', message: 'Groq returned 401: Invalid API Key' }, 401, /GROQ_API_KEY/],
     [{ status: 429, message: 'rate_limit_error' }, 429, /Rate limited/i],
-    [{ status: 400, message: 'Your credit balance is too low' }, 402, /credit/i],
+    // The free-tier answer to an unfunded account is another provider, not a card.
+    [{ status: 400, message: 'Your credit balance is too low' }, 402, /GEMINI_API_KEY|GROQ_API_KEY/],
     [{ status: 529, message: 'overloaded_error' }, 503, /overloaded|unavailable/i],
     [{ message: 'Connection error.' }, 503, /network connection/i],
     [{ status: 404, message: 'model not found' }, 404, /not available/i],
   ];
 
   for (const [thrown, status, pattern] of cases) {
-    const client = { messages: { create: async () => { throw Object.assign(new Error(thrown.message), { status: thrown.status }); } } };
+    const client = { messages: { create: async () => {
+      throw Object.assign(new Error(thrown.message), { status: thrown.status, provider: thrown.provider });
+    } } };
     await assert.rejects(() => ask('anything', { result, audit, client }), (err) => {
       assert.equal(err.status, status, `wrong status for: ${thrown.message}`);
       assert.match(err.message, pattern);
@@ -233,16 +240,21 @@ test('an unrecognised failure still says something, rather than throwing raw', a
   });
 });
 
-test('without a key the agent refuses to start, and says the rest still works', async () => {
-  const saved = process.env.ANTHROPIC_API_KEY;
-  delete process.env.ANTHROPIC_API_KEY;
+test('with no provider at all the agent refuses to start, and names the free ones', async () => {
+  // Every provider has to be cleared, not just Anthropic — the point of the chain
+  // is that any one key is enough, so the refusal only happens when none is set.
+  const vars = ['ANTHROPIC_API_KEY', 'GEMINI_API_KEY', 'GOOGLE_API_KEY', 'GROQ_API_KEY'];
+  const saved = Object.fromEntries(vars.map((v) => [v, process.env[v]]));
+  for (const v of vars) delete process.env[v];
   try {
     await assert.rejects(() => ask('anything', { result, audit }), (err) => {
       assert.equal(err.status, 503);
-      assert.match(err.message, /ANTHROPIC_API_KEY/);
+      assert.match(err.message, /GEMINI_API_KEY/, 'must point at a free option, not only the paid one');
+      assert.match(err.message, /GROQ_API_KEY/);
+      assert.match(err.message, /dashboard, matching and exception notes all work/);
       return true;
     });
   } finally {
-    if (saved !== undefined) process.env.ANTHROPIC_API_KEY = saved;
+    for (const v of vars) if (saved[v] !== undefined) process.env[v] = saved[v];
   }
 });

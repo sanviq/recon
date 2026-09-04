@@ -8,7 +8,7 @@
 // Same boundary as everywhere else: the engine decided what is flagged and why.
 // This layer only decides what to say first.
 
-import Anthropic from '@anthropic-ai/sdk';
+import { getClient, parseModelJson } from '../llm/client.js';
 import { formatPaise } from '../lib/money.js';
 import { REASON, REASON_LABEL, STATUS } from '../match/codes.js';
 
@@ -179,7 +179,7 @@ export function templateBrief(facts) {
  */
 export async function writeBrief(result, { client, topN = 12 } = {}) {
   const facts = buildBriefFacts(result, { topN });
-  const api = client ?? (process.env.ANTHROPIC_API_KEY ? new Anthropic() : null);
+  const api = client ?? getClient();
   if (!api) return { ...templateBrief(facts), source: 'template', generated_at: new Date().toISOString() };
 
   try {
@@ -194,11 +194,11 @@ export async function writeBrief(result, { client, topN = 12 } = {}) {
     });
 
     if (response.stop_reason === 'refusal') throw new Error('refusal');
-    const parsed = JSON.parse(response.content.find((b) => b.type === 'text')?.text ?? '');
+    const parsed = parseModelJson(response.content.find((b) => b.type === 'text')?.text ?? '');
     return {
       ...parsed,
       source: 'llm',
-      model: MODEL,
+      model: response.model ?? MODEL,
       generated_at: new Date().toISOString(),
       usage: {
         input_tokens: response.usage.input_tokens,
