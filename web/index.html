@@ -76,27 +76,88 @@
     color: var(--ink);
     font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
   }
-  .wrap { max-width: 1180px; margin: 0 auto; padding: 22px 20px 64px; }
+  /* --- shell: a fixed rail beside a scrolling report ---------------------- */
+  .shell { display: grid; grid-template-columns: 236px minmax(0, 1fr); align-items: start; }
+  .wrap { max-width: 1220px; margin: 0 auto; padding: 0 26px 64px; }
 
-  /* Sticky identity bar. In a demo the page is scrolled constantly, and the one
-     thing that must never scroll away is which dataset and which run is on screen. */
-  .topbar {
-    position: sticky; top: 0; z-index: 20;
-    background: var(--topbar); backdrop-filter: saturate(150%) blur(10px);
-    border-bottom: 1px solid var(--border);
+  .rail {
+    position: sticky; top: 0; height: 100vh; z-index: 20;
+    display: flex; flex-direction: column; gap: 4px;
+    padding: 20px 14px 16px;
+    background: var(--surface); border-right: 1px solid var(--border);
   }
-  .topbar-in {
-    max-width: 1180px; margin: 0 auto; padding: 11px 20px;
-    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+
+  /* The mark is the relational join operator: two triangles meeting point to
+     point. That is not decoration — a join across three sources is literally the
+     whole program, and the two halves are the same two colours the report uses
+     for confirmed and flagged. */
+  .brand { display: flex; align-items: center; gap: 11px; padding: 4px 8px 20px; }
+  .brand svg { display: block; flex: none; }
+  .wordmark { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .wordmark b {
+    font-size: 17px; font-weight: 750; letter-spacing: 0.14em;
+    line-height: 1; color: var(--ink);
   }
-  .mark {
-    display: inline-flex; align-items: center; gap: 9px;
-    font-size: 15px; font-weight: 650; letter-spacing: -0.01em; margin-right: 2px;
+  .wordmark em {
+    font-style: normal; font-size: 10.5px; letter-spacing: 0.055em;
+    color: var(--ink-muted); text-transform: uppercase; white-space: nowrap;
   }
-  .mark .dot {
-    width: 9px; height: 9px; border-radius: 50%; background: var(--series-matched);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--series-matched) 22%, transparent);
+
+  .nav { display: flex; flex-direction: column; gap: 2px; }
+  .nav a {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border-radius: 8px;
+    color: var(--ink-2); text-decoration: none; font-size: 13.5px;
+    border: 1px solid transparent;
   }
+  .nav a .n {
+    display: grid; place-items: center; width: 18px; height: 18px; border-radius: 5px;
+    background: var(--plane); border: 1px solid var(--border);
+    font-size: 10.5px; color: var(--ink-muted); flex: none;
+  }
+  .nav a:hover { background: var(--plane); color: var(--ink); }
+  .nav a[aria-current="true"] {
+    background: var(--plane); color: var(--ink); font-weight: 600;
+    border-color: var(--border);
+  }
+  .nav a[aria-current="true"] .n {
+    background: var(--series-matched); border-color: transparent; color: #fff;
+  }
+
+  .rail-foot { margin-top: auto; display: flex; flex-direction: column; gap: 8px; padding: 12px 8px 0; border-top: 1px solid var(--border); }
+  .rail-foot .sub { font-size: 11.5px; line-height: 1.45; word-break: break-word; }
+
+  /* Below the breakpoint the rail lies down across the top and the nav scrolls
+     sideways, rather than eating a third of a phone screen. */
+  @media (max-width: 900px) {
+    .shell { grid-template-columns: 1fr; }
+    .rail {
+      position: static; height: auto; flex-direction: row; align-items: center; gap: 14px;
+      flex-wrap: wrap; border-right: 0; border-bottom: 1px solid var(--border); padding: 12px 18px;
+    }
+    .brand { padding: 0; }
+    .nav { flex-direction: row; overflow-x: auto; flex: 1; }
+    .nav a { white-space: nowrap; }
+    .rail-foot { margin-top: 0; border-top: 0; padding: 0; flex-direction: row; align-items: center; gap: 10px; }
+    .rail-foot .sub { display: none; }
+    .wrap { padding: 0 18px 56px; }
+  }
+
+  /* --- page head ---------------------------------------------------------- */
+  .page-head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 18px; flex-wrap: wrap; padding: 26px 0 20px;
+  }
+  .page-head h1 { font-size: 27px; font-weight: 700; letter-spacing: -0.02em; }
+  .page-head .sub { margin-top: 5px; max-width: 68ch; }
+  .head-figs { display: flex; gap: 10px; flex-wrap: wrap; }
+  .head-fig {
+    border: 1px solid var(--border); border-radius: 9px; background: var(--surface);
+    padding: 7px 13px; box-shadow: var(--elev);
+  }
+  .head-fig .k { font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-muted); }
+  .head-fig .v { font-size: 17px; font-weight: 700; margin-top: 2px; font-variant-numeric: tabular-nums; }
+
   .badge {
     display: inline-flex; align-items: center; gap: 6px;
     font-size: 11.5px; padding: 3px 9px; border-radius: 20px;
@@ -105,7 +166,7 @@
   }
   .badge i { width: 6px; height: 6px; border-radius: 50%; background: var(--sev-low); flex: none; }
   .badge.on i { background: var(--good); }
-  .topbar .spacer { flex: 1 1 auto; }
+  .badge.on i { box-shadow: 0 0 0 3px color-mix(in srgb, var(--good) 25%, transparent); }
 
   h1 { font-size: 20px; margin: 0; letter-spacing: -0.01em; }
   .sub { color: var(--ink-muted); font-size: 13px; }
@@ -133,9 +194,14 @@
     color: var(--ink-2); font-size: 11px; letter-spacing: 0; flex: none;
   }
   .eyebrow .rule { flex: 1; height: 1px; background: var(--border); }
+  .eyebrow, .brief { scroll-margin-top: 18px; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
   .grid { display: grid; gap: 14px; margin-top: 20px; }
-  .cols-2 { grid-template-columns: minmax(0,1fr) minmax(0,1fr); align-items: start; }
+  /* Stretch, not start: two cards side by side that end at different heights read
+     as a layout bug, and the short one having room to breathe costs nothing. */
+  .cols-2 { grid-template-columns: minmax(0,1fr) minmax(0,1fr); align-items: stretch; }
   @media (max-width: 860px) { .cols-2 { grid-template-columns: 1fr; } }
 
   /* --- hero + donut + meter ---------------------------------------------- */
@@ -177,6 +243,9 @@
   .tile .k { color: var(--ink-2); font-size: 12px; }
   .tile .v { font-size: 25px; font-weight: 650; margin-top: 5px; letter-spacing: -0.015em; font-variant-numeric: tabular-nums; }
   .tile .n { color: var(--ink-muted); font-size: 12px; margin-top: 3px; }
+  /* Inside a half-width card, auto-fit lands on three across and orphans the
+     fourth. Four accuracy measures are a 2x2 block, so say so. */
+  .cols-2 .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
   /* --- reason bars ------------------------------------------------------- */
   .bars { display: flex; flex-direction: column; gap: 10px; }
@@ -287,20 +356,44 @@
 </style>
 </head>
 <body>
-<div class="topbar">
-  <div class="topbar-in">
-    <span class="mark"><span class="dot"></span>Recon</span>
-    <span class="sub" id="datasetLine">loading…</span>
-    <span class="spacer"></span>
-    <span class="badge" id="agentBadge"><i></i>checking…</span>
-  </div>
-</div>
-<div class="wrap">
-  <p class="sub" style="margin:2px 0 18px">
-    Three-way reconciliation across a merchant ledger, Razorpay payments and settlements, and a bank statement.
-  </p>
+<div class="shell">
+  <aside class="rail">
+    <div class="brand">
+      <svg width="34" height="34" viewBox="0 0 34 34" role="img" aria-label="Recon">
+        <rect width="34" height="34" rx="9" fill="var(--plane)" stroke="var(--border)"/>
+        <!-- The join operator: two sides brought to a single point. -->
+        <path d="M8 9 L15.4 17 L8 25 Z" fill="var(--series-matched)"/>
+        <path d="M26 9 L18.6 17 L26 25 Z" fill="var(--series-flagged)"/>
+      </svg>
+      <span class="wordmark"><b>RECON</b><em>Reconciliation agent</em></span>
+    </div>
 
-  <div id="app"><p class="empty">Loading…</p></div>
+    <nav class="nav" id="nav">
+      <a href="#sec-brief"><span class="n">·</span>Month-end brief</a>
+      <a href="#sec-overview"><span class="n">1</span>What the run found</a>
+      <a href="#sec-ask"><span class="n">2</span>Ask the data</a>
+      <a href="#sec-why"><span class="n">3</span>Why records flagged</a>
+      <a href="#sec-benchmark"><span class="n">4</span>The alternatives</a>
+      <a href="#sec-records"><span class="n">5</span>Every decision</a>
+    </nav>
+
+    <div class="rail-foot">
+      <span class="badge" id="agentBadge"><i></i>checking…</span>
+      <span class="sub" id="datasetLine">loading…</span>
+    </div>
+  </aside>
+
+  <div class="wrap">
+    <div class="page-head">
+      <div>
+        <h1>Reconciliation report</h1>
+        <p class="sub">Three-way match across a merchant ledger, Razorpay payments and settlements, and a bank statement.</p>
+      </div>
+      <div class="head-figs" id="headFigs"></div>
+    </div>
+
+    <div id="app"><p class="empty">Loading…</p></div>
+  </div>
 </div>
 
 <script type="module">
@@ -361,9 +454,17 @@ function render() {
   badge.className = `badge${on ? ' on' : ''}`;
   badge.innerHTML = `<i></i>${on ? esc((s.agent?.providers ?? 'model').split(' -> ')[0]) : 'no model key — templates only'}`;
 
+  // The three figures a merchant would want before reading anything else, kept
+  // beside the title rather than buried in the card grid.
+  document.getElementById('headFigs').innerHTML = [
+    ['Reconciled', pct(sum.match_rate)],
+    ['Needs review', String(sum.exceptions)],
+    ['Value flagged', fmtRs(sum.value_flagged_paise)],
+  ].map(([k, v]) => `<div class="head-fig"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join('');
+
   document.getElementById('app').innerHTML = `
     ${briefCard(s.brief)}
-    ${eyebrow(1, 'What the run found')}
+    ${eyebrow(1, 'What the run found', 'sec-overview')}
     <section class="card">
       <div class="hero-row">
         <div>
@@ -395,10 +496,10 @@ function render() {
       </div>
     </section>
 
-    ${eyebrow(2, 'Ask it anything about this run')}
+    ${eyebrow(2, 'Ask it anything about this run', 'sec-ask')}
     ${askCard(s.agent)}
 
-    ${eyebrow(3, 'Why those records were flagged')}
+    ${eyebrow(3, 'Why those records were flagged', 'sec-why')}
     <div class="grid cols-2" style="margin-top:0">
       <section class="card">
         <h2>Exceptions by reason</h2>
@@ -410,10 +511,10 @@ function render() {
       </section>
     </div>
 
-    ${s.compare?.systems ? eyebrow(4, 'Measured against the alternatives') : ''}
+    ${s.compare?.systems ? eyebrow(4, 'Measured against the alternatives', 'sec-benchmark') : ''}
     ${comparePanel(s.compare)}
 
-    ${eyebrow(5, 'Every record, and every decision behind it')}
+    ${eyebrow(5, 'Every record, and every decision behind it', 'sec-records')}
     <section class="card">
       <h2>Exception list — every unmatched record, nothing hidden</h2>
       <div class="toolbar">
@@ -433,12 +534,47 @@ function render() {
     btn.addEventListener('click', () => { state.filter = btn.dataset.filter; render(); });
   }
   wireAsk();
+  wireNav();
 }
 
 const tile = (k, v, n) => `<div class="card tile"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div><div class="n">${esc(n)}</div></div>`;
 
-const eyebrow = (n, label) =>
-  `<div class="eyebrow"><span class="num">${n}</span>${esc(label)}<span class="rule"></span></div>`;
+/**
+ * Keeps the rail pointing at whatever is on screen.
+ *
+ * Rebuilt on every render rather than wired once, because render() replaces the
+ * section nodes wholesale and an observer left watching the old ones would go
+ * quietly dead — the nav would keep highlighting, just always the same item.
+ */
+let navObserver = null;
+function wireNav() {
+  navObserver?.disconnect();
+  const links = [...document.querySelectorAll('#nav a')];
+  const targets = links
+    .map((a) => ({ a, el: document.getElementById(a.getAttribute('href').slice(1)) }))
+    .filter((t) => t.el);
+  if (!targets.length) return;
+
+  const seen = new Set();
+  const mark = () => {
+    // The last section past the reading line wins, so the rail reflects what is
+    // being read rather than whichever section happens to be tallest.
+    const current = targets.filter((t) => seen.has(t.el)).pop() ?? targets[0];
+    for (const { a } of targets) a.removeAttribute('aria-current');
+    current.a.setAttribute('aria-current', 'true');
+  };
+
+  navObserver = new IntersectionObserver((entries) => {
+    for (const e of entries) e.isIntersecting ? seen.add(e.target) : seen.delete(e.target);
+    mark();
+  }, { rootMargin: '-12% 0px -70% 0px' });
+
+  for (const { el } of targets) navObserver.observe(el);
+  mark();
+}
+
+const eyebrow = (n, label, id) =>
+  `<div class="eyebrow"${id ? ` id="${id}"` : ''}><span class="num">${n}</span>${esc(label)}<span class="rule"></span></div>`;
 
 /**
  * Matched against flagged, as one whole.
@@ -502,7 +638,7 @@ function briefCard(brief) {
     </li>`;
   }).join('');
 
-  return `<section class="card brief">
+  return `<section class="card brief" id="sec-brief">
     <h2>Month-end brief · <span class="src">${writtenBy(brief.source, brief.model)}</span></h2>
     <p class="headline">${esc(brief.headline)}</p>
     <p class="state">${esc(brief.state_of_the_month)}</p>
