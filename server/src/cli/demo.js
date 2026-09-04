@@ -43,9 +43,13 @@ const steps = [
     why: 'Precision on the auto-matched set is the number that matters: a false match is money silently booked to the wrong invoice.',
     cmd: ['evaluate.js', '--data', data] },
 
-  { title: 'Compare — what the alternatives would have scored on this same data',
+  // Scored over 40 generated datasets rather than the one just reconciled. The
+  // contrast is the whole argument, and a single dataset is a weak place to make
+  // it — the same finding across forty unseen months is the difference between
+  // an anecdote and a result. It costs about half a second.
+  { title: 'Compare — what the alternatives score across 40 unseen months',
     why: 'The naive build reports a higher match rate and books real money to the wrong place. That contrast is the entire argument.',
-    cmd: ['compare.js', '--data', data] },
+    cmd: ['compare.js', '--seeds', '40', '--profile', 'hard', '--out', `${data}/compare.json`] },
 ];
 
 console.log(`\n${B}Recon${R} — reconciliation for Razorpay merchants, end to end\n`);

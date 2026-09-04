@@ -467,10 +467,7 @@ function render() {
     ${eyebrow(1, 'What the run found', 'sec-overview')}
     <section class="card">
       <div class="hero-row">
-        <div>
-          <div class="hero-figure">${pct(sum.match_rate)}</div>
-          <div class="hero-label">${sum.matched} of ${sum.ledger_rows} invoices<br>auto-reconciled end to end</div>
-        </div>
+        ${heroFigure(s, sum)}
         <div class="hero-rule" aria-hidden="true"></div>
         ${donut(sum.matched, sum.ledger_rows - sum.matched)}
       </div>
@@ -606,6 +603,40 @@ function wireNav() {
 
 const eyebrow = (n, label, id) =>
   `<div class="eyebrow"${id ? ` id="${id}"` : ''}><span class="num">${n}</span>${esc(label)}<span class="rule"></span></div>`;
+
+/**
+ * The single largest number on the page.
+ *
+ * It used to be the match rate, which quietly argued against the project. This
+ * whole build exists to say that a match rate on its own rewards guessing — the
+ * naive baseline beats Recon on it by declaring money reconciled that never
+ * arrived — so putting 69.4% in 54px type invited the one reading the rest of
+ * the page spends its time refuting.
+ *
+ * Precision leads instead: of everything it settled on its own, how much was
+ * right. The match rate is not hidden — it is a line below, in the donut, and in
+ * the header figures — because burying it would be the same dishonesty in the
+ * other direction. Where there is no labelled ground truth to measure precision
+ * against, the match rate leads again, since it is then the only thing measured.
+ */
+function heroFigure(s, sum) {
+  const m = s.metrics?.accuracy;
+  if (!m) {
+    return `<div>
+      <div class="hero-figure">${pct(sum.match_rate)}</div>
+      <div class="hero-label">${sum.matched} of ${sum.ledger_rows} invoices<br>auto-reconciled end to end</div>
+    </div>`;
+  }
+  const wrong = m.false_positive + m.misrouted_matches;
+  return `<div>
+    <div class="hero-figure">${pct(m.precision_auto_matched)}</div>
+    <div class="hero-label">
+      of the ${sum.matched} invoices it settled on its own were correct —
+      <b>${wrong === 0 ? 'none' : wrong}</b> booked to the wrong invoice.<br>
+      ${pct(sum.match_rate)} auto-reconciled; the rest is on the exception list with a reason.
+    </div>
+  </div>`;
+}
 
 /**
  * Matched against flagged, as one whole.
@@ -872,8 +903,27 @@ function comparePanel(compare) {
        A headline match rate, on its own, rewards exactly the wrong behaviour.</p>`
     : '';
 
+  // A baseline that scores exactly zero looks rigged, and the reason it is not
+  // rigged lived only in a source comment. Anyone reading the table deserves the
+  // mechanism on the same screen as the number.
+  const sheet = compare.systems.spreadsheet;
+  const zeroNote = sheet && sheet.match_rate === 0
+    ? `<p class="sub" style="margin:12px 0 0">The spreadsheet scores zero because a VLOOKUP has nothing to look up:
+       Razorpay deducts a fee plus GST and batches a day of payments into a single payout, so an invoice
+       amount is not a number that ever appears in the bank statement. Its 100% precision is over an empty
+       set — it matched nothing, so it got nothing wrong, which is why precision is never quoted here without
+       a match rate beside it.</p>`
+    : '';
+
+  // One dataset is "this same data"; forty generated ones are a holdout, and
+  // calling those "this same data" would be a false claim about the strongest
+  // evidence in the project.
+  const scope = compare.datasets > 1
+    ? `What the alternatives score across ${compare.datasets} unseen datasets`
+    : 'What the alternatives score on this same data';
+
   return `<section class="card" style="margin-top:14px">
-    <h2>What the alternatives score on this same data · <span class="src">${compare.datasets} dataset(s)</span></h2>
+    <h2>${esc(scope)} · <span class="src">${esc(compare.profile ?? '')} profile</span></h2>
     <div class="scroll-x"><table>
       <thead><tr>
         <th>System</th><th class="num">Match rate</th><th class="num">Precision</th>
@@ -882,6 +932,7 @@ function comparePanel(compare) {
       <tbody>${rows}</tbody>
     </table></div>
     ${punchline}
+    ${zeroNote}
   </section>`;
 }
 
